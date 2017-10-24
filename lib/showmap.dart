@@ -35,13 +35,16 @@ class _showMapState extends State<showMap> {
   initState() {
     super.initState();
     initPlatformState();
-    _locationSubscription =
-        _location.onLocationChanged.listen((Map<String,double> result) {
-          setState(() {
-            _currentLocation = result;
-          });
-        });
+//    _locationSubscription =
+//        _location.onLocationChanged.listen((Map<String,double> result) {
+//          setState(() {
+//            _currentLocation = result;
+//          });
+//        });
   }
+
+
+
 
   // Platform messages are asynchronous, so we initialize in an async method.
   initPlatformState() async {
@@ -62,6 +65,7 @@ class _showMapState extends State<showMap> {
     // setState to update our non-existent appearance.
     if (!mounted)
       return;
+      //_currentLocation = location;
 
     setState(() {
       print("location${location}");
@@ -108,7 +112,7 @@ class _showMapState extends State<showMap> {
                     ),
                     //Map Image
                     mapimage=new Image.network(
-                      "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=16&size=640x400&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
+                      "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=16&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
                       fit: BoxFit.contain,
                       gaplessPlayback: true,
                     ),

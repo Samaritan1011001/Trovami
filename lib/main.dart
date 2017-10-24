@@ -43,14 +43,10 @@ class logindetails {
   //String name = '';
 }
 
-class member{
-  String name="";
-  bool inviteStatus=true;
-  var id="";
-}
+
 class groupDetails {
   String groupname = '';
-  member groupmember=new member();
+  List<PersonData> groupmember=new List<PersonData>();
 
 }
 

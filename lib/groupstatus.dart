@@ -69,13 +69,13 @@ void mapLocation(){
                   return new Container(
                     child:new Column( children: <Widget>[
                       new Text(
-                          "Name:${grpd.groupmember.name}",
+                          "Name:${grpd.groupname}",
                           //style: new TextStyle(color: Colors.white, fontSize: 40.0),
                           textAlign: TextAlign.center,
                           //style: new TextStyle(fontFamily:'Nexa',fontSize: 50.0)
                         ),
-                         new Text(
-                            "Acceptance:${grpd.groupmember.inviteStatus}",
+                         new Text("",
+                            //"Acceptance:${grpd.groupmember.inviteStatus}",
                             //textAlign: TextAlign.center,
                          ),
 
