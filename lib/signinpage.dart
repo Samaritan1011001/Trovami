@@ -2,6 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'main.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:async';                                               // new
+
+final googleSignIn = new GoogleSignIn();                          // new
+
+
 
 
 class BaseLayout extends StatefulWidget {
@@ -57,6 +63,21 @@ class signinformstate extends State<SignInForm>{
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final GlobalKey<FormFieldState<String>> _passwordFieldKey = new GlobalKey<FormFieldState<String>>();
 
+
+
+  Future<Null> _ensureLoggedIn() async {
+    GoogleSignInAccount user = googleSignIn.currentUser;
+    if (user == null)
+      user = await googleSignIn.signInSilently();
+    Navigator.of(context).pushNamed('/b');
+
+    if (user == null) {
+      await googleSignIn.signIn();
+      Navigator.of(context).pushNamed('/b');
+
+
+    }
+  }
 
   void _handleSubmitted() {
     final FormState form = _formKey.currentState;
@@ -171,13 +192,17 @@ class signinformstate extends State<SignInForm>{
             child: new FloatingActionButton(
               onPressed: _handleSubmitted,
                 child: new Icon(signinicon),
-                //tooltip: 'Sign-in',
-                //iconSize: 75.0,
-              //alignment: Alignment.center,
-              //color: Colors.black87,
-              //height: 200.0,
-//                highlightColor: Colors.white70,
-//                splashColor: Colors.transparent,
+
+            ),
+            padding: new EdgeInsets.only(top:10.0),
+          ),
+          new Container(
+            //padding: const EdgeInsets.all(20.0),
+            alignment: Alignment.center,
+            child: new FloatingActionButton(
+              onPressed: _ensureLoggedIn,
+              child: new Icon(Icons.golf_course),
+
             ),
             padding: new EdgeInsets.only(top:10.0),
           ),
@@ -191,11 +216,6 @@ class signinformstate extends State<SignInForm>{
                 tooltip: 'Sign-up',
                 heroTag: null,
                 backgroundColor: Colors.brown,
-                //iconSize: 75.0,
-//                alignment: Alignment.center,
-//                color: Colors.black87,
-//                highlightColor: Colors.white70,
-//                splashColor: Colors.transparent,
                 onPressed:() {
                   Navigator.of(context).pushNamed('/a');
                 }

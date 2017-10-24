@@ -12,7 +12,7 @@ groupDetails grpd=new groupDetails();
 void main() {
 
   runApp(new MaterialApp(
-    title: "LocatePal",
+    title: "Trovami",
     home: new BaseLayout(),
     routes: <String, WidgetBuilder> {
       '/a': (BuildContext context) => new SignupLayout(),

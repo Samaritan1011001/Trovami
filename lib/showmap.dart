@@ -89,7 +89,7 @@ class _showMapState extends State<showMap> {
 
     return new Scaffold(
             appBar: new AppBar(
-              title: new Text('Plugin example app'),
+              title: new Text('Map'),
             ),
             body:
             new Column(
@@ -146,7 +146,6 @@ class _showMapState extends State<showMap> {
                     ),
                   ],
                 ),
-                new Center(child:new Text('$_currentLocation\n')),
               ],
             )
         );
