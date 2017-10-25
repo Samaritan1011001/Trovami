@@ -7,12 +7,6 @@ dependencies:
     sdk: flutter
   location:
     path: /Users/manojn/Documents/locations_plugin/flutterlocation
-  image_picker: 0.1.1                                             # new
-  google_sign_in: 0.3.1                                           # new
-  firebase_analytics: 0.0.4                                       # new
-  firebase_auth: 0.2.0                                            # new
-  firebase_database: 0.0.12                                       # new
-  firebase_storage: 0.0.5
 
 dev_dependencies:
   flutter_test:

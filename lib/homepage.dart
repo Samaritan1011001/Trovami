@@ -14,14 +14,7 @@ class homepagelayoutstate extends State<Homepagelayout>{
   @override
   Widget build(BuildContext context){
     return new Scaffold(
-//      appBar: new AppBar(centerTitle: true,title: new Text("Trovami"),elevation: 0.0),
       body: new Container(
-//        decoration: new BoxDecoration(
-//          image: new DecorationImage(
-//            image: new AssetImage("graphics/back.jpg"),
-//            fit: BoxFit.cover,
-//          ),
-//        ),
         child:new Homepage(),
       ),
 
@@ -44,10 +37,10 @@ class homepagestate extends State<Homepage>{
 
   @override
   Widget build(BuildContext context) {
-
   return new CustomScrollView(
     slivers: <Widget>[
       new SliverAppBar(
+        leading: new Container(),
         pinned: true,
         expandedHeight: 50.0,
         //floating: true,
@@ -89,7 +82,9 @@ class homepagestate extends State<Homepage>{
             iconSize: 35.0,),
         ],
         flexibleSpace: new FlexibleSpaceBar(
-          title: new Text('Demo'),
+          title: new Text('Trovami'),
+          //background: ,
+          //centerTitle: true,
 
         ),
       ),
@@ -107,7 +102,12 @@ class homepagestate extends State<Homepage>{
                 child: new displaygroup(),
 
                 ),
-                ]),
+                ]),decoration: new BoxDecoration(
+              border: new Border(
+                //top: new BorderSide(width: 16.0, color: Colors.brown[100]),
+                bottom: new BorderSide(width: 1.0, color: Colors.brown[200]),
+              ),
+            ),
             );
           },
           childCount: 1,

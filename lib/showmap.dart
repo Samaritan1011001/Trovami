@@ -94,7 +94,7 @@ class _showMapState extends State<showMap> {
             body:
             new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 new Stack(
                   children: <Widget>[
@@ -103,18 +103,18 @@ class _showMapState extends State<showMap> {
                     ),
                     //Zoom in Map Image for caching
                     zoominimage=new Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=20&size=640x400&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=20&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
                     fit: BoxFit.contain,
                     ),
                     zoomoutimage=new Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=14&size=640x400&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=14&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
                     fit: BoxFit.contain,
                     ),
-                    //Map Image
                     mapimage=new Image.network(
                       "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=16&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
-                      fit: BoxFit.contain,
+                      fit: BoxFit.fill,
                       gaplessPlayback: true,
+                      //height: 0.0,
                     ),
 
                     new Positioned(

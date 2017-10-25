@@ -24,7 +24,7 @@ class groupstatuslayoutstate extends State<groupstatuslayout>{
 //          ),
 //        ),
         child:new groupstatus(),
-        color: Colors.brown,
+        //color: Colors.brown,
       ),
 
     );
@@ -69,18 +69,21 @@ void mapLocation(){
                   return new Container(
                     child:new Column( children: <Widget>[
                       new Text(
-                          "Name:${grpd.groupname}",
-                          //style: new TextStyle(color: Colors.white, fontSize: 40.0),
-                          textAlign: TextAlign.center,
+                          "Group Name: ${grpd.groupname}",
+                          style: new TextStyle(color: Colors.black, fontSize: 20.0),
+                          //textAlign: TextAlign.center,
                           //style: new TextStyle(fontFamily:'Nexa',fontSize: 50.0)
                         ),
-                         new Text("",
-                            //"Acceptance:${grpd.groupmember.inviteStatus}",
+                         new Text("Members:",
+                           style: new TextStyle(color: Colors.black, fontSize: 20.0),
+
+                           //"Acceptance:${grpd.groupmember.inviteStatus}",
                             //textAlign: TextAlign.center,
                          ),
 
                    ],
                   ),
+                    padding: new EdgeInsets.only(top:30.0),
                   );
                 },
             childCount: 1,

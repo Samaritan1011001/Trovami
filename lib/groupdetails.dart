@@ -19,6 +19,8 @@ class addGroup extends StatefulWidget {
 }
 
 class addGroupstate extends State<addGroup>{
+  List<Widget> children1=new List<Widget>();
+
   final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
   void _handleSubmitted() {
     final FormState form = _groupformKey.currentState;
@@ -36,7 +38,8 @@ class addGroupstate extends State<addGroup>{
   @override
   Widget build(BuildContext context) {
     print(count);
-    List<Widget> children1= new List.generate(count, (int i) => new memberlist(members[i].name));
+    //grpd=null;
+    children1= new List.generate(count, (int i) => new memberlist(members[i].name));
     for(var i=0;i<children1.length;i++) {
       print(children1[i].toString());
     }
@@ -44,8 +47,15 @@ class addGroupstate extends State<addGroup>{
       body: new Form(
         key: _groupformKey,
         child: new ListView(
+          padding: new EdgeInsets.symmetric(horizontal: 16.0),
           children: <Widget>[
-            new Container(
+
+            new Container(child: new Center( child:
+            new Text("Group Details",style: new TextStyle(fontSize: 20.0,),),
+            ),
+              padding: new EdgeInsets.only( top:40.0),
+            ),
+            new Container(child: new Container(
               child: new TextFormField(
                 decoration: const InputDecoration(
                   icon: const Icon(Icons.person),
@@ -63,11 +73,20 @@ class addGroupstate extends State<addGroup>{
                 width: 1.0,
                 ),
               ),
-              padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+              padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0),
+            ),
+                padding: new EdgeInsets.only( top:30.0)
             ),
 
 
-            new PopupMenuButton<PersonData>(
+
+            new Row(children: <Widget>[
+
+              new Text("Add a member:"),
+
+
+              new PopupMenuButton<PersonData>(
+              icon: new Icon(Icons.add),
               onSelected: _select,
               itemBuilder: (BuildContext context) {
                 return users.map((PersonData user) {
@@ -78,6 +97,9 @@ class addGroupstate extends State<addGroup>{
                 }).toList();
               },
             ),
+            ],
+    ),
+
 
 
             new Column(
@@ -86,11 +108,12 @@ class addGroupstate extends State<addGroup>{
 
 
             new Container(
-              alignment: Alignment.center,
+              alignment: Alignment.bottomCenter,
               child: new FloatingActionButton(
                 onPressed: _handleSubmitted,
                 child: new Icon(Icons.check),
               ),
+              padding: new EdgeInsets.only( top:50.0) ,
             ),
           ],
         ),
@@ -108,6 +131,17 @@ class memberlist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Text("${mem}");
+    return new Row(children: <Widget>[ 
+      new Icon(Icons.person),
+      new Text(
+        "${mem}",
+style: new TextStyle(fontSize: 20.0),
+//          icon: new Icon(Icons.person),
+        ),
+        ],
+    );
+        //onSaved: (String value) { user.name = value; },
+      //);
+
   }
 }

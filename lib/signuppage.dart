@@ -118,10 +118,12 @@ class signupstate extends State<Signup>{
             children: <Widget>[
               new Container(
                 child: new TextFormField(
+
                   decoration: new InputDecoration(
                     hintText: 'Name',
                     labelText: 'Name',
                     icon: new Icon(Icons.person),
+                    //hintStyle: new TextStyle(color: Colors.black),
                   ),
                   onSaved: (String value) { user.name = value; },
                 ),
@@ -196,12 +198,15 @@ class signupstate extends State<Signup>{
               new Container(
                 padding: const EdgeInsets.all(20.0),
                 alignment: Alignment.center,
-                child: new FloatingActionButton(
-                  tooltip: 'Sign-up',
-                  heroTag: "signuphero",
-                  child: new Icon(signupicon),
+                child: new RaisedButton(
+                  //tooltip: 'Sign-up',
+                  child: new Text("Sign up"),
                   onPressed: _handleSubmitted1,
-                  backgroundColor: Colors.brown,
+                  color: Colors.brown[300],
+                  highlightColor: Colors.brown,
+                  splashColor: Colors.white,
+                  elevation: 150.0,
+                  //backgroundColor: Colors.brown,
                 ),
                 ),
 
@@ -215,6 +220,7 @@ class signupstate extends State<Signup>{
         ),
           padding: new EdgeInsets.only(top:50.0),
         ),
+      backgroundColor: Colors.brown[100],
     );
   }
 

@@ -2,10 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'main.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';                                               // new
 
-final googleSignIn = new GoogleSignIn();                          // new
 
 
 
@@ -65,19 +63,7 @@ class signinformstate extends State<SignInForm>{
 
 
 
-  Future<Null> _ensureLoggedIn() async {
-    GoogleSignInAccount user = googleSignIn.currentUser;
-    if (user == null)
-      user = await googleSignIn.signInSilently();
-    Navigator.of(context).pushNamed('/b');
 
-    if (user == null) {
-      await googleSignIn.signIn();
-      Navigator.of(context).pushNamed('/b');
-
-
-    }
-  }
 
   void _handleSubmitted() {
     final FormState form = _formKey.currentState;
@@ -172,9 +158,12 @@ class signinformstate extends State<SignInForm>{
                 hintText: 'Type your password here',
                 labelText: 'Password *',
                 icon: new Icon(lock_outline),
+                //labelStyle: new TextStyle(color: Colors.black,inherit: false),
+                //hintStyle: new TextStyle(fontWeight: FontWeight.bold,color: Colors.black,inherit: false),
               ),
               obscureText: true,
               onSaved: (String value) { logindet.password = value; },
+              //style: new TextStyle(color: Colors.black),
             ),
             decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
               color: Colors.black,
@@ -189,9 +178,15 @@ class signinformstate extends State<SignInForm>{
           new Container(
             //padding: const EdgeInsets.all(20.0),
             alignment: Alignment.center,
-            child: new FloatingActionButton(
+            child: new RaisedButton(
+              disabledColor: new Color.fromRGBO(245, 245, 245,0.0),
+              //color: Colors.brown,
+              //highlightColor: Colors.brown,
+              color: Colors.brown[400],
+              splashColor: Colors.brown,
+              elevation: 150.0,
               onPressed: _handleSubmitted,
-                child: new Icon(signinicon),
+                child: new Text("Sign In"),
 
             ),
             padding: new EdgeInsets.only(top:10.0),
@@ -199,28 +194,19 @@ class signinformstate extends State<SignInForm>{
           new Container(
             //padding: const EdgeInsets.all(20.0),
             alignment: Alignment.center,
-            child: new FloatingActionButton(
-              onPressed: _ensureLoggedIn,
-              child: new Icon(Icons.golf_course),
-
-            ),
-            padding: new EdgeInsets.only(top:10.0),
-          ),
-          new Container(
-            //padding: const EdgeInsets.all(20.0),
-            alignment: Alignment.center,
-            child: new Hero(tag: "signuphero",
-              child: new FloatingActionButton(
+            child: new RaisedButton(
                 //child: const Text('Sign-up'),
-                child: new Icon(signupicon),
-                tooltip: 'Sign-up',
-                heroTag: null,
-                backgroundColor: Colors.brown,
+                child: new Text("Sign up"),
+                //disabledColor: Colors.brown[200],
+                color: Colors.brown[200],
+                highlightColor: Colors.brown,
+                splashColor: Colors.brown,
+                elevation: 150.0,
                 onPressed:() {
                   Navigator.of(context).pushNamed('/a');
                 }
             ),
-            ),
+
             padding: new EdgeInsets.only(top:10.0),
           ),
 
@@ -231,7 +217,7 @@ class signinformstate extends State<SignInForm>{
         ],
       ),
     ),
-      padding: new EdgeInsets.only(top:150.0),
+      padding: new EdgeInsets.only(top:100.0),
     );
 
   }
