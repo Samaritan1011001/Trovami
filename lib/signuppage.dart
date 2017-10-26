@@ -2,6 +2,8 @@
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'Roundedbutton.dart';
+import 'signinpage.dart';
 
 
 class SignupLayout extends StatefulWidget {
@@ -15,12 +17,12 @@ class signuplayoutstate extends State<SignupLayout>{
     return new Scaffold(
 //      appBar: new AppBar(centerTitle: true,title: new Text("Trovami"),elevation: 0.0),
       body: new Container(
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-            image: new AssetImage("graphics/back.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
+//        decoration: new BoxDecoration(
+//          image: new DecorationImage(
+//            image: new AssetImage("graphics/back.jpg"),
+//            fit: BoxFit.cover,
+//          ),
+//        ),
         child:new Signup(),
       ),
 
@@ -108,6 +110,7 @@ class signupstate extends State<Signup>{
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
 
     return new Scaffold(
         body: new Container(child:new Form(
@@ -195,20 +198,26 @@ class signupstate extends State<Signup>{
               ),
                 //const SizedBox(width: 16.0),
 
-              new Container(
-                padding: const EdgeInsets.all(20.0),
-                alignment: Alignment.center,
-                child: new RaisedButton(
-                  //tooltip: 'Sign-up',
-                  child: new Text("Sign up"),
-                  onPressed: _handleSubmitted1,
-                  color: Colors.brown[300],
-                  highlightColor: Colors.brown,
-                  splashColor: Colors.white,
-                  elevation: 150.0,
-                  //backgroundColor: Colors.brown,
+              new RoundedButton(
+                  buttonName: "Sign-up",
+                  onTap: _handleSubmitted1,
+                  width: screenSize.width,
+                  height: 50.0,
+                  bottomMargin: 10.0,
+                  borderWidth: 0.0,
+                  buttonColor: Colors.transparent,
                 ),
-                ),
+//                new RaisedButton(
+//                  //tooltip: 'Sign-up',
+//                  child: new Text("Sign up"),
+//                  onPressed: _handleSubmitted1,
+//                  color: Colors.brown[300],
+//                  highlightColor: Colors.brown,
+//                  splashColor: Colors.white,
+//                  elevation: 150.0,
+//                  //backgroundColor: Colors.brown,
+//                ),
+
 
 
               new Container(

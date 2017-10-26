@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 
 import 'package:location/location.dart';
 import 'dart:async';
+import 'groupstatus.dart';
 
 
 
@@ -20,6 +21,7 @@ class showMap extends StatefulWidget {
 }
 
 class _showMapState extends State<showMap> {
+
   StreamSubscription<Map<String,double>> _locationSubscription;
   Location _location = new Location();
   Image mapimage;
@@ -75,46 +77,33 @@ class _showMapState extends State<showMap> {
 
   @override
   Widget build(BuildContext context) {
-    print("abc");
-//    if(currentWidget){
-//      image1 = new Image.network("https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=18&size=640x400&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk");
-//      currentWidget = !currentWidget;
-//    }else{
-//      image2 = new Image.network("https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=18&size=640x400&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk");
-//      currentWidget = !currentWidget;
-//    }
-
-    //Zoom out Map Image for caching
-
 
     return new Scaffold(
             appBar: new AppBar(
               title: new Text('Map'),
+              backgroundColor: Colors.transparent,
             ),
             body:
-            new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
+
                 new Stack(
                   children: <Widget>[
                     new Center(
                       child: new CircularProgressIndicator(),
                     ),
                     //Zoom in Map Image for caching
-                    zoominimage=new Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=20&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
-                    fit: BoxFit.contain,
-                    ),
-                    zoomoutimage=new Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=14&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
-                    fit: BoxFit.contain,
-                    ),
+//                    zoominimage=new Image.network(
+//                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=20&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
+//                    fit: BoxFit.contain,
+//                    ),
+//                    zoomoutimage=new Image.network(
+//                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=14&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
+//                    fit: BoxFit.contain,
+//                    ),
                     mapimage=new Image.network(
-                      "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=16&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
-                      fit: BoxFit.fill,
+                      "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}%7CElitaPromenade%7C12.9121268,77.5982595&scale=2&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
+                      fit: BoxFit.cover,
                       gaplessPlayback: true,
-                      //height: 0.0,
+                      //height: 10.0,
                     ),
 
                     new Positioned(
@@ -144,10 +133,8 @@ class _showMapState extends State<showMap> {
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ],
-            )
+                  ],fit: StackFit.expand,
+            ),
         );
 
   }

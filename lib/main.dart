@@ -7,6 +7,10 @@ import 'groupstatus.dart';
 import 'showmap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'showMapwithoutme.dart';
+
+
+
 List<PersonData> users=new List<PersonData>();
 logindetails logindet = new logindetails();
 groupDetails grpd=new groupDetails();
@@ -37,6 +41,8 @@ void main() {
       '/c': (BuildContext context) => new addGroup(),
       '/d': (BuildContext context) => new groupstatuslayout(),
       '/e': (BuildContext context) => new showMap(),
+      '/f': (BuildContext context) => new showMapwithoutme(),
+
       //'/f': (BuildContext context) => new zoomIn(),
 
 

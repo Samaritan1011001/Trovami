@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'homepage.dart';
 import 'dart:convert';
 import 'dart:collection';
+import 'groupdetails.dart';
 
+bool mapflag;
 
 class groupstatuslayout extends StatefulWidget {
   @override
@@ -38,59 +40,140 @@ class groupstatus extends StatefulWidget {
 }
 
 class groupstatusstate extends State<groupstatus>{
+  bool switch1=false;
+  var switch2;
 
-void mapLocation(){
+  List<Widget> children=new List<Widget>();
 
-}
+  void onchange(bool value){
+    print(value);
+    if(value==true){
+      setState(()=> switch1=true);
+      mapflag=value;
+      //Navigator.of(context).pushNamed('/e');
+    }
+    else{
+      setState(()=> switch1=false);
+      mapflag=value;
+      //Navigator.of(context).pushNamed('/f');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    return new Scaffold( body: new CustomScrollView(
-      slivers: <Widget>[
-        new SliverAppBar(
-          pinned: true,
-          expandedHeight: 50.0,
+    children= new List.generate(members.length, (int i) => new memberlist(members[i].name));
+if(switch2=="showme"){
+  switch1=true;
+}else{
+  switch1=false;
+}
+    return new Scaffold( appBar: new AppBar(
         actions: <Widget>[
           new FlatButton(onPressed: (){
-            Navigator.of(context).pushNamed('/e');
+            if(mapflag==true){
+              switch2="showme";
+              Navigator.of(context).pushNamed('/e');
+
+            }else{
+              switch2="showwithoutme";
+              Navigator.of(context).pushNamed('/f');
+
+            }
           }, child: new Text("Show Map")),
 
         ],
-          //floating: true,
           flexibleSpace: new FlexibleSpaceBar(
             title: new Text('Trovami'),
 
           ),
         ),
-        new SliverFixedExtentList(
-          itemExtent: 80.0,
-          delegate: new SliverChildBuilderDelegate(
-                (BuildContext context,int index) {
-                  return new Container(
-                    child:new Column( children: <Widget>[
-                      new Text(
-                          "Group Name: ${grpd.groupname}",
-                          style: new TextStyle(color: Colors.black, fontSize: 20.0),
-                          //textAlign: TextAlign.center,
-                          //style: new TextStyle(fontFamily:'Nexa',fontSize: 50.0)
+
+                  body :new Container(
+                    child: new ListView(
+                      children : <Widget> [
+                        
+                        
+//                        new Chip(
+//                          label: new Text("Share Live Location",
+//                              style: new TextStyle(fontSize: 20.0)
+//                          ),
+//                          avatar: new CircleAvatar(
+//                            child: new Switch(
+//                                value: switch1,
+//                                onChanged: onchange,
+//
+//                            ),
+//                            backgroundColor: Colors.white,
+//                          ),
+//                          backgroundColor: Colors.white,
+//                        ),
+                          new Row(children :<Widget>[
+                        new Container(child: new Text("Share Live Location:",style: new TextStyle(fontSize: 20.0)),
+                            padding: new EdgeInsets.only( left:10.0),
+
                         ),
-                         new Text("Members:",
-                           style: new TextStyle(color: Colors.black, fontSize: 20.0),
-
-                           //"Acceptance:${grpd.groupmember.inviteStatus}",
-                            //textAlign: TextAlign.center,
-                         ),
-
-                   ],
-                  ),
-                    padding: new EdgeInsets.only(top:30.0),
-                  );
-                },
-            childCount: 1,
-          ),
-        ),
+                        new Container(
+                            child: new Switch(value: switch1, onChanged: onchange)
+                        ),
       ],
     ),
+      
+
+      new Container(
+        child: new Column(
+          children: <Widget>[
+            new Row(
+              children: <Widget>[
+                new CircleAvatar(child:new Icon(Icons.group),
+                  backgroundColor: Colors.brown[100],
+                ),
+                new Container(child:
+                new Text(
+                  "Group Name: ${grpd.groupname}",
+                  style: new TextStyle(fontSize: 20.0),
+                ),
+                    padding: new EdgeInsets.only( left:20.0)
+
+                ),
+              ],
+            ),
+          ],
+        ),
+        padding: new EdgeInsets.only( left:10.0,top: 5.0,bottom: 5.0),
+        decoration: new BoxDecoration(
+          border: new Border(
+            //top: new BorderSide(width: 16.0, color: Colors.brown[100]),
+            bottom: new BorderSide(width: 1.0, color: Colors.brown[200],style: BorderStyle.solid),
+          ),
+        ),
+
+      ),
+
+
+                    new Container(
+                      child:new Text("Members :",
+                        style: new TextStyle(fontSize: 20.0),
+                      ),
+                        padding: new EdgeInsets.only( left:10.0,top: 10.0,bottom: 10.0),
+                        decoration: new BoxDecoration(
+                    border: new Border(
+                    //top: new BorderSide(width: 16.0, color: Colors.brown[100]),
+                    bottom: new BorderSide(width: 0.0, color: Colors.brown[200],style: BorderStyle.solid),
+                    ),
+                    ),
+                    ),
+
+
+                    new Column( children: children),
+
+
+                    ],
+                  ),
+                    padding: new EdgeInsets.only(top:10.0),
+                  ),
+
+
+
     );
   }
 

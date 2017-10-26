@@ -2,10 +2,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'main.dart';
-import 'dart:async';                                               // new
+import 'dart:async';
+import 'Roundedbutton.dart';
+import 'InputTextField.dart';
+// new
 
 
+TextStyle textStyle = const TextStyle(
+    color: const Color(0XFFFFFFFF),
+    fontSize: 16.0,
+    fontWeight: FontWeight.normal);
 
+ThemeData appTheme = new ThemeData(
+  hintColor: Colors.white,
+);
+
+Color textFieldColor = const Color.fromRGBO(255, 255, 255, 0.1);
 
 
 class BaseLayout extends StatefulWidget {
@@ -117,6 +129,8 @@ class signinformstate extends State<SignInForm>{
   @override
   Widget build(BuildContext context) {
     print(1);
+    final Size screenSize = MediaQuery.of(context).size;
+
     return new Container(child:new Form(
       key: _formKey,
       autovalidate: _autovalidate,
@@ -134,81 +148,118 @@ class signinformstate extends State<SignInForm>{
           ),
 
           new Container(
-            child: new TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.person),
-                hintText: 'EmailID',
-                labelText: 'EmailID',
-                isDense: true,
-              ),
-              onSaved: (String value) { logindet.EmailId = value; },
-              validator: _validateName,
-            ),
-            decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
-              color: Colors.black,
-              width: 1.0,
-            ),),
-            padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+            child: new InputField(
+                //icon: Icons.person,
+                hintText: "Email",
+                obscureText: false,
+                textInputType: TextInputType.text,
+                textStyle: textStyle,
+                textFieldColor: textFieldColor,
+                icon: Icons.mail_outline,
+                iconColor: Colors.white,
+                bottomMargin: 20.0,
+                validateFunction: _validateName,
+                onSaved: (String email) {
+                  logindet.EmailId = email;
+                }),
+//            new TextFormField(
+//              decoration: const InputDecoration(
+//                icon: const Icon(Icons.person),
+//                hintText: 'EmailID',
+//                labelText: 'EmailID',
+//                isDense: true,
+//              ),
+//              onSaved: (String value) { logindet.EmailId = value; },
+//              validator: _validateName,
+//            ),
+//            decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
+//              color: Colors.black,
+//              width: 1.0,
+//            ),),
+            padding: new EdgeInsets.only( bottom:15.0, top:10.0,right: 20.0 ),
           ),
-          new Container(child:
-          new Container(
-            child: new TextFormField(
-              key: _passwordFieldKey,
-              decoration: new InputDecoration(
-                hintText: 'Type your password here',
-                labelText: 'Password *',
-                icon: new Icon(lock_outline),
-                //labelStyle: new TextStyle(color: Colors.black,inherit: false),
-                //hintStyle: new TextStyle(fontWeight: FontWeight.bold,color: Colors.black,inherit: false),
-              ),
-              obscureText: true,
-              onSaved: (String value) { logindet.password = value; },
-              //style: new TextStyle(color: Colors.black),
-            ),
-            decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
-              color: Colors.black,
-              width: 1.0,
-            ),),
-            padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
-          ),
-            padding: new EdgeInsets.only(top:10.0),
-    ),
+           new InputField(
+                //icon: Icons.person,
+                //key: _passwordFieldKey,
+                  hintText: "Password",
+                  obscureText: true,
+                  textInputType: TextInputType.text,
+                  textStyle: textStyle,
+                  textFieldColor: textFieldColor,
+                  icon: Icons.lock_outline,
+                  iconColor: Colors.white,
+                  bottomMargin: 20.0,
+                  //validateFunction: _validateName,
+                  onSaved: (String pass) {
+                    logindet.password = pass;
+                  }),
+//             new TextFormField(
+//              key: _passwordFieldKey,
+//              decoration: new InputDecoration(
+//                hintText: 'Type your password here',
+//                labelText: 'Password *',
+//                icon: new Icon(lock_outline),
+//                //labelStyle: new TextStyle(color: Colors.black,inherit: false),
+//                //hintStyle: new TextStyle(fontWeight: FontWeight.bold,color: Colors.black,inherit: false),
+//              ),
+//              obscureText: true,
+//              onSaved: (String value) { logindet.password = value; },
+//              //style: new TextStyle(color: Colors.black),
+//            ),
+//            decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
+//              color: Colors.black,
+//              width: 1.0,
+//            ),),
+            //padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+
+            //padding: new EdgeInsets.only(top:10.0),
+
           //const SizedBox(width: 16.0),
 
-          new Container(
-            //padding: const EdgeInsets.all(20.0),
-            alignment: Alignment.center,
-            child: new RaisedButton(
-              disabledColor: new Color.fromRGBO(245, 245, 245,0.0),
-              //color: Colors.brown,
-              //highlightColor: Colors.brown,
-              color: Colors.brown[400],
-              splashColor: Colors.brown,
-              elevation: 150.0,
-              onPressed: _handleSubmitted,
-                child: new Text("Sign In"),
+          new RoundedButton(
+                buttonName: "Sign-In",
+                onTap: _handleSubmitted,
+                width: screenSize.width,
+                height: 50.0,
+                bottomMargin: 10.0,
+                borderWidth: 0.0,
+                buttonColor: Colors.transparent,
+              ),
+//             new RaisedButton(
+//              disabledColor: new Color.fromRGBO(245, 245, 245,0.0),
+//              //color: Colors.brown,
+//              //highlightColor: Colors.brown,
+//              color: Colors.brown[400],
+//              splashColor: Colors.brown,
+//              elevation: 150.0,
+//              onPressed: _handleSubmitted,
+//                child: new Text("Sign In"),
+//
+//            ),
 
+          new RoundedButton(
+              buttonName: "Sign-up",
+              onTap: () {
+                Navigator.of(context).pushNamed('/a');
+              },
+              width: screenSize.width,
+              height: 50.0,
+              bottomMargin: 10.0,
+              borderWidth: 0.0,
+              buttonColor: Colors.transparent,
             ),
-            padding: new EdgeInsets.only(top:10.0),
-          ),
-          new Container(
-            //padding: const EdgeInsets.all(20.0),
-            alignment: Alignment.center,
-            child: new RaisedButton(
-                //child: const Text('Sign-up'),
-                child: new Text("Sign up"),
-                //disabledColor: Colors.brown[200],
-                color: Colors.brown[200],
-                highlightColor: Colors.brown,
-                splashColor: Colors.brown,
-                elevation: 150.0,
-                onPressed:() {
-                  Navigator.of(context).pushNamed('/a');
-                }
-            ),
-
-            padding: new EdgeInsets.only(top:10.0),
-          ),
+//            new RaisedButton(
+//                //child: const Text('Sign-up'),
+//                child: new Text("Sign up"),
+//                //disabledColor: Colors.brown[200],
+//                color: Colors.brown[200],
+//                highlightColor: Colors.brown,
+//                splashColor: Colors.brown,
+//                elevation: 150.0,
+//                onPressed:() {
+//                  Navigator.of(context).pushNamed('/a');
+//                }
+//            ),
 
           new Container(
             padding: const EdgeInsets.only(top: 20.0),

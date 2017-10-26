@@ -37,7 +37,8 @@ class homepagestate extends State<Homepage>{
 
   @override
   Widget build(BuildContext context) {
-  return new CustomScrollView(
+
+    return new CustomScrollView(
     slivers: <Widget>[
       new SliverAppBar(
         leading: new Container(),
@@ -95,16 +96,24 @@ class homepagestate extends State<Homepage>{
                 print(grpd.groupname);
             return new Container(
               alignment: Alignment.center,
-              //color: Colors.black,
-              child: new Row(children: <Widget>[
-                new IconButton(icon: new Icon(Icons.group), onPressed: null),
-                new Container(
-                child: new displaygroup(),
+              child: new Row(
+                  children: <Widget>[
+                    new Container(child:
+                    new CircleAvatar(child: new IconButton(icon: new Icon(Icons.group), onPressed: null),
+                    backgroundColor: Colors.brown[200],
 
-                ),
-                ]),decoration: new BoxDecoration(
+                    ),
+                        padding: new EdgeInsets.only( left:10.0)
+
+                    ),
+                    new Container(
+                      child: new displaygroup(),
+                    ),
+
+                  ]
+              ),
+              decoration: new BoxDecoration(
               border: new Border(
-                //top: new BorderSide(width: 16.0, color: Colors.brown[100]),
                 bottom: new BorderSide(width: 1.0, color: Colors.brown[200]),
               ),
             ),
@@ -131,20 +140,42 @@ class homepagestate extends State<Homepage>{
 
 
 class displaygroupstate extends State<displaygroup>{
+  List<Widget> memchildren=new List<Widget>();
+
   @override
   build(BuildContext context) {
-      print(grpd.groupname);
-          return new Container(
-            child: new FlatButton(
-                child: new Text(grpd.groupname),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/d');
-              },
-              //color: Colors.black,
-            ),
+    memchildren= new List.generate(members.length, (int i) => new memchildren1(members[i].name));
 
+    print(grpd.groupname);
+          return new Column(
+            children: <Widget>[
+              new Container(
+                child: new FlatButton(
+                child: new Text(grpd.groupname),
+                  onPressed: () {
+                  Navigator.of(context).pushNamed('/d');
+                  },
+                ),
+                padding: new EdgeInsets.only(bottom:0.0),
+
+              ),
+              new Container(
+                  child: new Row(children: memchildren),
+                padding: new EdgeInsets.only(left:20.0),
+
+              )
+            ],
           );
     }
 
 
   }
+
+class memchildren1 extends StatelessWidget {
+  final String grpmem;
+  memchildren1(this.grpmem);
+  @override
+  build(BuildContext context) {
+    return new Text("${grpmem},");
+  }
+}
