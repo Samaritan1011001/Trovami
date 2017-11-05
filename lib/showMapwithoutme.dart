@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'dart:collection';
 import 'package:flutter/services.dart';
 
-import 'package:location/location.dart';
 import 'dart:async';
 import 'groupstatus.dart';
 

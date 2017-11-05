@@ -5,11 +5,9 @@ import 'homepage.dart';
 import 'dart:convert';
 import 'dart:collection';
 import 'package:flutter/services.dart';
-
 import 'package:location/location.dart';
-import 'dart:async';
-import 'groupstatus.dart';
 
+import 'dart:async';
 
 
 
@@ -22,37 +20,42 @@ class showMap extends StatefulWidget {
 
 class _showMapState extends State<showMap> {
 
+  Map<String,double> _currentLocation;
   StreamSubscription<Map<String,double>> _locationSubscription;
   Location _location = new Location();
-  Image mapimage;
+
+  bool currentWidget = true;
+
+  Image image1;
+  Image image2;
+
+
+
+Image mapimage;
   Image zoominimage;
   Image zoomoutimage;
-  bool currentWidget = true;
-  Map<String,double> _currentLocation;
 
 
 
 
-  @override
-  initState() {
-    super.initState();
-    initPlatformState();
-//    _locationSubscription =
-//        _location.onLocationChanged.listen((Map<String,double> result) {
-//          setState(() {
-//            _currentLocation = result;
-//          });
-//        });
-  }
+
+@override
+initState() {
+  super.initState();
+  initPlatformState();
+  _locationSubscription =
+      _location.onLocationChanged.listen((Map<String,double> result) {
+        setState(() {
+          _currentLocation = result;
+        });
+      });
+}
 
 
 
 
-  // Platform messages are asynchronous, so we initialize in an async method.
   initPlatformState() async {
     Map<String,double> location;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-
 
 
     try {
@@ -61,13 +64,9 @@ class _showMapState extends State<showMap> {
       location = null;
     }
 
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted)
       return;
-      //_currentLocation = location;
+      _currentLocation = location;
 
     setState(() {
       print("location${location}");
@@ -77,6 +76,7 @@ class _showMapState extends State<showMap> {
 
   @override
   Widget build(BuildContext context) {
+
 
     return new Scaffold(
             appBar: new AppBar(
@@ -99,11 +99,11 @@ class _showMapState extends State<showMap> {
 //                    "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&zoom=14&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
 //                    fit: BoxFit.contain,
 //                    ),
-                    mapimage=new Image.network(
-                      "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}%7CElitaPromenade%7C12.9121268,77.5982595&scale=2&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
+//                    mapimage=
+                    new Image.network(
+                      "https://maps.googleapis.com/maps/api/staticmap?center=${_currentLocation["latitude"]},${_currentLocation["longitude"]}&size=640x400&markers=color:red%7Clabel:C%7C${_currentLocation["latitude"]},${_currentLocation["longitude"]}&scale=2&key=AIzaSyB88HqtHTTY3K8qjuPMhAzVaR4nWNqjkYk",
                       fit: BoxFit.cover,
                       gaplessPlayback: true,
-                      //height: 10.0,
                     ),
 
                     new Positioned(
@@ -117,7 +117,7 @@ class _showMapState extends State<showMap> {
                             child: new IconButton(
                               icon: new Icon(Icons.add),
                               color: Colors.white,
-                              onPressed: () => zoomInMap(true),
+                              onPressed:null,
                             ),
                           ),
                           new Divider(),
@@ -127,7 +127,7 @@ class _showMapState extends State<showMap> {
                             child: new IconButton(
                               icon: new Icon(Icons.remove),
                               color: Colors.white,
-                              onPressed: () => zoomInMap(false),
+                              onPressed: null,
                             ),
                           ),
                         ],
@@ -138,18 +138,18 @@ class _showMapState extends State<showMap> {
         );
 
   }
-  void zoomInMap(bool flag){
-    if (flag==true){
-      // Navigator.of(context).pushNamed('/f');
-      print("true");
-      setState(() {mapimage=zoominimage;});
-    }
-    else{
-      setState((){mapimage=zoomoutimage;});
+//  void zoomInMap(bool flag){
+//    if (flag==true){
+//      // Navigator.of(context).pushNamed('/f');
+//      print("true");
+//      setState(() {mapimage=zoominimage;});
+//    }
+//    else{
+//      setState((){mapimage=zoomoutimage;});
+//
+//    }
+//  }
 
-    }
-  }
-  
 }
 
 

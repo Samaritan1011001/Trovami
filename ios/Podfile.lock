@@ -1,20 +1,112 @@
 PODS:
+  - Firebase/Auth (3.17.0):
+    - Firebase/Core
+    - FirebaseAuth (= 3.1.1)
+  - Firebase/Core (3.17.0):
+    - FirebaseAnalytics (= 3.9.0)
+    - FirebaseCore (= 3.6.0)
+  - Firebase/Database (3.17.0):
+    - Firebase/Core
+    - FirebaseDatabase (= 3.1.2)
+  - firebase_auth (0.0.1):
+    - Firebase/Auth
+    - Firebase/Core
+    - FirebaseUI/Auth (~> 3.0)
+    - FirebaseUI/Google
+    - Flutter
+    - Google/SignIn
+  - firebase_database (0.0.1):
+    - Firebase/Database
+    - Flutter
+  - FirebaseAnalytics (3.9.0):
+    - FirebaseCore (~> 3.6)
+    - FirebaseInstanceID (~> 1.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseAuth (3.1.1):
+    - FirebaseAnalytics (~> 3.7)
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseCore (3.6.0):
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseDatabase (3.1.2):
+    - FirebaseAnalytics (~> 3.7)
+  - FirebaseInstanceID (1.0.10):
+    - FirebaseCore (~> 3.6)
+  - FirebaseUI/Auth (3.1.1):
+    - Firebase/Auth
+  - FirebaseUI/Google (3.1.1):
+    - FirebaseUI/Auth
+    - GoogleSignIn (~> 4.0)
   - Flutter (1.0.0)
+  - Google/Core (3.1.0):
+    - FirebaseAnalytics (~> 3.2)
+  - Google/SignIn (3.1.0):
+    - Google/Core
+    - GoogleSignIn (~> 4.0)
+  - google_sign_in (0.0.1):
+    - Flutter
+    - GoogleSignIn (~> 4.0)
+  - GoogleSignIn (4.1.0):
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GoogleToolboxForMac/NSString+URLArguments (~> 2.1)
+    - GTMOAuth2 (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GoogleToolboxForMac/DebugUtils (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/Defines (2.1.3)
+  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3):
+    - GoogleToolboxForMac/DebugUtils (= 2.1.3)
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
+  - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
+  - GTMOAuth2 (1.1.5):
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.1.12):
+    - GTMSessionFetcher/Full (= 1.1.12)
+  - GTMSessionFetcher/Core (1.1.12)
+  - GTMSessionFetcher/Full (1.1.12):
+    - GTMSessionFetcher/Core (= 1.1.12)
   - location (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - firebase_auth (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.1.1/ios`)
+  - firebase_database (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.0.12/ios`)
   - Flutter (from `/Users/manojn/Documents/flutter_SDK/flutter/bin/cache/artifacts/engine/ios`)
-  - location (from `/Users/manojn/Documents/locations_plugin/flutterlocation/ios`)
+  - google_sign_in (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/google_sign_in-0.3.1/ios`)
+  - location (from `/Users/manojn/.pub-cache/git/flutterlocation-ee90294617a850fee7566334f31eda81ab2a2315/ios`)
 
 EXTERNAL SOURCES:
+  firebase_auth:
+    :path: /Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.1.1/ios
+  firebase_database:
+    :path: /Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.0.12/ios
   Flutter:
     :path: /Users/manojn/Documents/flutter_SDK/flutter/bin/cache/artifacts/engine/ios
+  google_sign_in:
+    :path: /Users/manojn/.pub-cache/hosted/pub.dartlang.org/google_sign_in-0.3.1/ios
   location:
-    :path: /Users/manojn/Documents/locations_plugin/flutterlocation/ios
+    :path: /Users/manojn/.pub-cache/git/flutterlocation-ee90294617a850fee7566334f31eda81ab2a2315/ios
 
 SPEC CHECKSUMS:
+  Firebase: 4b66b5b59c43edac745b87f0c87e42cdd0279c13
+  firebase_auth: bc8727f162f8af67ae665f9c533ef546a8f789de
+  firebase_database: 8d50f5c188b769afc186b0a700b2c6cdb8208df9
+  FirebaseAnalytics: e5fe8486efc01bec33f6bf82e2fa9fce4b124052
+  FirebaseAuth: cc8a1824170adbd351edb7f994490a3fb5c18be6
+  FirebaseCore: 9691ee2ade70c098d7cf92440f4303f16d83ca75
+  FirebaseDatabase: 05c96d7b43a7368dc91c07791adb49683e1738d1
+  FirebaseInstanceID: b9eedd6846fb5e1f0f7279e1deaa7a7e4cf8392e
+  FirebaseUI: 6e99ff95e369f5858232e4f65bff215458fe8469
   Flutter: d674e78c937094a75ac71dd77e921e840bea3dbf
+  Google: 98da4b1a60ed0beb80a290387a28333406a1eb90
+  google_sign_in: 24ea34feed2d7d04e957cd1c4daf063c488532c2
+  GoogleSignIn: 8c599fc10d25b2af86a3f82fd9631e863f2b1400
+  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
+  GTMOAuth2: be83fd28d63ae3087e7d351b1f39c1a7e24ab6e7
+  GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
 
 PODFILE CHECKSUM: 351e02e34b831289961ec3558a535cbd2c4965d2

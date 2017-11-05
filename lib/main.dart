@@ -8,10 +8,13 @@ import 'showmap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'showMapwithoutme.dart';
+var popflag=0;
 
 
 
-List<PersonData> users=new List<PersonData>();
+
+
+List<UserData> users=new List<UserData>();
 logindetails logindet = new logindetails();
 groupDetails grpd=new groupDetails();
 
@@ -23,10 +26,9 @@ final ThemeData kIOSTheme = new ThemeData(
 );
 
 final ThemeData kDefaultTheme = new ThemeData(
-  primarySwatch: Colors.brown,
-  accentColor: Colors.brown,
+  primarySwatch: Colors.blueGrey,
+  accentColor: Colors.blueGrey,
 );
-
 void main() {
 
   runApp(new MaterialApp(
@@ -35,32 +37,94 @@ void main() {
     theme: defaultTargetPlatform == TargetPlatform.iOS
         ? kIOSTheme
         : kDefaultTheme,
-    routes: <String, WidgetBuilder> {
-      '/a': (BuildContext context) => new SignupLayout(),
-      '/b': (BuildContext context) => new Homepagelayout(),
-      '/c': (BuildContext context) => new addGroup(),
-      '/d': (BuildContext context) => new groupstatuslayout(),
-      '/e': (BuildContext context) => new showMap(),
-      '/f': (BuildContext context) => new showMapwithoutme(),
-
-      //'/f': (BuildContext context) => new zoomIn(),
-
-
-
-
-    },
+      onGenerateRoute: (RouteSettings settings) {
+        switch (settings.name) {
+          case '/a': return new MyCustomRoute(
+            builder: (_) => new SignupLayout(),
+            settings: settings,
+          );
+          case '/b': return new MyCustomRoute(
+            builder: (_) => new Homepagelayout(),
+            settings: settings,
+          );
+          case '/c': return new MyCustomRoute1(
+            builder: (_) => new addGroup(),
+            settings: settings,
+          );
+          case '/d': return new MyCustomRoute1(
+            builder: (_) => new groupstatuslayout(),
+            settings: settings,
+          );
+          case '/e': return new MyCustomRoute1(
+            builder: (_) => new showMap(),
+            settings: settings,
+          );
+          case '/f': return new MyCustomRoute1(
+            builder: (_) => new showMapwithoutme(),
+            settings: settings,
+          );
+        }
+        assert(false);
+      }
   ),
   );
 }
 
-class PersonData {
-  PersonData({this.EmailId,this.password,this.name});
+class MyCustomRoute<T> extends MaterialPageRoute<T> {
+  MyCustomRoute({ WidgetBuilder builder, RouteSettings settings })
+      : super(builder: builder, settings: settings);
+
+  @override
+  Widget buildTransitions(BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    if (settings.isInitialRoute)
+      return child;
+    return new FadeTransition( opacity: animation, child: child);
+  }
+}
+
+class MyCustomRoute1<T> extends MaterialPageRoute<T> {
+  MyCustomRoute1({ WidgetBuilder builder, RouteSettings settings })
+      : super(builder: builder, settings: settings);
+
+  @override
+  Widget TransitionBuilder(BuildContext context,
+      Animation<Offset> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    if (settings.isInitialRoute)
+      return child;
+    return new SlideTransition( position: animation, child: child);
+  }
+}
+
+
+class UserData {
+  UserData({this.EmailId,this.password,this.name,this.locationShare,this.groupsIamin,this.location});
    String EmailId ;
-  String password;
- String name;
+   String password;
+   String name;
+   bool locationShare;
+   var location=null;
+   List<String> groupsIamin=[];
+
+
+  UserData.fromJson(Map value){
+    EmailId=value["emailid"];
+    name=value["name"];
+    locationShare=value["locationShare"];
+    groupsIamin=value["groupsIamin"];
+    location=value["location"];
+  }
+   Map toJson(){
+     return {"name": name,"locationShare": locationShare,"groupsIamin":groupsIamin,"emailid":EmailId,"location":location};
+   }
 }
 
 class logindetails {
+  logindetails({this.EmailId,this.password});
   String EmailId = '';
   String password = '';
   //String name = '';
@@ -68,8 +132,19 @@ class logindetails {
 
 
 class groupDetails {
-  String groupname = '';
-  List<PersonData> groupmember=new List<PersonData>();
+  groupDetails({this.groupname,this.members});
+  String groupname = "";
+  List<UserData> members;
+
+  groupDetails.fromJson(Map value){
+    groupname=value["groupname"];
+    print("classvalue:${value["members"]}");
+    members=value["members"];
+
+  }
+  Map toJson(){
+    return {"groupname": groupname,"members":members};
+  }
 
 }
 

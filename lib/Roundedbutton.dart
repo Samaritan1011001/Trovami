@@ -9,9 +9,11 @@ class RoundedButton extends StatelessWidget {
   double bottomMargin;
   double borderWidth;
   Color buttonColor;
+  Color splashcolor;
+  Color highlightColor;
 
   TextStyle textStyle = new TextStyle(
-      color: Colors.brown[150],
+      color: new Color.fromRGBO(255, 255, 255, 0.4),
       fontSize: 16.0,
       fontWeight: FontWeight.bold);
 
@@ -23,7 +25,9 @@ class RoundedButton extends StatelessWidget {
         this.bottomMargin,
         this.borderWidth,
         this.width,
-        this.buttonColor});
+        this.buttonColor,
+      this.splashcolor,
+      this.highlightColor});
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,8 @@ class RoundedButton extends StatelessWidget {
                   width: borderWidth)),
           child: new Text(buttonName, style: textStyle),
         ),
+        splashColor: splashcolor,
+          highlightColor:highlightColor,
       ));
     else
       return (new InkWell(

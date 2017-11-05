@@ -1,28 +1,46 @@
-
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'Roundedbutton.dart';
-import 'signinpage.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
+
+
+
+var httpClient = createHttpClient();
+bool userexists=false;
+UserData user1=new UserData();
+const jsonCodec=const JsonCodec(reviver: _reviver);
+
+
+
+
+_reviver( key, value) {
+  if(key!=null&& value is Map && key.contains("-")){
+    print("value:${value}");
+    return new UserData.fromJson(value);
+  }
+  return value;
+}
+
+TextStyle textStyle = new TextStyle(
+    color: new Color.fromRGBO(255, 255, 255, 0.4),
+    fontSize: 16.0,
+    fontWeight: FontWeight.bold
+);
 
 class SignupLayout extends StatefulWidget {
   @override
   signuplayoutstate createState() => new signuplayoutstate();
 }
 
+
 class signuplayoutstate extends State<SignupLayout>{
   @override
   Widget build(BuildContext context){
     return new Scaffold(
-//      appBar: new AppBar(centerTitle: true,title: new Text("Trovami"),elevation: 0.0),
       body: new Container(
-//        decoration: new BoxDecoration(
-//          image: new DecorationImage(
-//            image: new AssetImage("graphics/back.jpg"),
-//            fit: BoxFit.cover,
-//          ),
-//        ),
         child:new Signup(),
       ),
 
@@ -41,37 +59,52 @@ class Signup extends StatefulWidget {
 
 class signupstate extends State<Signup>{
 
-  final GlobalKey<ScaffoldState> _scaffoldKeySecondary = new GlobalKey<
-      ScaffoldState>();
-  PersonData user=new PersonData();
-
-  void showInSnackBar(String value) {
-    _scaffoldKeySecondary.currentState.showSnackBar(new SnackBar(
-        content: new Text(value)
-    ));
-  }
-
+  final GlobalKey<ScaffoldState> _scaffoldKeySecondary = new GlobalKey<ScaffoldState>();
   bool _autovalidate1 = false;
   bool _formWasEdited = false;
   GlobalKey<FormState> _formKeySeondary = new GlobalKey<FormState>();
-  final GlobalKey<
-      FormFieldState<String>> _passwordFieldKeySecondary = new GlobalKey<
-      FormFieldState<String>>();
+  final GlobalKey<FormFieldState<String>> _passwordFieldKeySecondary = new GlobalKey<FormFieldState<String>>();
+  final IconData mail = const IconData(0xe158, fontFamily: 'MaterialIcons');
+  final IconData lock_outline = const IconData(
+      0xe899, fontFamily: 'MaterialIcons');
+  final IconData signupicon=const IconData(0xe316, fontFamily: 'MaterialIcons');
 
-  void _handleSubmitted1() {
-    //print(_formWasEdited);
+
+  void showInSnackBar(String value) {
+    _scaffoldKeySecondary.currentState.showSnackBar(
+        new SnackBar(
+          content: new Text(value)
+        )
+    );
+  }
+
+  _handleSubmitted1() async{
     final FormState form = _formKeySeondary.currentState;
     if (!form.validate()) {
       _autovalidate1 = true; // Start validating on every change.
       showInSnackBar('Please fix the errors in red before submitting.');
     } else {
       form.save();
-      users.add(user);
-      for(var i=0;i<users.length;i++) {
-        print(users[i].EmailId);
-        print(users[i].password);
+      user1.location=null;
+      user1.groupsIamin=[];
+      users.add(user1);
+      var userjson= jsonCodec.encode(user1);
+      print("userjson:${userjson}");
+      var emailkey=user1.EmailId;
+      var response=await httpClient.get("https://fir-trovami.firebaseio.com/users.json");
+      Map usrmap=jsonCodec.decode(response.body);
+      usrmap.forEach((k,v){
+        if(v.EmailId==user1.EmailId){
+          userexists=true;
+        }
+      });
+      if(userexists==false){
+        await httpClient.post("https://fir-trovami.firebaseio.com/users.json",body: userjson);
       }
-      //showInSnackBar('${person.name}\'s phone number is ${person.phoneNumber}');
+      else
+      {
+        showInSnackBar("User already exits");
+      }
       Navigator.of(context).pop();
     }
   }
@@ -97,13 +130,6 @@ class signupstate extends State<Signup>{
   }
 
 
-//  final TextEditingController _controller = new TextEditingController();
-//  final TextEditingController _passcontroller = new TextEditingController();
-
-  final IconData mail = const IconData(0xe158, fontFamily: 'MaterialIcons');
-  final IconData lock_outline = const IconData(
-      0xe899, fontFamily: 'MaterialIcons');
-  final IconData signupicon=const IconData(0xe316, fontFamily: 'MaterialIcons');
 
 
 
@@ -113,92 +139,76 @@ class signupstate extends State<Signup>{
     final Size screenSize = MediaQuery.of(context).size;
 
     return new Scaffold(
-        body: new Container(child:new Form(
-          key: _formKeySeondary,
-          autovalidate: _autovalidate1,
-          child: new ListView(
-            padding: new EdgeInsets.symmetric(horizontal: 16.0),
-            children: <Widget>[
-              new Container(
-                child: new TextFormField(
-
-                  decoration: new InputDecoration(
-                    hintText: 'Name',
-                    labelText: 'Name',
-                    icon: new Icon(Icons.person),
-                    //hintStyle: new TextStyle(color: Colors.black),
-                  ),
-                  onSaved: (String value) { user.name = value; },
-                ),
-//                decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
-//                  color: Colors.black,
-//                  width: 1.0,
-//                ),),
-                padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
-              ),
-              new Container(
-                child: new Container(
+        key: _scaffoldKeySecondary,
+        body: new Container(
+          child:new Form(
+            key: _formKeySeondary,
+            autovalidate: _autovalidate1,
+            child: new ListView(
+              padding: new EdgeInsets.symmetric(horizontal: 16.0),
+              children: <Widget>[
+                new Container(
                   child: new TextFormField(
-                    decoration: new InputDecoration(
-                      icon: new Icon(mail),
-                      hintText: 'EmailID',
-                      labelText: 'EmailID',
-                    ),
-                    onSaved: (String value) { user.EmailId = value; },
-                    validator: _validateName,
-                  ),
-//                  decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
-//                    color: Colors.black,
-//                    width: 1.0,
-//                  ),),
-                  padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
-                ),
-                padding: new EdgeInsets.only(top:10.0),
-              ),
-              new Container(
-                child: new Container(
-                  child: new TextFormField(
-                    key: _passwordFieldKeySecondary,
-                    decoration: new InputDecoration(
-                      hintText: 'Type your password here',
-                      labelText: 'Password *',
-                      icon: new Icon(lock_outline),
-                    ),
-                    obscureText: true,
-                    onSaved: (String value) { user.password=value;
-                    },
-                  ),
-//                  decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
-//                    color: Colors.black,
-//                    width: 1.0,
-//                  ),),
-                  padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
-                ),
-                padding: new EdgeInsets.only(top:10.0),
-              ),
-              new Container(
-                child: new Container(
-                  child:new TextFormField(
-                    //key: _passwordFieldKeySecondary,
-                    decoration: new InputDecoration(
-                      hintText: 'Repeat Password',
-                      labelText: 'Retype-Password *',
-                      icon: new Icon(lock_outline),
-                    ),
-                    obscureText: true,
-                    validator: _validatePassword,
-                  ),
-//                  decoration: new BoxDecoration(borderRadius: new BorderRadius.circular(100.0),border: new Border.all(
-//                    color: Colors.black,
-//                    width: 1.0,
-//                  ),),
-                  padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
-                ),
-                padding: new EdgeInsets.only(top:10.0),
-              ),
-                //const SizedBox(width: 16.0),
 
-              new RoundedButton(
+                    decoration: new InputDecoration(
+                      hintText: 'Name',
+                      labelText: 'Name',
+                      icon: new Icon(Icons.person),
+                      labelStyle: textStyle
+                    ),
+                    onSaved: (String value) { user1.name = value; },
+                  ) ,
+                  padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                ),
+                new Container(
+                  child: new Container(
+                    child: new TextFormField(
+                      decoration: new InputDecoration(
+                        icon: new Icon(mail),
+                        hintText: 'EmailID',
+                        labelText: 'EmailID',
+                      ),
+                      onSaved: (String value) { user1.EmailId = value; },
+                      validator: _validateName,
+                    ),
+                    padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                  ),
+                  padding: new EdgeInsets.only(top:10.0),
+                ),
+                new Container(
+                  child: new Container(
+                    child: new TextFormField(
+                      key: _passwordFieldKeySecondary,
+                      decoration: new InputDecoration(
+                        hintText: 'Type your password here',
+                        labelText: 'Password *',
+                        icon: new Icon(lock_outline),
+                      ),
+                      obscureText: true,
+                      onSaved: (String value) { user1.password=value;
+                      },
+                    ),
+                    padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                  ),
+                  padding: new EdgeInsets.only(top:10.0),
+                ),
+                new Container(
+                  child: new Container(
+                    child:new TextFormField(
+                      decoration: new InputDecoration(
+                        hintText: 'Repeat Password',
+                        labelText: 'Retype-Password *',
+                        icon: new Icon(lock_outline),
+
+                      ),
+                      obscureText: true,
+                      validator: _validatePassword,
+                    ),
+                    padding: new EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                  ),
+                  padding: new EdgeInsets.only(top:10.0),
+                ),
+                new RoundedButton(
                   buttonName: "Sign-up",
                   onTap: _handleSubmitted1,
                   width: screenSize.width,
@@ -207,30 +217,18 @@ class signupstate extends State<Signup>{
                   borderWidth: 0.0,
                   buttonColor: Colors.transparent,
                 ),
-//                new RaisedButton(
-//                  //tooltip: 'Sign-up',
-//                  child: new Text("Sign up"),
-//                  onPressed: _handleSubmitted1,
-//                  color: Colors.brown[300],
-//                  highlightColor: Colors.brown,
-//                  splashColor: Colors.white,
-//                  elevation: 150.0,
-//                  //backgroundColor: Colors.brown,
-//                ),
-
-
-
-              new Container(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: new Text('* indicates required field', style: Theme.of(context).textTheme.caption),
-              ),
-            ],
+                new Container(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: new Text('* indicates required field', style: Theme.of(context).textTheme.caption),
+                ),
+              ],
+            ),
           ),
-        ),
           padding: new EdgeInsets.only(top:50.0),
         ),
-      backgroundColor: Colors.brown[100],
+        backgroundColor: const Color.fromRGBO(0, 0, 0, 0.7),
     );
   }
 
 }
+

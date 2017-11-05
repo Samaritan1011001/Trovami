@@ -6,11 +6,20 @@ dependencies:
   flutter:
     sdk: flutter
   location:
-    path: /Users/manojn/Documents/locations_plugin/flutterlocation
+    git:
+      url: git://github.com/Lyokone/flutterlocation.git
+#  google_sign_in: ^0.3.1
+  http: '>=0.11.3+12'
+#  firebase: '^4.0.0'
+
+#  firebase_auth: 0.1.1
+#  firebase_database: 0.0.12
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 
 # For information on the generic Dart part of this file, see the
@@ -29,7 +38,7 @@ flutter:
       - weight: 500
 
   assets:
-    [graphics/back.jpg,graphics/backk.jpg,graphics/backoption1.jpg,graphics/backoption2.jpg]
+    [graphics/back.jpg,graphics/backk.jpg,graphics/backoption1.jpg,graphics/backoption2.jpg,graphics/staticmap.gif,graphics/google_signin_buttons/android/hdpi/btn_google_light_normal_hdpi.9.png]
 
 
   # To add assets to your application, add an assets section, like this:

@@ -1,10 +1,20 @@
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:convert';
-import 'groupdetails.dart';
+import 'package:flutter/services.dart';
 
-//final List groupdisplayarray=[];
+import 'groupdetails.dart';
+import 'dart:async';
+import 'signinpage.dart';
+
+
+var temp=[];
+String pagename='';
+List<UserData> memberstoshow=new List<UserData>();
+List<String> groupnamestoshow=new List<String>();
+var groupstatusgroupname='';
+
+
 class Homepagelayout extends StatefulWidget {
   @override
   homepagelayoutstate createState() => new homepagelayoutstate();
@@ -24,30 +34,71 @@ class homepagelayoutstate extends State<Homepagelayout>{
 
 
 class Homepage extends StatefulWidget{
+  var membersflag=0;
+  var groupsflag=0;
   @override
-  homepagestate createState() => new homepagestate();
+  homepagestate createState() => new homepagestate(groupsflag,membersflag);
 }
 
 class homepagestate extends State<Homepage>{
-  void addgroup(){
-    Navigator.of(context).pushNamed('/c');
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+  new GlobalKey<RefreshIndicatorState>();
+  var membersflag;
+  var groupsflag;
+  List<Widget> homechildren=new List<Widget>();
+
+  homepagestate(this.groupsflag,this.membersflag);
+
+
+
+  Future<Null>   getgroups() async{
+    _refreshIndicatorKey.currentState?.show();
+    var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
+    var response=await httpClient.get(groupsiaminurl);
+    Map resstring=jsonCodec.decode(response.body);
+    resstring.forEach((k,v) async {
+      if(v.EmailId==loggedinuser) {
+        var response2 = await httpClient.get(
+            'https://fir-trovami.firebaseio.com/users/${k}/groupsIamin.json?');
+            print(response2.body);
+        groupnamestoshow = jsonCodec.decode(response2.body);
+        setState(() {
+          groupnamestoshow = groupnamestoshow;
+        });
+      }
+    });
   }
 
+
+
+  void addgroup(){
+Navigator.of(context).pushNamed('/c');
+  }
+  @override
+  void initState() {
+    super.initState();
+    getgroups();
+  }
 
 
   @override
   Widget build(BuildContext context) {
 
-    return new CustomScrollView(
-    slivers: <Widget>[
-      new SliverAppBar(
-        leading: new Container(),
-        pinned: true,
-        expandedHeight: 50.0,
-        //floating: true,
-        actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.group_add), onPressed: addgroup,iconSize: 42.0,),
-          new IconButton(icon: new Icon(Icons.person), onPressed: () {
+
+    if(groupnamestoshow!=null) {
+      homechildren =
+      new List.generate(groupnamestoshow.length, (int i) => new homechildrenlist(
+          groupnamestoshow[i], membersflag));
+    }else homechildren=new List<Widget>();
+    return new Scaffold(
+      appBar: new AppBar(
+      leading: new Container(),
+      actions: <Widget>[
+        new IconButton(
+          icon: new Icon(Icons.group_add), onPressed: addgroup,iconSize: 42.0,
+        ),
+        new IconButton(
+          icon: new Icon(Icons.person), onPressed: () {
             showModalBottomSheet<Null>(context: context, builder: (BuildContext context) {
               return new Container(
                   child: new Padding(
@@ -59,7 +110,6 @@ class homepagestate extends State<Homepage>{
                             child: new Text(
                               "User Details",
                               textAlign: TextAlign.center,
-                              //style: new TextStyle(fontFamily:'Nexa',fontSize: 50.0)
                             ),
                           ),
                           new Container(
@@ -80,102 +130,103 @@ class homepagestate extends State<Homepage>{
               );
             });
           },
-            iconSize: 35.0,),
-        ],
-        flexibleSpace: new FlexibleSpaceBar(
-          title: new Text('Trovami'),
-          //background: ,
-          //centerTitle: true,
-
+          iconSize: 35.0,),
+      ],
+      title: new Text('Trovami'),
+      ),
+      body: new RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: getgroups,
+        child: new Column(
+          children: homechildren,
         ),
       ),
-      new SliverFixedExtentList(
-        itemExtent: 80.0,
-        delegate: new SliverChildBuilderDelegate(
-              (BuildContext context,int index) {
-                print(grpd.groupname);
-            return new Container(
-              alignment: Alignment.center,
-              child: new Row(
-                  children: <Widget>[
-                    new Container(child:
-                    new CircleAvatar(child: new IconButton(icon: new Icon(Icons.group), onPressed: null),
-                    backgroundColor: Colors.brown[200],
-
-                    ),
-                        padding: new EdgeInsets.only( left:10.0)
-
-                    ),
-                    new Container(
-                      child: new displaygroup(),
-                    ),
-
-                  ]
-              ),
-              decoration: new BoxDecoration(
-              border: new Border(
-                bottom: new BorderSide(width: 1.0, color: Colors.brown[200]),
-              ),
-            ),
-            );
-          },
-          childCount: 1,
-        ),
-      ),
-    ],
-  );
-
-
-
+    );
   }
-  }
-
-  class displaygroup extends StatefulWidget{
-
-  @override
-  displaygroupstate createState() => new displaygroupstate();
-
-
 }
 
 
-class displaygroupstate extends State<displaygroup>{
-  List<Widget> memchildren=new List<Widget>();
+class homechildrenlist extends StatelessWidget {
+  var membersflag;
+  String groupname;
+  homechildrenlist(this.groupname,this.membersflag);
 
   @override
   build(BuildContext context) {
-    memchildren= new List.generate(members.length, (int i) => new memchildren1(members[i].name));
+   return new Container(
+     child: new FlatButton(
+       child: new Row(
+         children: <Widget>[
+           new Container(
+             child: new CircleAvatar(child: new IconButton(
+              icon: new Icon(Icons.group), onPressed: null),
+               backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
+             ),
+             margin: const EdgeInsets.only(right: 16.0),
+             padding: new EdgeInsets.only(top: 10.0,bottom: 10.0),
+           ),
+           new Container(
+             child: new displaygroup(groupname,membersflag),
+           ),
+         ]
+       ),
+       onPressed: () {
+         groupstatusgroupname = groupname;
+         Navigator.of(context).pushNamed('/d');
+       },
+     ),
+     decoration: new BoxDecoration(
+       border: new Border(
+         bottom: new BorderSide(width: 1.0, color: Colors.brown[200]),
+       ),
+     ),
+   );
+  }
+}
 
-    print(grpd.groupname);
-          return new Column(
-            children: <Widget>[
-              new Container(
-                child: new FlatButton(
-                child: new Text(grpd.groupname),
-                  onPressed: () {
-                  Navigator.of(context).pushNamed('/d');
-                  },
-                ),
-                padding: new EdgeInsets.only(bottom:0.0),
+  class displaygroup extends StatelessWidget{
+    var membersflag;
+    String groupname;
+    displaygroup(this.groupname,this.membersflag);
+    List<Widget> memchildren=new List<Widget>();
 
-              ),
-              new Container(
-                  child: new Row(children: memchildren),
-                padding: new EdgeInsets.only(left:20.0),
+    Future<Null>   getmembers() async{
 
-              )
-            ],
-          );
     }
 
 
+  @override
+  build(BuildContext context) {
+
+    if(membersflag==0) {
+      getmembers();
+      membersflag = 1;
+    }
+    memchildren= new List.generate(temp.length, (int i) => new memchildren1(temp[i]["name"]));
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        new Flexible(
+          child: new Container(
+          child: new Text(groupname,style: new TextStyle(fontWeight: FontWeight.bold),),
+        ),
+          fit: FlexFit.loose,
+        ),
+        new Container(
+          child: new Row(children: memchildren),
+          padding: new EdgeInsets.only(left:0.0,top: 3.0),
+        )
+      ],
+      mainAxisSize: MainAxisSize.min,
+    );
   }
+}
 
 class memchildren1 extends StatelessWidget {
   final String grpmem;
   memchildren1(this.grpmem);
   @override
   build(BuildContext context) {
-    return new Text("${grpmem},");
+    return new Text("${grpmem},",style: new TextStyle(fontWeight: FontWeight.normal),);
   }
 }

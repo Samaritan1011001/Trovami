@@ -7,7 +7,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
+//        classpath 'com.google.gms:google-services:3.1.0'
+//        classpath 'com.google.android.gms:play-services:9.0.0'
+
     }
 }
 
@@ -29,3 +32,4 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
