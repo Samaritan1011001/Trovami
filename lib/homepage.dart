@@ -2,6 +2,7 @@ import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
 
 import 'groupdetails.dart';
 import 'dart:async';
@@ -12,9 +13,23 @@ var temp=[];
 String pagename='';
 List<UserData> memberstoshow=new List<UserData>();
 List<String> groupnamestoshow=new List<String>();
+List<groupDetails> groupstoshaw=new List<groupDetails>();
+groupDetails grps=new groupDetails();
+const jsonCodec2=const JsonCodec(reviver: _reviver2);
+List<UserData> memberstoshowhomepage=new List<UserData>();
+
+
 var groupstatusgroupname='';
 
+_reviver2(key,value) {
 
+  if(key!=null&& value is Map){
+    return new groupDetails.fromJson(value);
+  }
+
+  else
+    return value;
+}
 class Homepagelayout extends StatefulWidget {
   @override
   homepagelayoutstate createState() => new homepagelayoutstate();
@@ -52,21 +67,39 @@ class homepagestate extends State<Homepage>{
 
 
   Future<Null>   getgroups() async{
+//loggedinuser="v@g.com";
+//loggedinusername="var";
+groupstoshaw=new List<groupDetails>();
+String userkey;
     _refreshIndicatorKey.currentState?.show();
     var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
     var response=await httpClient.get(groupsiaminurl);
     Map resstring=jsonCodec.decode(response.body);
-    resstring.forEach((k,v) async {
+    resstring.forEach((k,v){
       if(v.EmailId==loggedinuser) {
-        var response2 = await httpClient.get(
-            'https://fir-trovami.firebaseio.com/users/${k}/groupsIamin.json?');
-            print(response2.body);
-        groupnamestoshow = jsonCodec.decode(response2.body);
-        setState(() {
-          groupnamestoshow = groupnamestoshow;
-        });
+        userkey=k;
       }
     });
+        var response2 = await httpClient.get(
+            'https://fir-trovami.firebaseio.com/users/${userkey}/groupsIamin.json?');
+            print(response2.body);
+        groupnamestoshow = jsonCodec.decode(response2.body);
+        print("groupnamestoshow:${groupnamestoshow}");
+
+
+//    print("groupnamestoshow.length:${groupnamestoshow.length}");
+//    for(var i=0;i<groupnamestoshow.length;i++){
+//      grps=new groupDetails();
+//      grps.groupname=groupnamestoshow[i];
+//      print("grps.groupname:${grps.groupname}");
+//      grps.groupmembers=
+//null;
+//    groupstoshaw.add(grps);
+//    }
+
+        setState(() {
+          groupstoshaw = groupstoshaw;
+        });
   }
 
 
@@ -76,7 +109,6 @@ Navigator.of(context).pushNamed('/c');
   }
   @override
   void initState() {
-    super.initState();
     getgroups();
   }
 
@@ -137,7 +169,7 @@ Navigator.of(context).pushNamed('/c');
       body: new RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: getgroups,
-        child: new Column(
+        child: new ListView(
           children: homechildren,
         ),
       ),
@@ -184,13 +216,55 @@ class homechildrenlist extends StatelessWidget {
   }
 }
 
-  class displaygroup extends StatelessWidget{
+  class displaygroup extends StatefulWidget {
     var membersflag;
     String groupname;
-    displaygroup(this.groupname,this.membersflag);
-    List<Widget> memchildren=new List<Widget>();
 
-    Future<Null>   getmembers() async{
+    displaygroup(this.groupname,this.membersflag);
+    @override
+    displaygroupstate createState() => new displaygroupstate(groupname,membersflag);
+  }
+class displaygroupstate extends State<displaygroup> {
+
+    var membersflag;
+    String groupname;
+
+    displaygroupstate(this.groupname,this.membersflag);
+    List<Widget> memchildren=new List<Widget>();
+    getmembers(String groupname) async{
+      memberstoshowhomepage=new List<UserData>();
+      String groupkey;
+      var memcountt;
+      var url="https://fir-trovami.firebaseio.com/groups.json";
+      var response=await httpClient.get(url);
+      Map groupresmap=jsonCodec2.decode(response.body);
+      groupresmap.forEach((k,v) {
+        if (v.groupname == groupname) {
+          groupkey=k;
+          memcountt=v.groupmembers.length;
+        }
+      });
+      for (var i = 0; i < memcountt; i++) {
+        var response1 = await httpClient.get(
+            "https://fir-trovami.firebaseio.com/groups/${groupkey}/members/${i}.json");
+        Map result1 = jsonCodec.decode(response1.body);
+        UserData member=new UserData();
+        member.name=result1["name"];
+        print("result1[name]:${result1["name"]}");
+        memberstoshowhomepage.add(member);
+      }
+//    setState(() {
+//      memberstoshowhomepage = memberstoshowhomepage;
+//    });
+//      setState(() {
+//        groupmemberstoshow = groupmemberstoshow;
+//      });
+      return memberstoshowhomepage;
+
+    }
+    @override
+    void initState() {
+      getmembers(groupname);
 
     }
 
@@ -198,11 +272,7 @@ class homechildrenlist extends StatelessWidget {
   @override
   build(BuildContext context) {
 
-    if(membersflag==0) {
-      getmembers();
-      membersflag = 1;
-    }
-    memchildren= new List.generate(temp.length, (int i) => new memchildren1(temp[i]["name"]));
+    memchildren= new List.generate(1, (int i) => new memchildren1(""));
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -227,6 +297,6 @@ class memchildren1 extends StatelessWidget {
   memchildren1(this.grpmem);
   @override
   build(BuildContext context) {
-    return new Text("${grpmem},",style: new TextStyle(fontWeight: FontWeight.normal),);
+    return new Text("${grpmem}",style: new TextStyle(fontWeight: FontWeight.normal),);
   }
 }

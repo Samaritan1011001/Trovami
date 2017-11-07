@@ -9,6 +9,7 @@ import 'InputTextField.dart';
 import 'signuppage.dart';
 
 String loggedinuser;
+var loggedinusername;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -89,7 +90,7 @@ class signinformstate extends State<SignInForm>{
         usrmap.forEach((k,v){
           if(logindet.EmailId==v.EmailId){
                       loggedinuser=logindet.EmailId;
-
+                      loggedinusername=v.name;
             Navigator.of(context).pushReplacementNamed('/b');
 
           }

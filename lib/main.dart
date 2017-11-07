@@ -107,7 +107,7 @@ class UserData {
    String password;
    String name;
    bool locationShare;
-   var location=null;
+  Map<String,double> location=null;
    List<String> groupsIamin=[];
 
 
@@ -116,7 +116,6 @@ class UserData {
     name=value["name"];
     locationShare=value["locationShare"];
     groupsIamin=value["groupsIamin"];
-    location=value["location"];
   }
    Map toJson(){
      return {"name": name,"locationShare": locationShare,"groupsIamin":groupsIamin,"emailid":EmailId,"location":location};
@@ -132,22 +131,26 @@ class logindetails {
 
 
 class groupDetails {
-  groupDetails({this.groupname,this.members});
+  groupDetails({this.groupname,this.groupmembers});
   String groupname = "";
-  List<UserData> members;
+  List<UserData> groupmembers=[];
 
   groupDetails.fromJson(Map value){
     groupname=value["groupname"];
-    print("classvalue:${value["members"]}");
-    members=value["members"];
+//    print("value of members:${value["members"]}");
+      groupmembers=value["members"];
 
   }
   Map toJson(){
-    return {"groupname": groupname,"members":members};
+    return {"groupname": groupname,"members":groupmembers};
   }
 
 }
 
 
-
+class currentLoc{
+  String EmailId;
+  Map<String,double> currentLocation;
+  currentLoc({this.EmailId,this.currentLocation});
+}
 
