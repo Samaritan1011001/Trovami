@@ -511,7 +511,7 @@ class groupstatusstate extends State<groupstatus>{
           appBar: new AppBar(
             leading: new FlatButton(onPressed: (){
               Navigator.of(context).pushReplacementNamed('/b');
-            }, child: new BackButton()),
+            }, child:new Icon(Icons.keyboard_backspace)),
         actions: <Widget>[
           new FlatButton(onPressed:()async {
 //            const oneSec = const Duration(seconds: 20);

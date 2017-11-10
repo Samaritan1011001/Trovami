@@ -44,11 +44,11 @@ Timer tim;
       _handleDismiss();
 //              print("key:${key}");
     await getlocsofmembers(0);
-
-    mapView = new MapView();
-    compositeSubscription = new CompositeSubscription();
-    showMap(currentLocations);
-
+      if(currentLocations.length!=0) {
+        mapView = new MapView();
+        compositeSubscription = new CompositeSubscription();
+        showMap(currentLocations);
+      }
     await getlocsofmembers(1);
 
 
@@ -68,7 +68,7 @@ Timer tim;
     return  new Scaffold( appBar: new AppBar(
       title:  new Text('Trovami'),
       backgroundColor: Colors.black,
-leading: new Container(),
+      leading: new Container(),
 //    flexibleSpace: new FlexibleSpaceBar(
 //    title: new Text('Trovami'),
 //    ),
@@ -201,7 +201,7 @@ if(flag==0) {
                   }
                   _handleDismiss();
 
-                  var twenty = const Duration(seconds: 10);
+                  var twenty = const Duration(seconds: 15);
                   new Timer(twenty, () {
                     mapView = new MapView();
                     compositeSubscription = new CompositeSubscription();
