@@ -8,6 +8,9 @@ import 'showmap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'showMapwithoutme.dart';
+import 'package:map_view/map_view.dart';
+import 'loadingindicator.dart';
+
 var popflag=0;
 
 
@@ -30,7 +33,7 @@ final ThemeData kDefaultTheme = new ThemeData(
   accentColor: Colors.blueGrey,
 );
 void main() {
-
+  MapView.setApiKey("AIzaSyBssaMQg3-7P4bhvVLPB-7jrK5QRixuiuw");
   runApp(new MaterialApp(
     title: "Trovami",
     home: new BaseLayout(),
@@ -55,12 +58,16 @@ void main() {
             builder: (_) => new groupstatuslayout(),
             settings: settings,
           );
-          case '/e': return new MyCustomRoute1(
-            builder: (_) => new showMap(),
-            settings: settings,
-          );
+//          case '/e': return new MyCustomRoute1(
+//            builder: (_) => new MyApp(),
+//            settings: settings,
+//          );
           case '/f': return new MyCustomRoute1(
             builder: (_) => new showMapwithoutme(),
+            settings: settings,
+          );
+          case '/g': return new MyCustomRoute1(
+            builder: (_) => new loadingindlayout(),
             settings: settings,
           );
         }
@@ -152,5 +159,17 @@ class currentLoc{
   String EmailId;
   Map<String,double> currentLocation;
   currentLoc({this.EmailId,this.currentLocation});
+}
+
+class locationclass{
+  double latitude;
+  double longitude;
+
+  locationclass({this.latitude, this.longitude});
+
+  Map toJson(){
+    return {"latitude":latitude,"longitude":longitude};
+  }
+
 }
 

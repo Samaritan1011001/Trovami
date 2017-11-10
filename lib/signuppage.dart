@@ -54,7 +54,6 @@ class signuplayoutstate extends State<SignupLayout>{
 class Signup extends StatefulWidget {
   @override
   signupstate createState() => new signupstate();
-
 }
 
 class signupstate extends State<Signup>{

@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'groupdetails.dart';
 import 'dart:async';
 import 'signinpage.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 
 var temp=[];
@@ -18,6 +19,7 @@ groupDetails grps=new groupDetails();
 const jsonCodec2=const JsonCodec(reviver: _reviver2);
 List<UserData> memberstoshowhomepage=new List<UserData>();
 
+final groupref = FirebaseDatabase.instance.reference().child('groups');          // new
 
 var groupstatusgroupname='';
 
@@ -67,8 +69,9 @@ class homepagestate extends State<Homepage>{
 
 
   Future<Null>   getgroups() async{
-//loggedinuser="v@g.com";
-//loggedinusername="var";
+//loggedinuser="m@g.com";
+//loggedinusername="man";
+
 groupstoshaw=new List<groupDetails>();
 String userkey;
     _refreshIndicatorKey.currentState?.show();
@@ -132,18 +135,19 @@ Navigator.of(context).pushNamed('/c');
         new IconButton(
           icon: new Icon(Icons.person), onPressed: () {
             showModalBottomSheet<Null>(context: context, builder: (BuildContext context) {
-              return new Container(
-                  child: new Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: new ListView(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              return new Scaffold(
+                appBar: new AppBar(flexibleSpace: new FlexibleSpaceBar(
+
+                title: new Text("User Details"),
+                  centerTitle: true,
+                ),
+                  leading: new Container(),
+
+                ),
+                  body :  new Row(children: <Widget>[
+                        new CircleAvatar(child: new Icon(Icons.person),),
+                        new Column(
                         children: <Widget>[
-                          new Container(
-                            child: new Text(
-                              "User Details",
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
                           new Container(
                             child: new Text(
                               "Name:${logindet.EmailId}",
@@ -158,7 +162,8 @@ Navigator.of(context).pushNamed('/c');
                           ),
                         ],
                       )
-                  )
+              ],),
+
               );
             });
           },
@@ -209,7 +214,7 @@ class homechildrenlist extends StatelessWidget {
      ),
      decoration: new BoxDecoration(
        border: new Border(
-         bottom: new BorderSide(width: 1.0, color: Colors.brown[200]),
+         bottom: new BorderSide(width: 1.0, color: const Color.fromRGBO(0, 0, 0, 0.2)),
        ),
      ),
    );
@@ -291,6 +296,14 @@ class displaygroupstate extends State<displaygroup> {
     );
   }
 }
+
+
+
+
+
+
+
+
 
 class memchildren1 extends StatelessWidget {
   final String grpmem;

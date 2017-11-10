@@ -8,22 +8,48 @@ import 'dart:core';
 import 'signinpage.dart';
 import 'homepage.dart';
 import 'dart:async';
-import 'package:location/location.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+import 'dart:async';
+import 'loadingindicator.dart';
+import 'main.dart';
 
 
+import 'package:map_view/camera_position.dart';
+import 'package:map_view/location.dart';
+import 'package:map_view/map_options.dart';
+import 'package:map_view/map_view.dart';
+import 'package:map_view/marker.dart';
+import 'package:map_view/toolbar_action.dart';
+//import 'package:location/location.dart';
 
+final userref = FirebaseDatabase.instance.reference().child('users');          // new
+final groupref = FirebaseDatabase.instance.reference().child('groups');          // new
+
+
+bool locationShare;
 
 var httpClient = createHttpClient();
 const jsonCodec1=const JsonCodec(reviver: _reviver1);
 const jsonCodec=const JsonCodec(reviver: _reviver);
-Location _location = new Location();
-List<currentLoc> currentLocations=new List<currentLoc>();
+//const jsonCodec3=const JsonCodec(reviver: _reviver3);
 
+//Location _location = new Location();
+List<currentLoc> currentLocations=new List<currentLoc>();
+Timer t1;
 bool mapflag;
 var temp1=[];
 var length;
 bool togglestate=false;
 
+//_reviver3(key,value) {
+//
+//  if(key!=null&& value is Map) {
+//    return new locationclass.fromJson(value);
+//  }
+//  else
+//    return value;
+//}
 _reviver(key,value) {
 
   if(key!=null&& value is Map) {
@@ -47,7 +73,6 @@ _reviver1(key,value) {
 
 
  togglememberlocation(bool newValue) async{
-bool locationShare;
   var url="https://fir-trovami.firebaseio.com/groups.json";
   var response=await httpClient.get(url);
 //  print("response:${response.body}");
@@ -61,91 +86,135 @@ bool locationShare;
       Map result1=jsonCodec.decode(response1.body);
 //      print(result1["emailid"]);
       if(result1["emailid"]==loggedinuser){
-
         if(result1["locationShare"]==true) {
           locationShare = false;
         }
-        else locationShare=true;
+        else {
+          print("true");
+//          MapView mapView = new MapView();
+////          CameraPosition cameraPosition;
+//          var compositeSubscription = new CompositeSubscription();
+//          var sub =  mapView.onLocationUpdated
+//              .listen((location) async {
+//            print("true1");
+//            locationclass loc=new locationclass();
+//            loc.latitude=location.latitude;
+//            loc.longitude=location.longitude;
+//            String result2 = jsonCodec.encode(loc);
+//            bool locationflag=true;
+//            await groupref.orderByKey().once().then((DataSnapshot snapshot) {
+//              snapshot.value.forEach((k, v) {
+//                print("v[members]:${v["members"]}");
+//                for (v in v["members"]) {
+//                  print(v);
+//                  if (v["name"] == loggedinusername && v["locationShare"] == true) {
+//                    print("v[name]:${v["name"]}");
+//                    locationflag = false;
+//                  }
+//                };
+//              }
+//              );
+//            });
+//            if(locationflag==false){
+//              print("true");
+//              var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
+//              var response = await httpClient.get(groupsiaminurl);
+//              Map resstring = jsonCodec.decode(response.body);
+//              resstring.forEach((k, v) async {
+//                if (v.EmailId == loggedinuser) {
+//                  var response1 = await httpClient.put(
+//                      'https://fir-trovami.firebaseio.com/users/${k}/location.json?',
+//                      body: result2);
+//                  print("Response1:${response1.body}");
+//                }
+//              });
+//            }
+//          });
+//          compositeSubscription.add(sub);
+//          mapView.dismiss();
+//          compositeSubscription.cancel();
+          locationShare=true;
+        }
         String result2=jsonCodec.encode(locationShare);
         var response2=await httpClient.put(
             "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}/locationShare.json",body: result2);
 
-        if (locationShare == true) {
-          var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-          var response = await httpClient.get(usersnurl);
-          Map resstring = jsonCodec.decode(response.body);
-          resstring.forEach((k, v) async {
-            var flag=0;
-            if (v.EmailId == loggedinuser) {
-              var response1 = await httpClient.get(
-                  'https://fir-trovami.firebaseio.com/users/${k}/location.json?');
-              Map resmap1 = jsonCodec.decode(response1.body);
-              if (resmap1 != null) {
-                for (var i = 0; i < currentLocations.length; i++) {
-                  if (currentLocations[i].EmailId == loggedinuser) {
-                    currentLoc currentLocation = new currentLoc();
-                    currentLocation.EmailId = loggedinuser;
-                    currentLocation.currentLocation = resmap1;
-                    currentLocations.insert(i, currentLocation);
-
-                    flag = 1;
-                  }
-                }
-                if(flag==0) {
-                  currentLoc currentLocation = new currentLoc();
-                  currentLocation.EmailId = loggedinuser;
-                  currentLocation.currentLocation = resmap1;
-                  currentLocations.add(currentLocation);
-                }
-              } else {
-                Map<String, double> location;
-                try {
-                  location = await _location.getLocation;
-                } on PlatformException {
-                  location = null;
-                }
-                var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-                var response = await httpClient.get(usersnurl);
-                Map resstring = jsonCodec.decode(response.body);
-                resstring.forEach((k, v) async {
-                  var flag1=0;
-                  if (v.EmailId == loggedinuser) {
-                    print("location:${location}");
-                    String result2 = jsonCodec.encode(location);
-                    var response1 = await httpClient.put(
-                        'https://fir-trovami.firebaseio.com/users/${k}/location.json?',
-                        body: result2);
-                    for (var i = 0; i < currentLocations.length; i++) {
-                      if (currentLocations[i].EmailId == loggedinuser) {
-                        currentLoc currentLocation = new currentLoc();
-                        currentLocation.EmailId = loggedinuser;
-                        currentLocation.currentLocation = resmap1;
-                        currentLocations.insert(i, currentLocation);
-
-                        flag1 = 1;
-                      }
-                    }
-                    if(flag1==0) {
-                      currentLoc currentLocation = new currentLoc();
-                      currentLocation.EmailId = loggedinuser;
-                      currentLocation.currentLocation = resmap1;
-                      currentLocations.add(currentLocation);
-                    }
-                    print("response1:${response1.body}");
-                  }
-                });
-              }
-              print("response1:${response1.body}");
-            }
-          });
-        }
-        else {
-          for (var i = 0; i < currentLocations.length; i++) {
-            if (currentLocations[i].EmailId == loggedinuser) {
-              currentLocations.removeAt(i);
-            }
-          }
-        }
+//        if (locationShare == true) {
+//          var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
+//          var response = await httpClient.get(usersnurl);
+//          Map resstring = jsonCodec.decode(response.body);
+//          resstring.forEach((k, v) async {
+//            var flag=0;
+//            if (v.EmailId == loggedinuser) {
+//              var response1 = await httpClient.get(
+//                  'https://fir-trovami.firebaseio.com/users/${k}/location.json?');
+//              Map resmap1 = jsonCodec.decode(response1.body);
+//              if (resmap1 != null) {
+//                for (var i = 0; i < currentLocations.length; i++) {
+//                  if (currentLocations[i].EmailId == loggedinuser) {
+//                    currentLoc currentLocation = new currentLoc();
+//                    currentLocation.EmailId = loggedinuser;
+//                    currentLocation.currentLocation = resmap1;
+//                    currentLocations.insert(i, currentLocation);
+//
+//                    flag = 1;
+//                  }
+//                }
+//                if(flag==0) {
+//                  currentLoc currentLocation = new currentLoc();
+//                  currentLocation.EmailId = loggedinuser;
+//                  currentLocation.currentLocation = resmap1;
+//                  currentLocations.add(currentLocation);
+//                }
+//              } else {
+//                Map<String, double> location;
+//                try {
+////                  location = await _location.getLocation;
+//                } on PlatformException {
+//                  location = null;
+//                }
+//                var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
+//                var response = await httpClient.get(usersnurl);
+//                Map resstring = jsonCodec.decode(response.body);
+//                resstring.forEach((k, v) async {
+//                  var flag1=0;
+//                  if (v.EmailId == loggedinuser) {
+//                    print("location:${location}");
+//                    String result2 = jsonCodec.encode(location);
+//                    var response1 = await httpClient.put(
+//                        'https://fir-trovami.firebaseio.com/users/${k}/location.json?',
+//                        body: result2);
+//                    for (var i = 0; i < currentLocations.length; i++) {
+//                      if (currentLocations[i].EmailId == loggedinuser) {
+//                        currentLoc currentLocation = new currentLoc();
+//                        currentLocation.EmailId = loggedinuser;
+//                        currentLocation.currentLocation = resmap1;
+//                        currentLocations.insert(i, currentLocation);
+//
+//                        flag1 = 1;
+//                      }
+//                    }
+//                    if(flag1==0) {
+//                      currentLoc currentLocation = new currentLoc();
+//                      currentLocation.EmailId = loggedinuser;
+//                      currentLocation.currentLocation = resmap1;
+//                      currentLocations.add(currentLocation);
+//                    }
+//                    print("response1:${response1.body}");
+//                  }
+//                });
+//              }
+//              print("response1:${response1.body}");
+//            }
+//          });
+//        }
+//        else {
+//          for (var i = 0; i < currentLocations.length; i++) {
+//            if (currentLocations[i].EmailId == loggedinuser) {
+//              currentLocations.removeAt(i);
+//            }
+//          }
+//        }
 
       }
       }
@@ -190,47 +259,160 @@ class groupstatusstate extends State<groupstatus>{
 
 
 
-
-
-//  initPlatformState(String emailid) async {
-//    Map<String,double> location;
-//
-//
-//    try {
-//      location = await _location.getLocation;
-//    } on PlatformException {
-//      location = null;
-//    }
-//
-//    if (!mounted)
-//      return;
-////    currentLoc currentLocation=new currentLoc();
-////    currentLocation.EmailId=emailid;
-////    currentLocation.currentLocation=location;
-////    currentLocations.add(currentLocation);
-//
-//    var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-//    var response=await httpClient.get(usersnurl);
-//    Map resstring=jsonCodec.decode(response.body);
-//    resstring.forEach((k,v) async {
-//      if(v.EmailId==emailid){
-//        print("location:${location}");
-//        String result2=jsonCodec.encode(location);
-//        var response1=await httpClient.put('https://fir-trovami.firebaseio.com/users/${k}/location.json?',body: result2);
-//        print("response1:${response1.body}");
-//      }
-//    });
-//  }
-
   var getmemflag=0;
   bool switch1=false;
   var switch2;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
   new GlobalKey<RefreshIndicatorState>();
+
   List<Widget> children=new List<Widget>();
   List<String> memberstoshowhomepage1=new List<String>();
 
+  getlocsofmembers() async{
 
+    var httpClient = createHttpClient();
+    print(1);
+    String groupkey;
+    int memcount=0;
+    String userlockey;
+
+
+    var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
+    var userresponse = await httpClient.get(usersnurl);
+    Map resstring = jsonCodec.decode(userresponse.body);
+    var memberlocshared=[];
+    var url="https://fir-trovami.firebaseio.com/groups.json";
+//    _refreshIndicatorKey.currentState.show();
+    var response=await httpClient.get(url);
+//    print("response:${response.body}");
+    Map groupresmap=jsonCodec1.decode(response.body);
+    groupresmap.forEach((k,v) {
+      if(v.groupname==groupstatusgroupname) {
+        memcount=v.groupmembers.length;
+        print("groupstatusgroupname:${groupstatusgroupname}");
+        groupkey = k;
+      }
+    });
+    print("memcount:${memcount}");
+    for(var i=0;i<memcount;i++) {
+      var response1 = await httpClient.get(
+          "https://fir-trovami.firebaseio.com/groups/${groupkey}/members/${i}.json");
+//          print("response1:${response1.body}");
+      Map result1 = jsonCodec.decode(response1.body);
+      print(result1["emailid"]);
+      print(result1["locationShare"]);
+//          if(result1["emailid"]!=loggedinuser) {
+      if (result1["locationShare"] == true) {
+//            memberlocshared.add(i);
+        resstring.forEach((k, v) {
+          if (v.EmailId == result1["emailid"]) {
+            userlockey = k;
+          }
+        });
+//                  print("v.Emaild:${v.EmailId}");
+        var flag = 0;
+        var userlocresponse = await httpClient.get(
+            "https://fir-trovami.firebaseio.com/users/${userlockey}/location.json");
+        Map resmap1 = jsonCodec.decode(userlocresponse.body);
+        print("resmap1:${resmap1}");
+        for (var i = 0; i < currentLocations.length; i++) {
+          if (currentLocations[i].EmailId == result1["emailid"]) {
+            currentLoc currentLocation = new currentLoc();
+            currentLocation.EmailId = result1["emailid"];
+            currentLocation.currentLocation = resmap1;
+            currentLocations.removeAt(i);
+            currentLocations.add(currentLocation);
+            flag = 1;
+          }
+        }
+        print("flag:${flag}");
+        if (flag == 0) {
+          print(3);
+          currentLoc currentLocation = new currentLoc();
+          currentLocation.EmailId = result1["emailid"];
+          currentLocation.currentLocation = resmap1;
+          currentLocations.add(currentLocation);
+        }
+      } else {
+        for (var i = 0; i < currentLocations.length; i++) {
+          print(4);
+          if (currentLocations[i].EmailId == result1["emailid"]) {
+            currentLocations.removeAt(i);
+          }
+        }
+      }
+    }
+
+//          }
+//          else {
+//            print(2);
+//            if (result1["locationShare"] == true) {
+//              resstring.forEach((k, v) async {
+//                var flag=0;
+//                if (v.EmailId == loggedinuser) {
+//                  var response2 = await httpClient.get(
+//                      "https://fir-trovami.firebaseio.com/users/${k}/location.json");
+//                  Map resmap2 = jsonCodec.decode(response2.body);
+//                  if (resmap2 != null) {
+//                    for (var i = 0; i < currentLocations.length; i++) {
+//                      if (currentLocations[i].EmailId == loggedinuser) {
+//                        currentLoc currentLocation = new currentLoc();
+//                        currentLocation.EmailId = loggedinuser;
+//                        currentLocation.currentLocation = resmap2;
+//                        currentLocations.insert(i, currentLocation);
+//
+//                        flag = 1;
+//                      }
+//                    }
+//                    if (flag == 0) {
+//                      currentLoc currentLocation = new currentLoc();
+//                      currentLocation.EmailId = loggedinuser;
+//                      currentLocation.currentLocation = resmap2;
+//                      currentLocations.add(currentLocation);
+//                    }
+//                  }
+//                }
+//                else{
+//                  for (var i = 0; i < currentLocations.length; i++) {
+//                    if (currentLocations[i].EmailId == loggedinuser) {
+//                      currentLocations.removeAt(i);
+//                    }
+//                  }
+//                }
+//              });
+//            }
+//          }
+
+
+    for (var i = 0; i < currentLocations.length; i++) {
+      print("Currentlocations Emaild:${currentLocations[i].EmailId}");
+
+      print("Currentlocations:${currentLocations[i].currentLocation}");
+    }
+//    String currmap=buildurl(currentLocations);
+//        print("currmap:${currmap}");
+
+
+//    setState(() {
+//      print("currmap1:${currmap}");
+//      if(currmap==null){
+//        currentmap= new Image.asset("graphics/staticmap.gif",fit:BoxFit.fill, );
+//      }else {
+//        currentmap = new Image.network(
+//          currmap,
+//          fit: BoxFit.fill,
+//          gaplessPlayback: true,
+//        );
+//      }
+//    });
+
+
+    httpClient.close();
+
+//    showMap();
+
+
+  }
 
   getgrpmembers(String grpkey,int i) async{
     var response1 = await httpClient. get (
@@ -243,6 +425,7 @@ class groupstatusstate extends State<groupstatus>{
     if (result1["emailid"] == loggedinuser) {
       setState(() {
         togglestate = result1["locationShare"];
+        locationShare=result1["locationShare"];
       });
     }
     setState(() {
@@ -251,6 +434,9 @@ class groupstatusstate extends State<groupstatus>{
   }
 
   Future<Null>   getmembers1() async {
+    if(nouserflag==1){
+      showInSnackBar("No users online");
+    }
     String grpkey;
     var grpmemcount;
     var url = "https://fir-trovami.firebaseio.com/groups.json";
@@ -289,25 +475,28 @@ class groupstatusstate extends State<groupstatus>{
 //      list.length = unique;
     }return list1;
   }
+  final GlobalKey<ScaffoldState> _scaffoldKeySecondary2 = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    _scaffoldKeySecondary2.currentState.showSnackBar(
+        new SnackBar(
+            content: new Text(value)
+        )
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     getmembers1();
   }
-
+//  MapView mapView = new MapView();
+//  CameraPosition cameraPosition;
+//  var compositeSubscription = new CompositeSubscription();
 
   @override
   Widget build(BuildContext context) {
 
-
-
-
-
-//    if(getmemflag==0) {
-//      getmembers1();
-//      getmemflag=1;
-//    }
     children= new List.generate(memberstoshowhomepage1.length, (int i) => new memberlist(memberstoshowhomepage1[i]));
     if(switch2=="showme"){
       switch1=true;
@@ -317,17 +506,28 @@ class groupstatusstate extends State<groupstatus>{
     return new RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: getmembers1,
-        child: new Scaffold( appBar: new AppBar(
+        child: new Scaffold(
+          key: _scaffoldKeySecondary2,
+          appBar: new AppBar(
+            leading: new FlatButton(onPressed: (){
+              Navigator.of(context).pushReplacementNamed('/b');
+            }, child: new BackButton()),
         actions: <Widget>[
-          new FlatButton(onPressed: (){
-//            if(mapflag==true){
-//              switch2="showme";
-              Navigator.of(context).pushNamed('/e');
-//            }else{
-//              switch2="showwithoutme";
-//              Navigator.of(context).pushNamed('/e');
-//            }
-          }, child: new Text("Show Map")),
+          new FlatButton(onPressed:()async {
+//            const oneSec = const Duration(seconds: 20);
+//            new Timer.periodic(oneSec, (Timer t) async {
+//              t1=t;
+              Navigator.of(context).pushNamed('/g');
+
+//              _handleDismiss();
+//
+////              print("key:${key}");
+//              await getlocsofmembers();
+//              mapView = new MapView();
+//              compositeSubscription = new CompositeSubscription();
+//              showMap();
+//            });
+            }, child: new Text("Show Map")),
         ],
       flexibleSpace: new FlexibleSpaceBar(
             title: new Text('Trovami'),
@@ -400,6 +600,22 @@ class groupstatusstate extends State<groupstatus>{
     ),
     );
   }
+
+//  showMapagain() async {
+//    _handleDismiss();
+//
+//    await getlocsofmembers();
+//        mapView = new MapView();
+//    compositeSubscription = new CompositeSubscription();
+//        const oneSec = const Duration(seconds:5);
+//        Timer t;
+//    new Timer(oneSec, () => showMap(t));
+//
+//
+//
+//  }
+
+
 }
 
 
@@ -442,3 +658,10 @@ class memberlist extends StatelessWidget {
 
   }
 }
+
+
+
+
+
+
+
