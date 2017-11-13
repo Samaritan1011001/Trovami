@@ -23,6 +23,9 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');         
 
 var groupstatusgroupname='';
 
+double animvalue=0.0;
+
+
 _reviver2(key,value) {
 
   if(key!=null&& value is Map){
@@ -57,7 +60,7 @@ class Homepage extends StatefulWidget{
   homepagestate createState() => new homepagestate(groupsflag,membersflag);
 }
 
-class homepagestate extends State<Homepage>{
+class homepagestate extends State<Homepage> with SingleTickerProviderStateMixin {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
   new GlobalKey<RefreshIndicatorState>();
   var membersflag;
@@ -69,6 +72,7 @@ class homepagestate extends State<Homepage>{
 
 
   Future<Null>   getgroups() async{
+
 //loggedinuser="m@g.com";
 //loggedinusername="man";
 
@@ -115,7 +119,6 @@ Navigator.of(context).pushNamed('/c');
     getgroups();
   }
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -133,43 +136,71 @@ Navigator.of(context).pushNamed('/c');
           icon: new Icon(Icons.group_add), onPressed: addgroup,iconSize: 42.0,
         ),
         new IconButton(
-          icon: new Icon(Icons.person), onPressed: () {
-            showModalBottomSheet<Null>(context: context, builder: (BuildContext context) {
-              return new Scaffold(
-                appBar: new AppBar(flexibleSpace: new FlexibleSpaceBar(
+          icon: new Icon(Icons.person), onPressed:
+            (){
 
-                title: new Text("User Details"),
-                  centerTitle: true,
-                ),
-                  leading: new Container(),
+              Animation<double> alpha;
 
-                ),
-                  body :  new Row(children: <Widget>[
-                        new CircleAvatar(child: new Icon(Icons.person),),
-                        new Column(
-                        children: <Widget>[
-                          new Container(
-                            child: new Text(
-                              "Name:${logindet.EmailId}",
-                              textAlign: TextAlign.center,
-                          ),
-                          ),
-                          new Container(
-                            child: new Text(
-                              "EmailID:${logindet.EmailId}",
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      )
-              ],),
+              final AnimationController controller = new AnimationController(
+                  duration: const Duration(milliseconds: 500), vsync: this);
+              alpha = new Tween(begin: 0.0, end: 255.0).animate(controller)
+                ..addListener(() {
+                  setState(() {
+                    animvalue=alpha.value;
+                    // the state that has changed here is the animation object’s value
+                  });
+                });
+              controller.forward();
 
-              );
-            });
-          },
+//              final AnimationController controller = new AnimationController(
+//                  duration: const Duration(milliseconds: 500), vsync: this);
+//              alpha = new Tween(begin: 0.0, end: 255.0).animate(controller)
+//                ..addListener(() {
+//                  setState(() {
+//                    // the state that has changed here is the animation object’s value
+//                  });
+//                });
+//              controller.forward();
+            },
+//            () {
+//            showModalBottomSheet<Null>(context: context, builder: (BuildContext context) {
+//              return new Scaffold(
+//                appBar: new AppBar(flexibleSpace: new FlexibleSpaceBar(
+//
+//                title: new Text("User Details"),
+//                  centerTitle: true,
+//                ),
+//                  leading: new Container(),
+//
+//                ),
+//                  body :  new Row(children: <Widget>[
+//                        new CircleAvatar(child: new Icon(Icons.person),),
+//                        new Column(
+//                        children: <Widget>[
+//                          new Container(
+//                            child: new Text(
+//                              "Name:${logindet.EmailId}",
+//                              textAlign: TextAlign.center,
+//                          ),
+//                          ),
+//                          new Container(
+//                            child: new Text(
+//                              "EmailID:${logindet.EmailId}",
+//                              textAlign: TextAlign.center,
+//                            ),
+//                          ),
+//                        ],
+//                      )
+//              ],),
+//
+//              );
+//            });
+//          },
           iconSize: 35.0,),
+
+
       ],
-      title: new Text('Trovami'),
+      title: new Text('Groups'),
       ),
       body: new RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -236,6 +267,8 @@ class displaygroupstate extends State<displaygroup> {
 
     displaygroupstate(this.groupname,this.membersflag);
     List<Widget> memchildren=new List<Widget>();
+
+
     getmembers(String groupname) async{
       memberstoshowhomepage=new List<UserData>();
       String groupkey;
@@ -249,14 +282,16 @@ class displaygroupstate extends State<displaygroup> {
           memcountt=v.groupmembers.length;
         }
       });
-      for (var i = 0; i < memcountt; i++) {
-        var response1 = await httpClient.get(
-            "https://fir-trovami.firebaseio.com/groups/${groupkey}/members/${i}.json");
-        Map result1 = jsonCodec.decode(response1.body);
-        UserData member=new UserData();
-        member.name=result1["name"];
-        print("result1[name]:${result1["name"]}");
-        memberstoshowhomepage.add(member);
+      if(memcountt!=null) {
+        for (var i = 0; i < memcountt; i++) {
+          var response1 = await httpClient.get(
+              "https://fir-trovami.firebaseio.com/groups/${groupkey}/members/${i}.json");
+          Map result1 = jsonCodec.decode(response1.body);
+          UserData member = new UserData();
+          member.name = result1["name"];
+          print("result1[name]:${result1["name"]}");
+          memberstoshowhomepage.add(member);
+        }
       }
 //    setState(() {
 //      memberstoshowhomepage = memberstoshowhomepage;
@@ -267,12 +302,13 @@ class displaygroupstate extends State<displaygroup> {
       return memberstoshowhomepage;
 
     }
+
     @override
     void initState() {
+
       getmembers(groupname);
 
     }
-
 
   @override
   build(BuildContext context) {
@@ -281,12 +317,18 @@ class displaygroupstate extends State<displaygroup> {
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new Flexible(
+        new Center(
           child: new Container(
+            margin: new EdgeInsets.symmetric(vertical: 10.0),
+            height: animvalue,
+            width: animvalue,
+            child: new FlutterLogo(),
+          ),
+        ),
+         new Container(
           child: new Text(groupname,style: new TextStyle(fontWeight: FontWeight.bold),),
         ),
-          fit: FlexFit.loose,
-        ),
+
         new Container(
           child: new Row(children: memchildren),
           padding: new EdgeInsets.only(left:0.0,top: 3.0),

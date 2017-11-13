@@ -561,12 +561,14 @@ class groupstatusstate extends State<groupstatus>{
                         child:new Icon(Icons.group),
                         backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
                       ),
-                      new Container(child:
+                      new Expanded(child:new Container(
+                          child:
                       new Text(
                         "Group Name: ${groupstatusgroupname}",
-                        style: new TextStyle(fontSize: 20.0),
+                        style: new TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),
                       ),
                           padding: new EdgeInsets.only( left:20.0)
+                      ),
                       ),
                     ],
                   ),

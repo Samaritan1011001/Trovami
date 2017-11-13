@@ -187,7 +187,7 @@ if(members.length!=0) {
 
             new Container(
               child: new Container(
-                child: new Text("Group Details",
+                child: new Text("Add a Group",
                   style: new TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),

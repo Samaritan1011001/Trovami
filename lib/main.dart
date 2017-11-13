@@ -36,7 +36,7 @@ void main() {
   MapView.setApiKey("AIzaSyBssaMQg3-7P4bhvVLPB-7jrK5QRixuiuw");
   runApp(new MaterialApp(
     title: "Trovami",
-    home: new BaseLayout(),
+    home: new SignInForm(),
     theme: defaultTargetPlatform == TargetPlatform.iOS
         ? kIOSTheme
         : kDefaultTheme,

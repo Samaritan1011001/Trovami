@@ -22,7 +22,10 @@ final userref = FirebaseDatabase.instance.reference().child('users');          /
 final groupref = FirebaseDatabase.instance.reference().child('groups');
  int nouserflag;
 var httpClient = createHttpClient();
+var twenty;
+var sec = const Duration(seconds: 1);
 
+Timer t2;
 
 class loadingindlayout extends StatefulWidget {
   @override
@@ -60,6 +63,8 @@ Timer tim;
   void initState() {
 //    super.initState();
     loadshowmap();
+    twenty = const Duration(seconds: 10);
+    t2=new Timer(sec, ()=>{});
 //  getlocsofmembers();
   }
 
@@ -203,10 +208,13 @@ if(flag==0) {
 
                   var twenty = const Duration(seconds: 15);
                   new Timer(twenty, () {
-                    mapView = new MapView();
-                    compositeSubscription = new CompositeSubscription();
-                    showMap(currentLocations);
+                    if(currentLocations.length!=0) {
+                      mapView = new MapView();
+                      compositeSubscription = new CompositeSubscription();
+                      showMap(currentLocations);
+                    }
                   });
+
                 }
                 print("currentLocations.length:${currentLocations.length}");
                 for (var i = 0; i < currentLocations.length; i++) {
@@ -372,6 +380,8 @@ if(flag==0) {
       }
 //    }
     print("showmap");
+    print("locationShare:${locationShare}");
+
     mapView.show(
         new MapOptions(
             showUserLocation: locationShare,
@@ -387,34 +397,7 @@ if(flag==0) {
       if(currentLocations.length!=0) {
         for (var i = 0; i < currentLocations.length; i++) {
 
-//      mapView.setMarkers(<Marker>[
-//        new Marker("1", "Work", 45.523970, -122.663081, color: Colors.blue),
-//        new Marker("2", "Nossa Familia Coffee", 45.528788, -122.684633),
-//      ]);
-//        if (currentLocations[i].EmailId == loggedinuser) {
-////        mapView.setMarkers(<Marker>[
-////        new Marker("0", "${currentLocations[i].EmailId}", currentLocations[i].currentLocation["latitude"],
-////            currentLocations[i].currentLocation["longitude"],
-////            color: Colors.blue),
-////        new Marker("2", "Nossa Familia Coffee", 45.528788, -122.684633),
-//          mapView.addMarker(new Marker("${i}", "${currentLocations[i].EmailId}",
-//              currentLocations[i].currentLocation["latitude"],
-//              currentLocations[i].currentLocation["longitude"],
-//              color: Colors.blue));
-////      ]);
-//        } else {
-//          print("currentLocations[i].EmailId:${currentLocations[i].EmailId}");
-//          print("Currentlocations:${currentLocations[i].currentLocation}");
-//          nouserflag=0;
-//
-//          if(currentLocations[i].currentLocation==null){
-//            _handleDismiss();
-//            Navigator.of(context).pushReplacementNamed('/d');
-//            nouserflag=1;
-//          }
-//          var lat= await currentLocations[i].currentLocation["latitude"];
-//          var long= await currentLocations[i].currentLocation["longitude"];
-//          await mapView.setCameraPosition(lat, long, 10.0);
+
         if(currentLocations[i].currentLocation!=null&&currentLocations[i].EmailId!=loggedinuser) {
 
           mapView.addMarker(new Marker("${i}", "${currentLocations[i].EmailId}",
@@ -424,63 +407,17 @@ if(flag==0) {
         }
         }
       }
-//      else{
-//        mapView.addMarker(new Marker("0", "${loggedinuser}",
-//            currentLocations[i].currentLocation["latitude"],
-//            currentLocations[i].currentLocation["longitude"],
-//            color: Colors.redAccent));
-//      }
       mapView.zoomToFit(padding: 100);
     });
     compositeSubscription.add(sub1);
 
     var sub2 = mapView.onLocationUpdated
-        .listen((location)  {
+        .listen((location) async {
 
-      var twenty = const Duration(seconds: 30);
-     new Timer(twenty, () async
-      {
-        locationclass loc = new locationclass();
-        int decimals = 3;
-        int fac = pow(10, decimals);
-        double d = location.latitude;
-        loc.latitude = (d * fac).round() / fac;
-
-        double d1 = location.longitude;
-        loc.longitude = (d1 * fac).round() / fac;
-//        print("d: $d");
-//        loc.latitude = location.latitude;
-//        loc.longitude = location.longitude;
-        String result2 = jsonCodec.encode(loc);
-        bool locationflag = true;
-        await groupref.orderByKey().once().then((DataSnapshot snapshot) {
-          snapshot.value.forEach((k, v) {
-//                print("v[members]:${v["members"]}");
-            for (v in v["members"]) {
-              print(v);
-              if (v["name"] == loggedinusername && v["locationShare"] == true) {
-//                    print("v[name]:${v["name"]}");
-                locationflag = false;
-              }
-            };
-          }
-          );
-        });
-        if (locationflag == false) {
-          print("true");
-          var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-          var response = await httpClient.get(groupsiaminurl);
-          Map resstring = jsonCodec.decode(response.body);
-          resstring.forEach((k, v) async {
-            if (v.EmailId == loggedinuser) {
-              var response1 = await httpClient.put(
-                  'https://fir-trovami.firebaseio.com/users/${k}/location.json?',
-                  body: result2);
-              print("Response1:${response1.body}");
-            }
-          });
-        }
-      });
+      if(!t2.isActive) {
+        t2.cancel();
+         t2= new  Timer(twenty, await updateLocation(location) );
+    }
     });
     compositeSubscription.add(sub2);
 
@@ -518,12 +455,7 @@ if(flag==0) {
   }
 
   _handleDismiss() async {
-//    double zoomLevel = await mapView.zoomLevel;
-//    Location centerLocation = await mapView.centerLocation;
-//    List<Marker> visibleAnnotations = await mapView.visibleAnnotations;
-//    print("Zoom Level: $zoomLevel");
-//    print("Center: $centerLocation");
-//    print("Visible Annotation Count: ${visibleAnnotations.length}");
+
   httpClient.close();
     mapView.dismiss();
     compositeSubscription.cancel();
@@ -561,3 +493,55 @@ if(flag==0) {
   return this._subscriptions.toList();
 
   }}
+
+
+
+
+
+  updateLocation(location) async{
+    var httpClient = createHttpClient();
+
+        locationclass loc = new locationclass();
+          loc.latitude = location.latitude;
+          loc.longitude = location.longitude;
+        int decimals = 5;
+        int fac = pow(10, decimals);
+        double d = location.latitude;
+        loc.latitude = (d * fac).round() / fac;
+
+        double d1 = location.longitude;
+        loc.longitude = (d1 * fac).round() / fac;
+//        print("d: $d");
+
+        String result2 = jsonCodec.encode(loc);
+        print("result2nowwwwwwwwwwwwwwwwwwww:${result2}");
+  bool locationflag = true;
+  await groupref.orderByKey().once().then((DataSnapshot snapshot) {
+  snapshot.value.forEach((k, v) {
+//                print("v[members]:${v["members"]}");
+  for (v in v["members"]) {
+  print(v);
+  if (v["name"] == loggedinusername && v["locationShare"] == true) {
+//                    print("v[name]:${v["name"]}");
+  locationflag = false;
+  }
+  };
+  }
+  );
+  });
+  if (locationflag == false) {
+  print("true");
+  var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
+  var response = await httpClient.get(groupsiaminurl);
+  Map resstring = jsonCodec.decode(response.body);
+  resstring.forEach((k, v) async {
+  if (v.EmailId == loggedinuser) {
+  var response1 = await httpClient.put(
+  'https://fir-trovami.firebaseio.com/users/${k}/location.json?',
+  body: result2);
+  print("Response1:${response1.body}");
+  }
+  });
+  }
+
+}
