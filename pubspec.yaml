@@ -5,19 +5,13 @@ description: A new Flutter project.
 dependencies:
   flutter:
     sdk: flutter
-#  location:
-#    git:
-#      url: git://github.com/Lyokone/flutterlocation.git
   map_view:
       git:
         url: git://github.com/apptreesoftware/flutter_google_map_view.git
-#  location: "^1.1.6"
-  google_sign_in: ^0.3.1
+  google_sign_in: 1.0.1
   http: '>=0.11.3+12'
-#  firebase: '^4.0.0'
-
-  firebase_auth: 0.1.1
-  firebase_database: 0.0.12
+#  firebase_auth: ^0.1.1
+  firebase_database: 0.1.2
 
 
 dev_dependencies:
@@ -35,12 +29,6 @@ flutter:
   # included with your application, so that you can use the icons in
   # the Icons class.
   uses-material-design: true
-  fonts:
-  - family: icomoon
-    fonts:
-      - asset: fonts/icomoon.ttf
-      - weight: 500
-
   assets:
     [graphics/back.jpg,graphics/backk.jpg,graphics/backoption1.jpg,graphics/backoption2.jpg,graphics/staticmap.gif,graphics/google-logo.jpg]
 

@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'signuppage.dart';
-import 'signinpage.dart';
-import 'homepage.dart';
-import 'groupdetails.dart';
-import 'groupstatus.dart';
-import 'showmap.dart';
+import 'package:map_view/map_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'showMapwithoutme.dart';
-import 'package:map_view/map_view.dart';
+
+import 'groupdetails.dart';
+import 'groupstatus.dart';
+import 'homepage.dart';
 import 'loadingindicator.dart';
+import 'signinpage.dart';
+import 'signuppage.dart';
+
+
 
 var popflag=0;
-
-
-
-
-
 List<UserData> users=new List<UserData>();
 logindetails logindet = new logindetails();
 groupDetails grpd=new groupDetails();
@@ -32,6 +28,8 @@ final ThemeData kDefaultTheme = new ThemeData(
   primarySwatch: Colors.blueGrey,
   accentColor: Colors.blueGrey,
 );
+
+
 void main() {
   MapView.setApiKey("AIzaSyBssaMQg3-7P4bhvVLPB-7jrK5QRixuiuw");
   runApp(new MaterialApp(
@@ -56,14 +54,6 @@ void main() {
           );
           case '/d': return new MyCustomRoute1(
             builder: (_) => new groupstatuslayout(),
-            settings: settings,
-          );
-//          case '/e': return new MyCustomRoute1(
-//            builder: (_) => new MyApp(),
-//            settings: settings,
-//          );
-          case '/f': return new MyCustomRoute1(
-            builder: (_) => new showMapwithoutme(),
             settings: settings,
           );
           case '/g': return new MyCustomRoute1(
