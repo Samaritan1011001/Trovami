@@ -10,6 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'groupdetails.dart';
 import 'main.dart';
 import 'signinpage.dart';
+import 'functionsForFirebaseApiCalls.dart';
 
 
 var temp=[];
@@ -20,16 +21,15 @@ List<UserData> membersToShow=new List<UserData>();
 List<String> groupNamesToShow=new List<String>();
 List<groupDetails> groupsToShow=new List<groupDetails>();
 groupDetails grps=new groupDetails();
-const jsonCodec2=const JsonCodec(reviver: _reviver2);
+const jsonCodec2=const JsonCodec();
 List<UserData> membersToShowHomepage=new List<UserData>();
 final groupref = FirebaseDatabase.instance.reference().child('groups');
+bool _first=true;
 
-  _reviver2(key,value) {
-    if(key!=null&& value is Map){
-      return new groupDetails.fromJson(value);
-    } else
-      return value;
-  }
+final GlobalKey<ScaffoldState> _scaffoldkeyhomepage = new GlobalKey<ScaffoldState>();
+
+
+
 
 
   class Homepagelayout extends StatefulWidget {
@@ -37,23 +37,43 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');
     homepagelayoutstate createState() => new homepagelayoutstate();
   }
 
-  class homepagelayoutstate extends State<Homepagelayout>{
-    @override
-    Widget build(BuildContext context)=>
-    new Scaffold(
-      body: new Container(
-        child:new Homepage(),
-      ),
-    );
-  }
+  class homepagelayoutstate extends State<Homepagelayout> {
 
+    @override
+    Widget build(BuildContext context) {
+
+      final Size screenSize = MediaQuery
+          .of(context)
+          .size;
+
+      return (_first?
+        new Scaffold(
+          key: _scaffoldkeyhomepage,
+          body: new Container(
+            child: new Homepage(),
+            width: screenSize.width,
+            height: screenSize.height,
+          ),
+        ):
+        new Scaffold(
+          body: new Center(
+            child: new Container(
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              height: animValue,
+              width: animValue,
+              child: const FlutterLogo(),
+            ),
+          ),
+        )
+      );
+    }
+  }
   class Homepage extends StatefulWidget{
     @override
     homepagestate createState() => new homepagestate();
   }
 
-// ignore: mixin_inherits_from_not_object
-  class homepagestate extends State<Homepage> with SingleTickerProviderStateMixin {
+  class homepagestate extends State<Homepage> with TickerProviderStateMixin {
     final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
     new GlobalKey<RefreshIndicatorState>();
     List<Widget> homechildren=new List<Widget>();
@@ -63,10 +83,9 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');
   //loggedinusername="man";
       groupsToShow=new List<groupDetails>();
       String userkey;
-       _refreshIndicatorKey.currentState?.show();
-      var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-      var response=await httpClient.get(groupsiaminurl);
-      final Map resstring=jsonCodec.decode(response.body);
+//       _refreshIndicatorKey.currentState?.show();
+
+      final Map resstring=await getUsers();
       resstring.forEach((k,v){
         if(v.EmailId==loggedinUser) {
           userkey=k;
@@ -78,6 +97,7 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');
 
       setState(() {
         groupsToShow = groupsToShow;
+        _first=true;
       });
     }
 
@@ -93,7 +113,7 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');
             groupNamesToShow[i]));
       }else homechildren=new List<Widget>();
 
-      return new Scaffold(
+      return                      new Scaffold(
         appBar: new AppBar(
         leading: new Container(),
         actions: <Widget>[
@@ -105,18 +125,22 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');
             icon: new Icon(Icons.person), onPressed:
               (){
               //TODO
-  //              Animation<double> alpha;
-  //
-  //              final AnimationController controller = new AnimationController(
-  //                  duration: const Duration(milliseconds: 500), vsync: this);
-  //              alpha = new Tween(begin: 0.0, end: 255.0).animate(controller)
-  //                ..addListener(() {
-  //                  setState(() {
-  //                    animValue=alpha.value;
-  //                    // the state that has changed here is the animation object’s value
-  //                  });
-  //                });
-  //              controller.forward();
+                Animation<double> alpha;
+
+                final AnimationController controller = new AnimationController(
+                    duration: const Duration(milliseconds: 500), vsync: this);
+                alpha = new Tween(begin: 0.0, end: 255.0).animate(controller)
+                  ..addListener(() {
+                    _scaffoldkeyhomepage.currentState.setState(() {
+                      _first=false;
+
+                    });
+                    _scaffoldkeyhomepage.currentState.setState(() {
+                      animValue=alpha.value;
+
+                    });
+                  });
+                controller.forward();
               },
             iconSize: 35.0,),
         ],
@@ -130,6 +154,7 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');
           ),
         ),
       );
+
     }
   }
 
@@ -187,9 +212,8 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');
       membersToShowHomepage=new List<UserData>();
       String groupkey;
       var memcountt;
-      var url="https://fir-trovami.firebaseio.com/groups.json";
-      var response=await httpClient.get(url);
-      Map groupresmap=jsonCodec2.decode(response.body);
+
+      Map groupresmap=await getGroups();
       groupresmap.forEach((k,v) {
         if (v.groupname == groupname) {
           groupkey=k;

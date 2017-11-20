@@ -1,27 +1,28 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'InputTextField.dart';
 import 'Roundedbutton.dart';
 import 'main.dart';
 import 'signuppage.dart';
+import 'homepage.dart';
+import 'functionsForFirebaseApiCalls.dart';
 
 final googleSignIn = new GoogleSignIn();
 String loggedinUser;
 var loggedInUsername;
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+
 TextStyle textStyle = new TextStyle(
     color: const Color.fromRGBO(255, 255, 255, 0.4),
     fontSize: 16.0,
     fontWeight: FontWeight.normal);
 
-ThemeData appTheme = new ThemeData(
-  hintColor: Colors.white,
-);
+
 
 Color textFieldColor = const Color.fromRGBO(0, 0, 0, 0.7);
 ScrollController scrollController = new ScrollController();
@@ -41,6 +42,7 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
 
   bool _isgooglesigincomplete=true;
   bool _first=true;
+  var httpClient = createHttpClient();
 
   final IconData mail = const IconData(0xe158, fontFamily: 'MaterialIcons');
   final IconData lock_outline = const IconData(0xe899, fontFamily: 'MaterialIcons');
@@ -64,15 +66,13 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
         content: new Text(value)
     ));
   }
+
+
   _ensureLoggedIn() async {
     GoogleSignInAccount user = googleSignIn.currentUser;
-//    if (user == null) {
       user ??= await googleSignIn.signInSilently();
-//    }
     if (user == null) {
       await googleSignIn.signIn();
-
-
     }
   }
   _handleSubmitted1() async {
@@ -87,8 +87,7 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
     guser.name=user.displayName;
     guser.locationShare=false;
     final String guserjson=jsonCodec.encode(guser);
-    var response = await httpClient.get('https://fir-trovami.firebaseio.com/users.json');
-    final Map usrmap=jsonCodec.decode(response.body);
+    final Map usrmap=await getUsers();
     usrmap.forEach((k,v){
       if(v.EmailId==user.email){
         userexists=true;
@@ -106,14 +105,16 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
   }
 
   _handleSubmitted() async {
+
+
     final FormState form = _formKey.currentState;
     if (!form.validate()) {
       _autovalidate = true;
       showInSnackBar('Please fix the errors in red before submitting.');
     } else {
+
       form.save();
-      var response=await httpClient.get('https://fir-trovami.firebaseio.com/users.json');
-      final Map usrmap=jsonCodec.decode(response.body);
+      final Map usrmap=await getUsers();
       usrmap.forEach(
         (k,v) async {
           if(logindet.EmailId==v.EmailId){
@@ -278,11 +279,12 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
                           onPressed: _handleSubmitted1,
                           backgroundColor: Colors.white,
                         )),
-//                        secondChild: createscaffold(),
+//                        secondChild: _scaffoldkeyhomepage,
 //                        crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
 //                      ),
                     ],
                   ),
+
                 ],
               ),
               ),

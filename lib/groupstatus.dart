@@ -6,6 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'functionsForFirebaseApiCalls.dart';
+
+
 
 import 'homepage.dart';
 import 'loadingindicator.dart';
@@ -43,9 +48,8 @@ _reviver1(key,value) {
 }
 
  toggleMemberLocation(bool newValue) async{
-  var url="https://fir-trovami.firebaseio.com/groups.json";
-  var response=await httpClient.get(url);
-  final Map groupresmap=jsonCodec1.decode(response.body);
+
+  final Map groupresmap=await getGroups();
 
   groupresmap.forEach((k,v) async{
     if(v.groupname==groupStatusGroupname) {
@@ -104,69 +108,6 @@ class groupstatusstate extends State<groupstatus>{
   List<Widget> children=new List<Widget>();
   List<String> memberstoShowHomepage1=new List<String>();
 
-  getlocsofmembers() async{
-    var httpClient = createHttpClient();
-    String groupkey;
-    int memcount=0;
-    String userlockey;
-
-    var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-    var userresponse = await httpClient.get(usersnurl);
-    final Map resstring = jsonCodec.decode(userresponse.body);
-
-    var url="https://fir-trovami.firebaseio.com/groups.json";
-    var response=await httpClient.get(url);
-
-    final Map groupresmap=jsonCodec1.decode(response.body);
-    groupresmap.forEach((k,v) {
-      if(v.groupname==groupStatusGroupname) {
-        memcount=v.groupmembers.length;
-        print("groupstatusgroupname:${groupStatusGroupname}");
-        groupkey = k;
-      }
-    });
-
-    for(var i=0;i<memcount;i++) {
-      var response1 = await httpClient.get(
-          "https://fir-trovami.firebaseio.com/groups/${groupkey}/members/${i}.json");
-      final Map result1 = jsonCodec.decode(response1.body);
-      if (result1["locationShare"] == true) {
-        resstring.forEach((k, v) {
-          if (v.EmailId == result1["emailid"]) {
-            userlockey = k;
-          }
-        });
-        var flag = 0;
-        var userlocresponse = await httpClient.get(
-            "https://fir-trovami.firebaseio.com/users/${userlockey}/location.json");
-        Map resmap1 = jsonCodec.decode(userlocresponse.body);
-        for (var i = 0; i < currentLocations.length; i++) {
-          if (currentLocations[i].EmailId == result1["emailid"]) {
-            currentLoc currentLocation = new currentLoc();
-            currentLocation.EmailId = result1["emailid"];
-            currentLocation.currentLocation = resmap1;
-            currentLocations.removeAt(i);
-            currentLocations.add(currentLocation);
-            flag = 1;
-          }
-        }
-        if (flag == 0) {
-          currentLoc currentLocation = new currentLoc();
-          currentLocation.EmailId = result1["emailid"];
-          currentLocation.currentLocation = resmap1;
-          currentLocations.add(currentLocation);
-        }
-      } else {
-        for (var i = 0; i < currentLocations.length; i++) {
-          if (currentLocations[i].EmailId == result1["emailid"]) {
-            currentLocations.removeAt(i);
-          }
-        }
-      }
-    }
-    httpClient.close();
-  }
-
   getgrpmembers(String grpkey,int i) async{
     var response1 = await httpClient. get (
         "https://fir-trovami.firebaseio.com/groups/${grpkey}/members/${i}.json");
@@ -190,11 +131,10 @@ class groupstatusstate extends State<groupstatus>{
     }
     String grpkey;
     var grpmemcount;
-    var url = "https://fir-trovami.firebaseio.com/groups.json";
-    _refreshIndicatorKey.currentState?.show();
-    var response = await httpClient.get(url);
 
-    final Map groupresmap = jsonCodec1.decode(response.body);
+    _refreshIndicatorKey.currentState?.show();
+
+    final Map groupresmap = await getGroups();
 
     groupresmap.forEach((k, v){
       if (v.groupname == groupStatusGroupname) {
@@ -249,7 +189,11 @@ class groupstatusstate extends State<groupstatus>{
       child: new Scaffold(
         key: _scaffoldKeySecondary2,
         appBar: new AppBar(
-          leading: new FlatButton(onPressed: (){
+          leading: defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoButton(child: new Icon(Icons.keyboard_backspace), onPressed: (){
+            Navigator.of(context).pushReplacementNamed('/b');
+          },
+          ) : new FlatButton(onPressed: (){
             Navigator.of(context).pushReplacementNamed('/b');
           },
               child:new Icon(Icons.keyboard_backspace)
@@ -263,7 +207,7 @@ class groupstatusstate extends State<groupstatus>{
             ),
           ],
           flexibleSpace: new FlexibleSpaceBar(
-            title: new Text('Trovami'),
+            title: new Text('Group Status'),
           ),
         ),
         body :new Container(
@@ -274,13 +218,20 @@ class groupstatusstate extends State<groupstatus>{
                 padding: const EdgeInsets.only( left:10.0),
                 ),
                 new Container(
-                    child: new Switch(value: togglestate, onChanged: (bool newValue) {
+                    child: defaultTargetPlatform == TargetPlatform.iOS
+                        ? new CupertinoSwitch(value: togglestate, onChanged: (bool newValue) {
                       toggleMemberLocation(newValue);
                       setState(() {
                         togglestate = newValue;
                       });
-                      },
-                    )
+                    },)
+                        : new Switch(value: togglestate, onChanged: (bool newValue) {
+                      toggleMemberLocation(newValue);
+                      setState(() {
+                        togglestate = newValue;
+                      });
+                    },
+                    ),
                 ),
               ],
               ),

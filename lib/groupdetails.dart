@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'InputTextField.dart';
 import 'main.dart';
 import 'signinpage.dart';
+import 'functionsForFirebaseApiCalls.dart';
 
 
 var httpClient = createHttpClient();
@@ -85,9 +86,9 @@ ThemeData appTheme = new ThemeData(
       loggedInMember.name=loggedInUsername;
       grpd.groupmembers.add(loggedInMember);
       for (var i = 0; i < grpd.groupmembers.length; i++) {
-        var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-        var response = await httpClient.get(groupsiaminurl);
-        final Map resstring = jsonCodec.decode(response.body);
+
+
+        final Map resstring = await getUsers();
         resstring.forEach((k, v) async {
           if (v.EmailId == grpd.groupmembers[i].EmailId) {
             if (v.groupsIamin == null) {
@@ -131,9 +132,8 @@ ThemeData appTheme = new ThemeData(
     }
 
     getusers()async{
-      var url="https://fir-trovami.firebaseio.com/users.json";
-      var response=await httpClient.get(url);
-      final Map resstring=jsonCodec.decode(response.body);
+
+      final Map resstring=await getUsers();
       resstring.forEach((k,v){
         UserData usertoshow=new UserData();
         usertoshow.name=v.name;

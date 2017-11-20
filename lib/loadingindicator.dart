@@ -17,6 +17,7 @@ import 'groupstatus.dart';
 import 'homepage.dart';
 import 'main.dart';
 import 'signinpage.dart';
+import 'functionsForFirebaseApiCalls.dart';
 
 final userref = FirebaseDatabase.instance.reference().child('users');          // new
 final groupref = FirebaseDatabase.instance.reference().child('groups');
@@ -79,12 +80,10 @@ class loadingindlayoutstate extends State<loadingindlayout> {
         int memcount = 0;
         String userlockey;
         if(flag==0) {
-          var usersnurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-          var userresponse = await httpClient.get(usersnurl);
-          final Map resstring = jsonCodec.decode(userresponse.body);
-          var url = "https://fir-trovami.firebaseio.com/groups.json";
-          var response = await httpClient.get(url);
-          final Map groupresmap = jsonCodec1.decode(response.body);
+
+          final Map resstring = await getUsers();
+
+          final Map groupresmap = await getGroups();
           groupresmap.forEach((k, v) {
             if (v.groupname == groupStatusGroupname) {
               memcount = v.groupmembers.length;
@@ -186,8 +185,6 @@ class loadingindlayoutstate extends State<loadingindlayout> {
       }
 
       showMap(List<currentLoc> currentLocations) {
-        print("showmap");
-        var httpClient = createHttpClient();
         double lat;
         double long;
         if (currentLocations.length!=0&& currentLocations[0].currentLocation!=null) {
@@ -224,7 +221,6 @@ class loadingindlayoutstate extends State<loadingindlayout> {
             .listen((location) async {
 
           if(!t2.isActive) {
-            t2.cancel();
              t2= new  Timer(twenty, await updateLocation(location) );
           }
         });
@@ -318,12 +314,10 @@ class loadingindlayoutstate extends State<loadingindlayout> {
       );
     });
     if (locationflag == false) {
-      var groupsiaminurl = 'https://fir-trovami.firebaseio.com/users.json?orderBy="\$key"';
-      var response = await httpClient.get(groupsiaminurl);
-      final Map resstring = jsonCodec.decode(response.body);
+      final Map resstring = await getUsers();
       resstring.forEach((k, v) async {
         if (v.EmailId == loggedinUser) {
-          var response1 = await httpClient.put(
+         await httpClient.put(
           'https://fir-trovami.firebaseio.com/users/${k}/location.json?',
           body: result2);
         }

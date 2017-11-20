@@ -4,9 +4,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import 'Roundedbutton.dart';
 import 'main.dart';
+import 'functionsForFirebaseApiCalls.dart';
 
 
 
@@ -41,14 +44,16 @@ class SignupLayout extends StatefulWidget {
 class signuplayoutstate extends State<SignupLayout>{
   @override
   Widget build(BuildContext context)=>
-  new Scaffold(
-    body: new Container(
-      child:new Signup(),
-    ),
-  );
+      defaultTargetPlatform == TargetPlatform.iOS
+          ? new CupertinoPageScaffold(child: new Signup()
+//        ,navigationBar: new CupertinoNavigationBar(middle: new Text("Sign-up"),backgroundColor:const Color.fromRGBO(0, 0, 0, 0.7),),
+      )
+          : new Scaffold(
+        body: new Container(
+          child:new Signup(),
+        ),
+      );
 }
-
-
 
 
 class Signup extends StatefulWidget {
@@ -91,8 +96,7 @@ class signupstate extends State<Signup>{
       users.add(user1);
       var userjson= jsonCodec.encode(user1);
       print("userjson:${userjson}");
-      var response=await httpClient.get('https://fir-trovami.firebaseio.com/users.json');
-      final Map usrmap=jsonCodec.decode(response.body);
+      final Map usrmap=await getUsers();
       usrmap.forEach((k,v){
         if(v.EmailId==user1.EmailId){
           userexists=true;
@@ -116,6 +120,7 @@ class signupstate extends State<Signup>{
       return 'Please enter correct EmailID';
     return null;
   }
+
 
   String _validatePassword(String value) {
     _formWasEdited = true;

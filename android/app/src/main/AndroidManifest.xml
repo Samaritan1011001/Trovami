@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yourcompany.locatepal">
+    package="com.yourcompany.locatepal"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
@@ -18,7 +20,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="locate_pal"
+        android:label="Trovami"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

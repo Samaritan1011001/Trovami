@@ -19,9 +19,8 @@ groupDetails grpd=new groupDetails();
 
 
 final ThemeData kIOSTheme = new ThemeData(
-  primarySwatch: Colors.orange,
-  primaryColor: Colors.grey[100],
-  primaryColorBrightness: Brightness.light,
+  primarySwatch: Colors.blueGrey,
+  accentColor: Colors.blueGrey,
 );
 
 final ThemeData kDefaultTheme = new ThemeData(
@@ -31,7 +30,10 @@ final ThemeData kDefaultTheme = new ThemeData(
 
 
 void main() {
-  MapView.setApiKey("AIzaSyBssaMQg3-7P4bhvVLPB-7jrK5QRixuiuw");
+  defaultTargetPlatform == TargetPlatform.iOS
+      ? MapView.setApiKey("AIzaSyCCb9wTjxuBTRBdSDGz6JIiZP3iAFOZ5Kw")
+      : MapView.setApiKey("AIzaSyBssaMQg3-7P4bhvVLPB-7jrK5QRixuiuw");
+
   runApp(new MaterialApp(
     title: "Trovami",
     home: new SignInForm(),
@@ -40,23 +42,35 @@ void main() {
         : kDefaultTheme,
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
-          case '/a': return new MyCustomRoute(
+
+          case '/a': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new SignupLayout(),settings: settings,)
+              : new MyCustomRoute(
             builder: (_) => new SignupLayout(),
             settings: settings,
           );
-          case '/b': return new MyCustomRoute(
+
+          case '/b': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new Homepagelayout(),settings: settings,)
+              :new MyCustomRoute(
             builder: (_) => new Homepagelayout(),
             settings: settings,
           );
-          case '/c': return new MyCustomRoute1(
+          case '/c': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new addGroup(),settings: settings,)
+              :new MyCustomRoute1(
             builder: (_) => new addGroup(),
             settings: settings,
           );
-          case '/d': return new MyCustomRoute1(
+          case '/d': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new groupstatuslayout(),settings: settings,)
+              :new MyCustomRoute1(
             builder: (_) => new groupstatuslayout(),
             settings: settings,
           );
-          case '/g': return new MyCustomRoute1(
+          case '/g': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new loadingindlayout(),settings: settings,)
+              :new MyCustomRoute1(
             builder: (_) => new loadingindlayout(),
             settings: settings,
           );
