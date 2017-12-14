@@ -11,7 +11,7 @@ Live location app created in Flutter using Firebase as the backend
     
 ## Preview
 
-
+![Check Repo](http://git.geekyants.com/sarika/trovami/blob/master/ezgif.com-video-to-gif.gif "Trovami Preview")
 
 
 ## Dependencies
