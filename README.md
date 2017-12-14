@@ -16,10 +16,10 @@ Live location app created in Flutter using Firebase as the backend
 
 ## Dependencies
     
-    1. [Flutter](https://flutter.io/)
-    2. [Firebase](https://firebase.google.com/)
-    3. [Google Sign in](https://github.com/flutter/plugins/tree/master/packages/google_sign_in)
-    4. [Maps Plugin](https://github.com/apptreesoftware/flutter_google_map_view)
+    1.[Flutter](https://flutter.io/)
+    2.[Firebase](https://firebase.google.com/)
+    3.[Google Sign in](https://github.com/flutter/plugins/tree/master/packages/google_sign_in)
+    4.[Maps Plugin](https://github.com/apptreesoftware/flutter_google_map_view)
     
 ## Getting Started
 
