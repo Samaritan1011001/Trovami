@@ -27,8 +27,8 @@ Live location app created in Flutter using Firebase as the backend
 
 2.Clone the repo
 ```
-$ git clone http://manoj@git.geekyants.com/sarika/trovami.git
-$ cd trovami/
+$ git clone https://github.com/Samartan/Trovami.git
+$ cd Trovami/
 
 ```
 
