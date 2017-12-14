@@ -3,25 +3,25 @@
 Live location app created in Flutter using Firebase as the backend 
 
 
-##Features
+#Features
     
     Create groups and choose to share your live location
     View group members on the map 
     Google Sign-in
     
-##Preview
+#Preview
 
 
 
 
-##Dependencies
+#Dependencies
     
     Flutter
     Firebase
     Google Sign in
     Maps Plugin
     
-##Getting Started
+#Getting Started
 
 1.Setup Flutter
 2.Clone the repo
