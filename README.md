@@ -23,7 +23,7 @@ Live location app created in Flutter using Firebase as the backend
     
 ## Getting Started
 
-1.[Setup Flutter] (https://flutter.io/setup/)
+1. [Setup Flutter](https://flutter.io/setup/)
 
 2.Clone the repo
 ```
