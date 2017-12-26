@@ -1,66 +1,77 @@
 import 'package:flutter/material.dart';
-import 'signuppage.dart';
-import 'signinpage.dart';
-import 'homepage.dart';
-import 'groupdetails.dart';
-import 'groupstatus.dart';
-import 'showmap.dart';
+import 'package:map_view/map_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'showMapwithoutme.dart';
+
+import 'groupdetails.dart';
+import 'groupstatus.dart';
+import 'homepage.dart';
+import 'loadingindicator.dart';
+import 'signinpage.dart';
+import 'signuppage.dart';
+
+
+
 var popflag=0;
-
-
-
-
-
 List<UserData> users=new List<UserData>();
 logindetails logindet = new logindetails();
 groupDetails grpd=new groupDetails();
 
 
 final ThemeData kIOSTheme = new ThemeData(
-  primarySwatch: Colors.orange,
-  primaryColor: Colors.grey[100],
-  primaryColorBrightness: Brightness.light,
+  primarySwatch: Colors.blueGrey,
+  accentColor: Colors.blueGrey,
 );
 
 final ThemeData kDefaultTheme = new ThemeData(
   primarySwatch: Colors.blueGrey,
   accentColor: Colors.blueGrey,
 );
+
+
 void main() {
+  defaultTargetPlatform == TargetPlatform.iOS
+      ? MapView.setApiKey("AIzaSyCCb9wTjxuBTRBdSDGz6JIiZP3iAFOZ5Kw")
+      : MapView.setApiKey("AIzaSyBssaMQg3-7P4bhvVLPB-7jrK5QRixuiuw");
 
   runApp(new MaterialApp(
     title: "Trovami",
-    home: new BaseLayout(),
+    home: new SignInForm(),
     theme: defaultTargetPlatform == TargetPlatform.iOS
         ? kIOSTheme
         : kDefaultTheme,
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
-          case '/a': return new MyCustomRoute(
+
+          case '/a': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new SignupLayout(),settings: settings,)
+              : new MyCustomRoute(
             builder: (_) => new SignupLayout(),
             settings: settings,
           );
-          case '/b': return new MyCustomRoute(
+
+          case '/b': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new Homepagelayout(),settings: settings,)
+              :new MyCustomRoute(
             builder: (_) => new Homepagelayout(),
             settings: settings,
           );
-          case '/c': return new MyCustomRoute1(
+          case '/c': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new addGroup(),settings: settings,)
+              :new MyCustomRoute1(
             builder: (_) => new addGroup(),
             settings: settings,
           );
-          case '/d': return new MyCustomRoute1(
+          case '/d': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new groupstatuslayout(),settings: settings,)
+              :new MyCustomRoute1(
             builder: (_) => new groupstatuslayout(),
             settings: settings,
           );
-          case '/e': return new MyCustomRoute1(
-            builder: (_) => new showMap(),
-            settings: settings,
-          );
-          case '/f': return new MyCustomRoute1(
-            builder: (_) => new showMapwithoutme(),
+          case '/g': return defaultTargetPlatform == TargetPlatform.iOS
+              ? new CupertinoPageRoute(builder:  (_) => new loadingindlayout(),settings: settings,)
+              :new MyCustomRoute1(
+            builder: (_) => new loadingindlayout(),
             settings: settings,
           );
         }
@@ -152,5 +163,17 @@ class currentLoc{
   String EmailId;
   Map<String,double> currentLocation;
   currentLoc({this.EmailId,this.currentLocation});
+}
+
+class locationclass{
+  double latitude;
+  double longitude;
+
+  locationclass({this.latitude, this.longitude});
+
+  Map toJson(){
+    return {"latitude":latitude,"longitude":longitude};
+  }
+
 }
 
