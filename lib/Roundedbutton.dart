@@ -41,7 +41,7 @@ class RoundedButton extends StatelessWidget {
           alignment: FractionalOffset.center,
           decoration: new BoxDecoration(
               color: buttonColor,
-              borderRadius: new BorderRadius.all(const Radius.circular(30.0)),
+              borderRadius: const BorderRadius.all(const Radius.circular(30.0)),
               border: new Border.all(
                   color: const Color.fromRGBO(221, 221, 221, 1.0),
                   width: borderWidth)),
@@ -60,7 +60,7 @@ class RoundedButton extends StatelessWidget {
           alignment: FractionalOffset.center,
           decoration: new BoxDecoration(
             color: buttonColor,
-            borderRadius: new BorderRadius.all(const Radius.circular(30.0)),
+            borderRadius: const BorderRadius.all(const Radius.circular(30.0)),
             border: new Border.all(
               color: Colors.black,
               width: 1.0,
