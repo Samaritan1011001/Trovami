@@ -23,12 +23,14 @@ A Live location app created in Flutter using Firebase as the backend
 
 # Getting Started
 
-1.Setup Flutter
+## 1.Setup Flutter
 
-2.Clone the repo
+## 2.Clone the repo
 
 $ git clone https://github.com/Samaritan1011001/Trovami.git
 $ cd trovami/
+
+## 3. Setup Firebase
 
 1. You'll need to create a Firebase instance. Follow the instructions at https://console.firebase.google.com.
 2. Once your Firebase instance is created, you'll need to enable anonymous authentication.
@@ -58,7 +60,7 @@ keytool -exportcert -list -v \
 * Follow instructions to download GoogleService-Info.plist, and place it into Trovami/ios/Runner in XCode
 * Open Trovami/ios/Runner/Info.plist. Locate the CFBundleURLSchemes key. The second item in the array value of this key is specific to the Firebase instance. Replace it with the value for REVERSED_CLIENT_ID from GoogleService-Info.plist
 
-#### 4. Run the app
+## 4. Run the app
 
 ```sh
 $ flutter run
