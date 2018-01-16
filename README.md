@@ -30,37 +30,39 @@ A Live location app created in Flutter using Firebase as the backend
 $ git clone https://github.com/Samaritan1011001/Trovami.git
 $ cd trovami/
 
-3. Setup firebase app
-You'll need to create a Firebase instance. Follow the instructions at https://console.firebase.google.com.
-Once your Firebase instance is created, you'll need to enable anonymous authentication.
-Go to the Firebase Console for your new instance.
+1. You'll need to create a Firebase instance. Follow the instructions at https://console.firebase.google.com.
+2. Once your Firebase instance is created, you'll need to enable anonymous authentication.
 
-Click "Authentication" in the left-hand menu
+* Go to the Firebase Console for your new instance.
+* Click "Authentication" in the left-hand menu
+* Click the "sign-in method" tab
+* Click "Google" and enable it
 
-Click the "sign-in method" tab
+3. (skip if not running on Android)
 
-Click "anonymous" and enable it
-(skip if not running on Android)
+* Create an app within your Firebase instance for Android, with package name com.yourcompany.locatePal
+* Run the following command to get your SHA-1 key:
 
-Create an app within your Firebase instance for Android, with package name com.yourcompany.news
-
-Follow instructions to download google-services.json, and place it into Trovami/android/app/
-
-Run the following command to get your SHA-1 key:
+```
 keytool -exportcert -list -v \
 -alias androiddebugkey -keystore ~/.android/debug.keystore
+```
 
-In the Firebase console, in the settings of your Android app, add your SHA-1 key by clicking "Add Fingerprint".
-(skip if not running on iOS)
+* In the Firebase console, in the settings of your Android app, add your SHA-1 key by clicking "Add Fingerprint".
+* Follow instructions to download google-services.json
+* place `google-services.json` into `Trovami/android/app/`.
 
-Create an app within your Firebase instance for iOS, with package name com.yourcompany.locatePal
+4. (skip if not running on iOS)
 
-Follow instructions to download GoogleService-Info.plist, and place it into Trovami/ios/Runner in XCode
-Open Trovami/ios/Runner/Info.plist. Locate the CFBun dleURLSchemes key. The second item in the array value of this key is specific to the Firebase instance. Replace it with the value for REVERSED_CLIENT_ID from GoogleService-Info.plist
+* Create an app within your Firebase instance for iOS, with package name com.yourcompany.locatePal
+* Follow instructions to download GoogleService-Info.plist, and place it into Trovami/ios/Runner in XCode
+* Open Trovami/ios/Runner/Info.plist. Locate the CFBundleURLSchemes key. The second item in the array value of this key is specific to the Firebase instance. Replace it with the value for REVERSED_CLIENT_ID from GoogleService-Info.plist
 
-4.Run the app
+#### 4. Run the app
 
+```sh
 $ flutter run
+```
 
 
 # Tasks to complete
