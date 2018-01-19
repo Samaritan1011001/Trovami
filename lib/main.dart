@@ -31,8 +31,8 @@ final ThemeData kDefaultTheme = new ThemeData(
 
 void main() {
   defaultTargetPlatform == TargetPlatform.iOS
-      ? MapView.setApiKey("AIzaSyCCb9wTjxuBTRBdSDGz6JIiZP3iAFOZ5Kw")
-      : MapView.setApiKey("AIzaSyBssaMQg3-7P4bhvVLPB-7jrK5QRixuiuw");
+      ? MapView.setApiKey("AIzaSyCLw1SjRi8TLDu_Nzcdo2Ufu68H1UXl9BU")
+      : MapView.setApiKey("AIzaSyB4xaxweIhP0F36ZCBpfeiDjpoPc741Oe0");
 
   runApp(new MaterialApp(
     title: "Trovami",

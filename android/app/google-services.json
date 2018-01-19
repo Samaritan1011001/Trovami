@@ -1,0 +1,113 @@
+{
+  "project_info": {
+    "project_number": "526082914918",
+    "firebase_url": "https://fir-trovami.firebaseio.com",
+    "project_id": "fir-trovami",
+    "storage_bucket": "fir-trovami.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526082914918:android:8a5beb3b78ca299a",
+        "android_client_info": {
+          "package_name": "com.yourcompany.locatepal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526082914918-fu1aqaopksuiomnr0a37fmjv0ugptp9r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yourcompany.locatepal",
+            "certificate_hash": "e8ca8a28ed4613efb81f9c7721d6456b8d5a9f4b"
+          }
+        },
+        {
+          "client_id": "526082914918-0hovopah6u9qo73pnnqneb35vvfhv3vo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEHsqYgyeL4JcCt5VifzMAjVdy-Ww2Cds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526082914918-jdliblrrebv1ir2vo2jqf5th15b64612.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yourcompany.locatePal"
+              }
+            },
+            {
+              "client_id": "526082914918-0hovopah6u9qo73pnnqneb35vvfhv3vo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526082914918:android:d5bd3b7cecee7e6c",
+        "android_client_info": {
+          "package_name": "com.yourcompany.trovami"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526082914918-esv64rn4ac0ga4qgqv9dcn2r1oq94j14.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yourcompany.trovami",
+            "certificate_hash": "e8ca8a28ed4613efb81f9c7721d6456b8d5a9f4b"
+          }
+        },
+        {
+          "client_id": "526082914918-0hovopah6u9qo73pnnqneb35vvfhv3vo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEHsqYgyeL4JcCt5VifzMAjVdy-Ww2Cds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526082914918-jdliblrrebv1ir2vo2jqf5th15b64612.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yourcompany.locatePal"
+              }
+            },
+            {
+              "client_id": "526082914918-0hovopah6u9qo73pnnqneb35vvfhv3vo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -44,6 +44,7 @@ class loadingindlayoutstate extends State<loadingindlayout> {
           if(currentLocations.isNotEmpty) {
             mapView = new MapView();
             compositeSubscription = new CompositeSubscription();
+            Navigator.of(context).pop();
             showMap(currentLocations);
           }
         await getlocsofmembers(1);
@@ -55,6 +56,12 @@ class loadingindlayoutstate extends State<loadingindlayout> {
         loadshowmap();
         twenty = const Duration(seconds: 10);
         t2=new Timer(sec, ()=>{});
+      }
+
+      @override
+      void dispose(){
+        super.dispose();
+
       }
 
       @override
@@ -162,16 +169,29 @@ class loadingindlayoutstate extends State<loadingindlayout> {
                             event.snapshot.value["location"];
                             currentLocations.add(currentLocation);
                           }
-                          _handleDismiss();
+//                          _handleDismiss();
 
-                          var twenty = const Duration(seconds: 15);
-                          new Timer(twenty, () {
+//                          var twenty = const Duration(seconds: 15);
+//                          new Timer(twenty, () {
                             if(currentLocations.length!=0) {
-                              mapView = new MapView();
-                              compositeSubscription = new CompositeSubscription();
-                              showMap(currentLocations);
+                              for (var i = 0; i < currentLocations.length; i++) {
+                                if(currentLocations[i].currentLocation!=null&&currentLocations[i].EmailId!=loggedinUser &&currentLocations[i].EmailId==event.snapshot.value["emailid"])
+                                {
+                                  mapView.removeMarker(new Marker("${currentLocations[i].EmailId}", "${currentLocations[i].EmailId}",
+                                      currentLocations[i].currentLocation["latitude"],
+                                      currentLocations[i].currentLocation["longitude"],
+                                      color: Colors.redAccent));
+                                  mapView.addMarker(new Marker("${currentLocations[i].EmailId}", "${currentLocations[i].EmailId}",
+                                      currentLocations[i].currentLocation["latitude"],
+                                      currentLocations[i].currentLocation["longitude"],
+                                      color: Colors.redAccent));
+                                  mapView.zoomToFit(padding: 500);
+
+                                }
+                              }
+//
                             }
-                          });
+//                          });
                         }
                       } else {}
                     }
@@ -201,12 +221,13 @@ class loadingindlayoutstate extends State<loadingindlayout> {
                     new Location(lat, long), 14.0),
                 title: "Live locator"),
             toolbarActions: [
-              new ToolbarAction("Close", 1), new ToolbarAction("refresh", 2)]);
+              new ToolbarAction("Close", 1)
+            ]);
         var sub1 = mapView.onMapReady.listen((_) async {
           if(currentLocations.isNotEmpty) {
             for (var i = 0; i < currentLocations.length; i++) {
               if(currentLocations[i].currentLocation!=null&&currentLocations[i].EmailId!=loggedinUser) {
-                    mapView.addMarker(new Marker("${i}", "${currentLocations[i].EmailId}",
+                    mapView.addMarker(new Marker("${currentLocations[i].EmailId}", "${currentLocations[i].EmailId}",
                     currentLocations[i].currentLocation["latitude"],
                     currentLocations[i].currentLocation["longitude"],
                     color: Colors.redAccent));
@@ -219,9 +240,10 @@ class loadingindlayoutstate extends State<loadingindlayout> {
 
         var sub2 = mapView.onLocationUpdated
             .listen((location) async {
-
-          if(!t2.isActive) {
-             t2= new  Timer(twenty, await updateLocation(location) );
+          print(1);
+         if(!t2.isActive) {
+        t2= new  Timer(twenty,await updateLocation(location)
+          );
           }
         });
         compositeSubscription.add(sub2);
@@ -234,17 +256,19 @@ class loadingindlayoutstate extends State<loadingindlayout> {
             .listen((location) => print("Touched location $location"));
         compositeSubscription.add(sub4);
 
-        var sub5 = mapView.onCameraChanged.listen((cameraPosition) =>
-            this.setState((){
-              this.cameraPosition = cameraPosition;
-            })
+        var sub5 = mapView.onCameraChanged.listen(
+                (cameraPosition) {
+//                  this.setState(() {
+//                    this.cameraPosition = cameraPosition;
+//                  })
+                }
         );
         compositeSubscription.add(sub5);
 
         var sub6 = mapView.onToolbarAction.listen((id) {
           if (id == 1) {
             _handleDismiss();
-            Navigator.of(context).pushReplacementNamed('/d');
+//            Navigator.of(context).pushReplacementNamed('/d');
           }
         });
         compositeSubscription.add(sub6);
@@ -255,6 +279,7 @@ class loadingindlayoutstate extends State<loadingindlayout> {
         httpClient.close();
           mapView.dismiss();
           compositeSubscription.cancel();
+
       }
 }
   class CompositeSubscription {
