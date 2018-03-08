@@ -19,9 +19,9 @@ dependencies:
 #dependency_overrides:
 #  uri: ^0.11.0
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#dev_dependencies:
+ # flutter_test:
+  #  sdk: flutter
 
 
 
