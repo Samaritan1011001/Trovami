@@ -60,7 +60,10 @@ keytool -exportcert -list -v \
 * Follow instructions to download GoogleService-Info.plist, and place it into Trovami/ios/Runner in XCode
 * Open Trovami/ios/Runner/Info.plist. Locate the CFBundleURLSchemes key. The second item in the array value of this key is specific to the Firebase instance. Replace it with the value for REVERSED_CLIENT_ID from GoogleService-Info.plist
 
-## 4. Run the app
+## 4. Setup Map Api
+Follow the steps given in this [readme](https://github.com/apptreesoftware/flutter_google_map_view).
+
+## 5. Run the app
 
 ```sh
 $ flutter run
