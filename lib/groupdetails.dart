@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
+import 'package:locate_pal/homepage.dart';
+import 'package:locate_pal/httpClient/httpClient.dart';
 
 import 'InputTextField.dart';
 import 'main.dart';
@@ -10,7 +12,7 @@ import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
 
-var httpClient = createHttpClient();
+//var httpClient = createHttpClient();
 String _selectedChoice="";
 var Json = const JsonCodec();
 var groupName="";
@@ -45,11 +47,15 @@ ThemeData appTheme = new ThemeData(
   }
 
   class addGroup extends StatefulWidget {
+    dynamic users;
+    addGroup({this.users});
     @override
-    addGroupstate createState() => new addGroupstate();
+    addGroupstate createState() => new addGroupstate(users:users);
   }
 
   class addGroupstate extends State<addGroup>{
+    dynamic users;
+    addGroupstate({this.users});
     final GlobalKey<ScaffoldState> _scaffoldKeySecondary1 = new GlobalKey<ScaffoldState>();
     final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
 
@@ -75,6 +81,7 @@ ThemeData appTheme = new ThemeData(
     }
 
      _handleSubmitted() async {
+  var httpClient = HttpClientFireBase();
       final FormState form = _groupformKey.currentState;
       form.save();
       UserData loggedInMember = new UserData();
@@ -88,23 +95,31 @@ ThemeData appTheme = new ThemeData(
       for (var i = 0; i < grpd.groupmembers.length; i++) {
 
 
-        final Map resstring = await getUsers();
-        resstring.forEach((k, v) async {
-          if (v.EmailId == grpd.groupmembers[i].EmailId) {
-            if (v.groupsIamin == null) {
+//        final Map resstring = await getUsers();
+
+
+        users.value.forEach((k, v) async {
+          if (v["emailid"] == grpd.groupmembers[i].EmailId) {
+
+            print("v['groupsIamin'] : ${v["groupsIamin"]}");
+            if (v["groupsIamin"] == null) {
               List<String> groupsIamin = [];
               groupsIamin.add(grpd.groupname);
               var groupsIaminjson = jsonCodec.encode(groupsIamin);
-              var response1 = await httpClient.put(
-                  'https://fir-trovami.firebaseio.com/users/${k}/groupsIamin.json?',
+             await httpClient.put(
+                  url: 'https://fir-trovami.firebaseio.com/users/${k}/groupsIamin.json?',
                   body: groupsIaminjson);
             } else {
-              var response2 = await httpClient.get(
-                  'https://fir-trovami.firebaseio.com/users/${k}/groupsIamin.json?');
-              List<String> resmap = jsonCodec.decode(response2.body);
+
+              var response2 = await getUserById(k);
+
+              List resmap=[];
+              resmap.addAll(response2.value["groupsIamin"]);
+              print("resmap: ${resmap}");
+
               resmap.add(grpd.groupname);
               var groupsIaminjson = jsonCodec.encode(resmap);
-              var response1 = await httpClient.put(
+              var response1 = await httpClient.put( url:
                   'https://fir-trovami.firebaseio.com/users/${k}/groupsIamin.json?',
                   body: groupsIaminjson);
             }
@@ -113,8 +128,13 @@ ThemeData appTheme = new ThemeData(
       }
       var groupjson = jsonCodec1.encode(grpd);
       var url = "https://fir-trovami.firebaseio.com/groups.json";
-      await httpClient.post(url, body: groupjson);
-      await Navigator.of(context).pushReplacementNamed('/b');
+      await httpClient.post(url:url, body: groupjson);
+//  Navigator.of(context).pushReplacement(
+//    MaterialPageRoute(
+//    builder: (context) => Homepagelayout(users: users),
+//  ),);
+     Navigator.of(context).pop();
+//      await Navigator.of(context).pushReplacementNamed('/b');
     }
 
     void _select(UserData user) {
@@ -131,13 +151,12 @@ ThemeData appTheme = new ThemeData(
       });
     }
 
-    getusers()async{
+    getusers(){
 
-      final Map resstring=await getUsers();
-      resstring.forEach((k,v){
+      users.value.forEach((k,v){
         UserData usertoshow=new UserData();
-        usertoshow.name=v.name;
-        usertoshow.EmailId = v.EmailId;
+        usertoshow.name=v["name"];
+        usertoshow.EmailId = v["emailid"];
         usertoshow.locationShare=false;
         if(usertoshow.EmailId==loggedinUser){
 
@@ -244,7 +263,10 @@ ThemeData appTheme = new ThemeData(
                 ),
                 new Container(
                   child:new FloatingActionButton(
-                    onPressed:    Navigator.of(context).pop,
+                    onPressed: (){   Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => Homepage(users: users),
+                    ),);
+                    },
                     child: new Icon(Icons.clear),
                     heroTag: null,
                   ),

@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:locate_pal/httpClient/httpClient.dart';
 
 import 'Roundedbutton.dart';
 import 'main.dart';
@@ -13,7 +14,6 @@ import 'functionsForFirebaseApiCalls.dart';
 
 
 
-var httpClient = createHttpClient();
 bool userexists=false;
 UserData user1=new UserData();
 const jsonCodec=const JsonCodec(reviver: _reviver);
@@ -103,7 +103,9 @@ class signupstate extends State<Signup>{
         }
       });
       if(userexists==false){
-        await httpClient.post('https://fir-trovami.firebaseio.com/users.json',body: userjson);
+        HttpClientFireBase httpClient = HttpClientFireBase();
+
+        await httpClient.post(url: 'https://fir-trovami.firebaseio.com/users.json',body: userjson);
       } else {
         showInSnackBar('User already exits');
       }

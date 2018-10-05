@@ -1,59 +1,73 @@
 PODS:
-  - Firebase/Core (4.3.0):
-    - FirebaseAnalytics (= 4.0.4)
-    - FirebaseCore (= 4.0.8)
-  - Firebase/Database (4.3.0):
+  - Firebase/Auth (5.4.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (= 5.0.2)
+  - Firebase/Core (5.4.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 5.0.1)
+  - Firebase/CoreOnly (5.4.0):
+    - FirebaseCore (= 5.0.5)
+  - Firebase/Database (5.4.0):
+    - Firebase/CoreOnly
+    - FirebaseDatabase (= 5.0.2)
+  - firebase_auth (0.0.1):
+    - Firebase/Auth
     - Firebase/Core
-    - FirebaseDatabase (= 4.1.0)
+    - Flutter
+  - firebase_core (0.0.1):
+    - Firebase/Core
+    - Flutter
   - firebase_database (0.0.1):
     - Firebase/Database
     - Flutter
-  - FirebaseAnalytics (4.0.4):
-    - FirebaseCore (~> 4.0)
-    - FirebaseInstanceID (~> 2.0)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseAnalytics (5.0.1):
+    - FirebaseCore (~> 5.0)
+    - FirebaseInstanceID (~> 3.0)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
-  - FirebaseCore (4.0.8):
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-    - nanopb (~> 0.3)
-  - FirebaseDatabase (4.1.0):
-    - FirebaseAnalytics (~> 4.0)
-    - FirebaseCore (~> 4.0)
+  - FirebaseAuth (5.0.2):
+    - FirebaseCore (~> 5.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseCore (5.0.5):
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+  - FirebaseDatabase (5.0.2):
+    - FirebaseCore (~> 5.0)
     - leveldb-library (~> 1.18)
-  - FirebaseInstanceID (2.0.4)
+  - FirebaseInstanceID (3.1.1):
+    - FirebaseCore (~> 5.0)
   - Flutter (1.0.0)
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 4.0)
-  - GoogleMaps (2.4.0):
-    - GoogleMaps/Maps (= 2.4.0)
-  - GoogleMaps/Base (2.4.0)
-  - GoogleMaps/Maps (2.4.0):
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
     - GoogleMaps/Base
-  - GoogleSignIn (4.1.0):
-    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
-    - GoogleToolboxForMac/NSString+URLArguments (~> 2.1)
+  - GoogleSignIn (4.1.2):
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+    - "GoogleToolboxForMac/NSString+URLArguments (~> 2.1)"
     - GTMOAuth2 (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - GoogleToolboxForMac/DebugUtils (2.1.3):
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/Defines (2.1.3)
-  - GoogleToolboxForMac/NSData+zlib (2.1.3):
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3):
-    - GoogleToolboxForMac/DebugUtils (= 2.1.3)
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
-  - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
-  - GTMOAuth2 (1.1.5):
+  - GoogleToolboxForMac/DebugUtils (2.1.4):
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - GoogleToolboxForMac/Defines (2.1.4)
+  - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.1.4)":
+    - GoogleToolboxForMac/DebugUtils (= 2.1.4)
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.1.4)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.1.4)"
+  - GTMOAuth2 (1.1.6):
     - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.1.12):
-    - GTMSessionFetcher/Full (= 1.1.12)
-  - GTMSessionFetcher/Core (1.1.12)
-  - GTMSessionFetcher/Full (1.1.12):
-    - GTMSessionFetcher/Core (= 1.1.12)
-  - leveldb-library (1.18.3)
-  - map_view (0.0.1):
+  - GTMSessionFetcher (1.1.15):
+    - GTMSessionFetcher/Full (= 1.1.15)
+  - GTMSessionFetcher/Core (1.1.15)
+  - GTMSessionFetcher/Full (1.1.15):
+    - GTMSessionFetcher/Core (= 1.1.15)
+  - leveldb-library (1.20)
+  - map_view (0.0.12):
     - Flutter
     - GoogleMaps
   - nanopb (0.3.8):
@@ -63,39 +77,64 @@ PODS:
   - nanopb/encode (0.3.8)
 
 DEPENDENCIES:
-  - firebase_database (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.1.2/ios`)
-  - Flutter (from `/Users/manojn/Documents/flutter_SDK/flutter/bin/cache/artifacts/engine/ios`)
-  - google_sign_in (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/google_sign_in-1.0.1/ios`)
-  - map_view (from `/Users/manojn/.pub-cache/git/flutter_google_map_view-57dc653ee9961abef497e89c194632cc4ee2eb29/ios`)
+  - firebase_auth (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.5.20/ios`)
+  - firebase_core (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.2.5/ios`)
+  - firebase_database (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_database-1.0.4/ios`)
+  - Flutter (from `/Users/manojn/Documents/flutter/bin/cache/artifacts/engine/ios`)
+  - google_sign_in (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/google_sign_in-3.2.1/ios`)
+  - map_view (from `/Users/manojn/.pub-cache/hosted/pub.dartlang.org/map_view-0.0.14/ios`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseAuth
+    - FirebaseCore
+    - FirebaseDatabase
+    - FirebaseInstanceID
+    - GoogleMaps
+    - GoogleSignIn
+    - GoogleToolboxForMac
+    - GTMOAuth2
+    - GTMSessionFetcher
+    - leveldb-library
+    - nanopb
 
 EXTERNAL SOURCES:
+  firebase_auth:
+    :path: "/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.5.20/ios"
+  firebase_core:
+    :path: "/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.2.5/ios"
   firebase_database:
-    :path: /Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_database-0.1.2/ios
+    :path: "/Users/manojn/.pub-cache/hosted/pub.dartlang.org/firebase_database-1.0.4/ios"
   Flutter:
-    :path: /Users/manojn/Documents/flutter_SDK/flutter/bin/cache/artifacts/engine/ios
+    :path: "/Users/manojn/Documents/flutter/bin/cache/artifacts/engine/ios"
   google_sign_in:
-    :path: /Users/manojn/.pub-cache/hosted/pub.dartlang.org/google_sign_in-1.0.1/ios
+    :path: "/Users/manojn/.pub-cache/hosted/pub.dartlang.org/google_sign_in-3.2.1/ios"
   map_view:
-    :path: /Users/manojn/.pub-cache/git/flutter_google_map_view-57dc653ee9961abef497e89c194632cc4ee2eb29/ios
+    :path: "/Users/manojn/.pub-cache/hosted/pub.dartlang.org/map_view-0.0.14/ios"
 
 SPEC CHECKSUMS:
-  Firebase: 83283761a1ef6dc9846e03d08059f51421afbd65
-  firebase_database: 8d50f5c188b769afc186b0a700b2c6cdb8208df9
-  FirebaseAnalytics: 722b53c7b32bfc7806b06e0093a2f5180d4f2c5a
-  FirebaseCore: 69b1a5ac5f857ba6d5fd9d5fe794f4786dd5e579
-  FirebaseDatabase: 607284a103e961d7f5863ee603cab5e85f443bd6
-  FirebaseInstanceID: 70c2b877e9338971b2429ea5a4293df6961aa44e
-  Flutter: d674e78c937094a75ac71dd77e921e840bea3dbf
-  google_sign_in: 24ea34feed2d7d04e957cd1c4daf063c488532c2
-  GoogleMaps: 8436ab5d1c25e36915b2f7416d0c8e3fa2e76c61
-  GoogleSignIn: 8c599fc10d25b2af86a3f82fd9631e863f2b1400
-  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
-  GTMOAuth2: be83fd28d63ae3087e7d351b1f39c1a7e24ab6e7
-  GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
-  leveldb-library: 10fb39c39e243db4af1828441162405bbcec1404
-  map_view: 2cc7fe6d6e9b9b158c46383ebca44e2d1b09abb8
+  Firebase: d66f4f29c23f22d96808d9abc174d81d8eee968f
+  firebase_auth: 27a5a77a032d557c18f8e223aaf8ec1368f6cdbc
+  firebase_core: c96aa8b2fcf7f5167d32f22034f502f9304952b8
+  firebase_database: dd62ab9f71967c9011ce2fd03a89e762dcc364df
+  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
+  FirebaseAuth: 096e457cdd4274412a66c4a35874787e411f5a03
+  FirebaseCore: 42b3267233bd21a5abd54117ccc38ca3dd0f8e83
+  FirebaseDatabase: 27be5ac5bc75e0b17537b2bbfada8258addcc8cd
+  FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
+  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  google_sign_in: cbeb57b96679823d14df6b2240b629b983a42d79
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
+  GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
+  GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
+  GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
+  GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
+  leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
+  map_view: 4a71319ae78b6fb4c20813224b8c6e256703ff9b
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
 
 PODFILE CHECKSUM: 351e02e34b831289961ec3558a535cbd2c4965d2
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

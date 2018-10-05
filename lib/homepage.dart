@@ -28,7 +28,7 @@ const jsonCodec2=const JsonCodec();
 List<UserData> membersToShowHomepage=new List<UserData>();
 final groupref = FirebaseDatabase.instance.reference().child('groups');
 final usrref = FirebaseDatabase.instance.reference().child('users');
-var _httpClient = createHttpClient();
+//var _httpClient = createHttpClient();
 const _jsonCodec=const JsonCodec(reviver: _reviver);
 var reference;
 
@@ -47,7 +47,8 @@ _reviver( key, value) {
 
 
   class Homepagelayout extends StatelessWidget {
-
+    dynamic users;
+    Homepagelayout({this.users});
     @override
     Widget build(BuildContext context) {
 
@@ -58,21 +59,11 @@ _reviver( key, value) {
       return
         new Scaffold(
           body: new Container(
-            child: new Homepage(),
+            child: new Homepage(users:users),
             width: screenSize.width,
             height: screenSize.height,
           ),
         );
-//        new Scaffold(
-//          body: new Center(
-//            child: new Container(
-//              margin: const EdgeInsets.symmetric(vertical: 10.0),
-//              height: animValue,
-//              width: animValue,
-//              child: const FlutterLogo(),
-//            ),
-//          ),
-//        )
     }
 
 
@@ -130,43 +121,41 @@ class groupBox extends StatelessWidget {
 
 
   class Homepage extends StatefulWidget{
+    dynamic users;
+    Homepage({this.users});
     @override
-    homepagestate createState() => new homepagestate();
+    homepagestate createState() => new homepagestate(users:users);
   }
 
   class homepagestate extends State<Homepage> with TickerProviderStateMixin {
-    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-    new GlobalKey<RefreshIndicatorState>();
+    dynamic users;
+    var userkey;
+
+    homepagestate({this.users});
+
     List<Widget> homechildren=new List<Widget>();
 
 
     getgroups() {
   //loggedinuser="m@g.com";
   //loggedinusername="man";
+
+      print("init");
       groupsToShow=new List<groupDetails>();
-      String userkey;
-//       _refreshIndicatorKey.currentState?.show();
-       _httpClient.get('https://fir-trovami.firebaseio.com/users.json').then((response){
-        Map resstring=_jsonCodec.decode(response.body);
-        resstring.forEach((k,v){
-          if(v.EmailId==loggedinUser) {
+
+
+//             _refreshIndicatorKey.currentState?.show();
+        users.value.forEach((k,v){
+          if(v["emailid"]==loggedinUser) {
             userkey=k;
           }
         });
-        setState(() {
-          reference = usrref.child(userkey).child("groupsIamin");
-        });
+
+      setState(()  {
+        reference=  usrref.child(userkey).child("groupsIamin");
+//        groupsToShow = groupsToShow;
+        _first=true;
       });
-
-//      var response2 = await httpClient.get(
-//          'https://fir-trovami.firebaseio.com/users/${userkey}/groupsIamin.json?');
-//      groupNamesToShow = jsonCodec.decode(response2.body);
-
-//      setState(()  {
-//        reference=  ref1;
-////        groupsToShow = groupsToShow;
-//        _first=true;
-//      });
     }
 
     @override
@@ -188,7 +177,12 @@ class groupBox extends StatelessWidget {
         leading: new Container(),
         actions: <Widget>[
           new IconButton(
-            icon: new Icon(Icons.group_add), onPressed: ()=>    Navigator.of(context).pushNamed('/c')
+            icon: new Icon(Icons.group_add), onPressed: ()async{
+
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => addGroup(users: users),
+            ),);
+              }
             ,iconSize: 42.0,
           ),
           new IconButton(

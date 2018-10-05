@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:locate_pal/httpClient/httpClient.dart';
+//import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'InputTextField.dart';
 import 'Roundedbutton.dart';
@@ -16,6 +21,8 @@ String loggedinUser;
 var loggedInUsername;
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
 TextStyle textStyle = new TextStyle(
     color: const Color.fromRGBO(255, 255, 255, 0.4),
@@ -27,7 +34,17 @@ TextStyle textStyle = new TextStyle(
 Color textFieldColor = const Color.fromRGBO(0, 0, 0, 0.7);
 ScrollController scrollController = new ScrollController();
 
+//const _jsonCodec=const JsonCodec(reviver: _reviver);
 
+//_reviver( key, value) {
+//  print("outside if key : ${key}, value : ${value}");
+//
+//  if(key!=null&& value is Map && key.contains('-')){
+//    print("inside if value : ${value}");
+//    return new UserData.fromJson(value);
+//  }
+//  return value;
+//}
 
 class SignInForm extends StatefulWidget {
 
@@ -42,7 +59,7 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
 
   bool _isgooglesigincomplete=true;
   bool _first=true;
-  var httpClient = createHttpClient();
+//  var httpClient = HttpClientFireBase();
 
   final IconData mail = const IconData(0xe158, fontFamily: 'MaterialIcons');
   final IconData lock_outline = const IconData(0xe899, fontFamily: 'MaterialIcons');
@@ -56,7 +73,11 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
   AnimationController controller;
 
 
-
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'email',
+    ],
+  );
 
 
 
@@ -68,40 +89,126 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
   }
 
 
-  _ensureLoggedIn() async {
-    GoogleSignInAccount user = googleSignIn.currentUser;
-      user ??= await googleSignIn.signInSilently();
-    if (user == null) {
-      await googleSignIn.signIn();
-    }
-  }
+//  _ensureLoggedIn() async {
+//    GoogleSignInAccount user = googleSignIn.currentUser;
+//      user ??= await googleSignIn.signInSilently();
+//    if (user == null) {
+//      await googleSignIn.signIn();
+//    }
+//  }
   _handleSubmitted1() async {
     setState(() {
         _isgooglesigincomplete = false;
 
     });
-    await _ensureLoggedIn();
-    GoogleSignInAccount user = googleSignIn.currentUser;
-    UserData guser=new UserData();
-    guser.EmailId=user.email;
-    guser.name=user.displayName;
-    guser.locationShare=false;
-    final String guserjson=jsonCodec.encode(guser);
-    final Map usrmap=await getUsers();
-    usrmap.forEach((k,v){
-      if(v.EmailId==user.email){
-        userexists=true;
+    try {
+      print("inside handlesub");
+
+      _authenticateWithGoogle();
+
+    } catch (error) {
+      print(error);
+    }
+
+  }
+
+   _authenticateWithGoogle() async {
+    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+    await googleUser.authentication;
+    final FirebaseUser firebaseUser = await
+    _auth.signInWithGoogle(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    GoogleSignInAccount user;
+    setState(() {
+      user = googleUser;
+    });
+
+
+
+    if (user != null) {
+      print("inside listener");
+
+      UserData guser=new UserData();
+      guser.EmailId=user.email;
+      guser.name=user.displayName;
+      guser.locationShare=false;
+
+
+      final String guserjson=jsonCodec.encode(guser);
+
+            final dynamic response= await getUsers();
+
+//                print("docs: ${response.value}");
+
+      response.value.forEach((k,v){
+//                  print(v["emailid"]);
+//                  print(1);
+
+                  if(v["emailid"]==user.email){
+                    userexists=true;
+                    loggedinUser=user.email;
+                    loggedInUsername=user.displayName;
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Homepagelayout(users: response),),);
+                  }
+        });
+        if(userexists==false){
+          HttpClientFireBase httpClient = HttpClientFireBase();
+
+          await httpClient.post(url: 'https://fir-trovami.firebaseio.com/users.json',body: guserjson);
         loggedinUser=user.email;
         loggedInUsername=user.displayName;
-        Navigator.of(context).pushReplacementNamed('/b');
-      }
-    });
-    if(userexists==false){
-      await httpClient.post('https://fir-trovami.firebaseio.com/users.json',body: guserjson);
-      loggedinUser=user.email;
-      loggedInUsername=user.displayName;
-      await Navigator.of(context).pushReplacementNamed('/b');
+         Navigator.of(context).pushReplacementNamed('/b');
+        }else{
+        setState(() {
+        _isgooglesigincomplete=true;
+        });
+        }
+
+
+//      usrRef.orderByKey().equalTo("nolan@g.com",key: "emailid").once().then((data){
+//        print("data: ${data.value}");
+//      });
+
+
+//      response.transform(utf8.decoder).listen( (contents) async {
+//        print("contents: ${contents}");
+//
+//        Map users=_jsonCodec.decode(contents);
+//        print("users:");
+//
+//        users.forEach((k,v){
+//          if(v.EmailId==user.email){
+//            userexists=true;
+//            loggedinUser=user.email;
+//            loggedInUsername=user.displayName;
+//            Navigator.of(context).pushReplacementNamed('/b');
+//          }
+//        });
+//        if(userexists==false){
+//          HttpClientFireBase httpClient = HttpClientFireBase();
+//
+//          await httpClient.post(url: 'https://fir-trovami.firebaseio.com/users.json',body: guserjson);
+//        loggedinUser=user.email;
+//        loggedInUsername=user.displayName;
+//         Navigator.of(context).pushReplacementNamed('/b');
+//        }else{
+//        setState(() {
+//        _isgooglesigincomplete=true;
+//        });
+//        }
+//        print("usrmap : ${response}");
+//
+//
+//      });
+
     }
+//    Navigator.of(context).pushReplacementNamed('/b');
+
+     // do something with signed-in user
   }
 
   _handleSubmitted() async {
@@ -149,9 +256,22 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
     return null;
   }
 
+setGoogleSigninListener(){
+  _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async{
+
+    print("herrrrr");
+
+  });
+  _googleSignIn.signInSilently();
+}
 
   @override
   void initState() {
+
+    setGoogleSigninListener();
+
+
+
     controller = new AnimationController(
         duration: const Duration(seconds: 10), vsync: this);
     animation = new ColorTween(begin: Colors.red, end: Colors.blue).animate(controller)

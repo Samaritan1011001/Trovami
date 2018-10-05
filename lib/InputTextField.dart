@@ -52,7 +52,8 @@ class InputField extends StatelessWidget {
                   icon,
                   color: Colors.brown[150],
                 ),
-                hideDivider: true),
+//                hideDivider: true,
+            ),
           ),
         )));
   }

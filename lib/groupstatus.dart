@@ -20,7 +20,7 @@ import 'signinpage.dart';
 
 final userref = FirebaseDatabase.instance.reference().child('users');          // new
 final groupref = FirebaseDatabase.instance.reference().child('groups');          // new
-var httpClient = createHttpClient();
+//var httpClient = createHttpClient();
 const jsonCodec1=const JsonCodec(reviver: _reviver1);
 const jsonCodec=const JsonCodec(reviver: _reviver);
 List<currentLoc> currentLocations=new List<currentLoc>();
@@ -49,29 +49,29 @@ _reviver1(key,value) {
 
  toggleMemberLocation(bool newValue) async{
 
-  final Map groupresmap=await getGroups();
-
-  groupresmap.forEach((k,v) async{
-    if(v.groupname==groupStatusGroupname) {
-      for(var i=0;i<v.groupmembers.length;i++) {
-        var response1 = await httpClient.get(
-            "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}.json");
-      Map result1=jsonCodec.decode(response1.body);
-      if(result1["emailid"]==loggedinUser){
-        if(result1["locationShare"]==true) {
-          locationShare = false;
-        }
-        else {
-          locationShare=true;
-        }
-        String result2=jsonCodec.encode(locationShare);
-        await httpClient.put(
-            "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}/locationShare.json",body: result2);
-
-      }
-      }
-    }
-  });
+//  final Map groupresmap=await getGroups();
+//
+//  groupresmap.forEach((k,v) async{
+//    if(v.groupname==groupStatusGroupname) {
+//      for(var i=0;i<v.groupmembers.length;i++) {
+//        var response1 = await httpClient.get(
+//            "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}.json");
+//      Map result1=jsonCodec.decode(response1.body);
+//      if(result1["emailid"]==loggedinUser){
+//        if(result1["locationShare"]==true) {
+//          locationShare = false;
+//        }
+//        else {
+//          locationShare=true;
+//        }
+//        String result2=jsonCodec.encode(locationShare);
+//        await httpClient.put(
+//            "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}/locationShare.json",body: result2);
+//
+//      }
+//      }
+//    }
+//  });
 
 }
 
@@ -109,20 +109,22 @@ class groupstatusstate extends State<groupstatus>{
   List<String> memberstoShowHomepage1=new List<String>();
 
   getgrpmembers(String grpkey,int i) async{
-    var response1 = await httpClient. get (
-        "https://fir-trovami.firebaseio.com/groups/${grpkey}/members/${i}.json");
-    Map result1 = jsonCodec.decode(response1.body);
-    memberstoShowHomepage1.add(result1["name"]);
+    var response1 = await getAGroupAndAMember(grpkey,i);
+//    Map result1 = jsonCodec.decode(response1.body);
+    print("response1 : ${i}");
 
-    if (result1["emailid"] == loggedinUser) {
+    memberstoShowHomepage1.add(response1.value[i]["name"]);
+    print("memberstoShowHomepage1 : ${memberstoShowHomepage1}");
+
+    if (response1.value[i]["emailid"] == loggedinUser) {
       setState(() {
-        togglestate = result1["locationShare"];
-        locationShare=result1["locationShare"];
+        togglestate = response1.value[i]["locationShare"];
+        locationShare=response1.value[i]["locationShare"];
       });
     }
-    setState(() {
-      memberstoShowHomepage1=dedup(memberstoShowHomepage1);
-    });
+
+
+
   }
 
   Future<Null>   getmembers1() async {
@@ -134,20 +136,26 @@ class groupstatusstate extends State<groupstatus>{
 
     _refreshIndicatorKey.currentState?.show();
 
-    final Map groupresmap = await getGroups();
+    final dynamic groupresmap = await getGroups();
 
-    groupresmap.forEach((k, v){
-      if (v.groupname == groupStatusGroupname) {
+//    print("grrrppr: ${groupresmap.value}");
+    groupresmap.value.forEach((k, v){
+      if (v["groupname"] == groupStatusGroupname) {
+        print("v: ${v["groupname"]}");
         grpkey=k;
-        grpmemcount=v.groupmembers.length;
+        grpmemcount=v["members"].length;
 
       }
       });
-
+    print("grpmemcount : ${grpmemcount}");
     for(var i = 0;i<grpmemcount;i++)
     {
       getgrpmembers(grpkey,i);
     }
+    setState(() {
+      memberstoShowHomepage1=memberstoShowHomepage1;
+//      memberstoShowHomepage1=dedup(memberstoShowHomepage1);
+    });
   }
 
 
@@ -191,10 +199,10 @@ class groupstatusstate extends State<groupstatus>{
         appBar: new AppBar(
           leading: defaultTargetPlatform == TargetPlatform.iOS
               ? new CupertinoButton(child: new Icon(Icons.keyboard_backspace), onPressed: (){
-            Navigator.of(context).pushReplacementNamed('/b');
+            Navigator.of(context).pop();
           },
           ) : new FlatButton(onPressed: (){
-            Navigator.of(context).pushReplacementNamed('/b');
+            Navigator.of(context).pop();
           },
               child:new Icon(Icons.keyboard_backspace)
           ),

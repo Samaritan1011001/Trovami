@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        google()
         jcenter()
         maven {
             url "https://maven.google.com"
@@ -7,9 +8,9 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath 'com.google.gms:google-services:3.1.0'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.2-4'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.51'
     }
 }
 
@@ -23,11 +24,21 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-    project.evaluationDependsOn(':app')
-}
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+subprojects {
+//    project.buildDir = "${rootProject.buildDir}/${project.name}"
+//    project.evaluationDependsOn(':app')
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion "26.1.0"
+            }
+        }
+    }
 }
