@@ -72,7 +72,7 @@ $ flutter run
 
 # Tasks to complete
 
-- [ ] Firebase Authentication 
+- [x] Firebase Authentication 
 - [x] Google Sign in
 - [ ] Chat screen 
 - [ ] Deleting groups
