@@ -2,7 +2,7 @@ name: locate_pal
 description: A new Flutter project.
 
 environment:
-    sdk: '>=1.9.0 <2.0.0'
+    sdk: '>=2.0.0-dev.68.0 <3.0.0'
 
 dependencies:
   flutter:
