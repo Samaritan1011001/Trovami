@@ -8,8 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:location/location.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
+import 'package:http/http.dart' as http;
 
 
 import 'homepage.dart';
@@ -47,33 +49,10 @@ _reviver1(key,value) {
  else return value;
 }
 
- toggleMemberLocation(bool newValue) async{
+ 
 
-//  final Map groupresmap=await getGroups();
-//
-//  groupresmap.forEach((k,v) async{
-//    if(v.groupname==groupStatusGroupname) {
-//      for(var i=0;i<v.groupmembers.length;i++) {
-//        var response1 = await httpClient.get(
-//            "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}.json");
-//      Map result1=jsonCodec.decode(response1.body);
-//      if(result1["emailid"]==loggedinUser){
-//        if(result1["locationShare"]==true) {
-//          locationShare = false;
-//        }
-//        else {
-//          locationShare=true;
-//        }
-//        String result2=jsonCodec.encode(locationShare);
-//        await httpClient.put(
-//            "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}/locationShare.json",body: result2);
-//
-//      }
-//      }
-//    }
-//  });
+// Platform messages are asynchronous, so we initialize in an async method.
 
-}
 
 
 
@@ -102,12 +81,95 @@ _reviver1(key,value) {
 
 class groupstatusstate extends State<groupstatus>{
 
+  LocationData _startLocation;
+  LocationData _currentLocation;
+
+  StreamSubscription<LocationData> _locationSubscription;
+
+  Location locationService  = new Location();
+  bool _permission = false;
+  String error;
+
+  bool currentWidget = true;
+  
   var getMemFlag=0;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKeySecondary2 = new GlobalKey<ScaffoldState>();
   List<Widget> children=new List<Widget>();
   List<String> memberstoShowHomepage1=new List<String>();
 
+
+  toggleMemberLocation(bool newValue) async{
+
+
+    await initPlatformState();
+    final Map groupresmap=await getGroups();
+
+    print("groupresmap => ${groupresmap}");
+
+    groupresmap.forEach((k,v) async{
+      if(v.groupname==groupStatusGroupname) {
+        for(var i=0;i<v.groupmembers.length;i++) {
+          var response1 = await http.get(
+              "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}.json");
+          Map result1=jsonCodec.decode(response1.body);
+          if(result1["emailid"]==loggedinUser){
+            if(result1["locationShare"]==true) {
+              locationShare = false;
+            }
+            else {
+              locationShare=true;
+            }
+            String result2=jsonCodec.encode(locationShare);
+            await http.put(
+                "https://fir-trovami.firebaseio.com/groups/${k}/members/${i}/locationShare.json",body: result2);
+          }
+        }
+      }
+    });
+
+  }
+
+  initPlatformState() async {
+    await locationService.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 1000);
+
+    LocationData location;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      bool serviceStatus = await locationService.serviceEnabled();
+      print("Service status: $serviceStatus");
+      if (serviceStatus) {
+        _permission = await locationService.requestPermission();
+        print("Permission: $_permission");
+        if (_permission) {
+          
+          if(locationShare){
+            location = await locationService.getLocation();
+          }
+
+         
+        }
+      } else {
+        bool serviceStatusResult = await locationService.requestService();
+        print("Service status activated after request: $serviceStatusResult");
+        if(serviceStatusResult){
+          initPlatformState();
+        }
+      }
+    } on PlatformException catch (e) {
+      print(e);
+      if (e.code == 'PERMISSION_DENIED') {
+        error = e.message;
+      } else if (e.code == 'SERVICE_STATUS_ERROR') {
+        error = e.message;
+      }
+      location = null;
+    }
+
+      _startLocation = location;
+
+  }
+  
   getgrpmembers(String grpkey,int i) async{
     var response1 = await getAGroupAndAMember(grpkey,i);
 //    Map result1 = jsonCodec.decode(response1.body);
@@ -139,11 +201,11 @@ class groupstatusstate extends State<groupstatus>{
     final dynamic groupresmap = await getGroups();
 
 //    print("grrrppr: ${groupresmap.value}");
-    groupresmap.value.forEach((k, v){
-      if (v["groupname"] == groupStatusGroupname) {
-        print("v: ${v["groupname"]}");
+    groupresmap.forEach((k, v){
+      if (v.groupname == groupStatusGroupname) {
+        print("v: ${v.groupname}");
         grpkey=k;
-        grpmemcount=v["members"].length;
+        grpmemcount=v.groupmembers.length;
 
       }
       });
@@ -208,7 +270,11 @@ class groupstatusstate extends State<groupstatus>{
           ),
           actions: <Widget>[
             new FlatButton(onPressed:()async {
-              await Navigator.of(context).pushNamed('/g');
+
+
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => loadingindlayout(locationService: locationService),),);
+//              await Navigator.of(context).pushNamed('/g');
 
             },
                 child: new Text("Show Map")

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:locate_pal/httpClient/httpClient.dart';
 
 import 'main.dart';
+import 'package:http/http.dart' as http;
 
 //var _httpClient = createHttpClient();
 const _jsonCodec=const JsonCodec(reviver: _reviver);
@@ -23,7 +24,7 @@ _reviver( key, value) {
 }
 
 _reviver2(key,value) {
-  if(key!=null&& value is Map){
+  if(key!=null && value is Map){
     return new groupDetails.fromJson(value);
   } else
     return value;
@@ -52,12 +53,12 @@ getGroupsIamIn(userId)async{
 
 getGroups()async{
 //  groupsRef.
-//  var url="https://fir-trovami.firebaseio.com/groups.json";
-//  var response=await _httpClient.get(url);
-//  return _jsonCodec2.decode(response.body);
+  var url="https://fir-trovami.firebaseio.com/groups.json";
+  var response=await http.get(url);
+  return _jsonCodec2.decode(response.body);
 
-  dynamic resp=await groupsRef.orderByKey().once();
-  return resp;
+//  dynamic resp=await groupsRef.orderByKey().once();
+//  return resp;
 }
 
 getAGroupAndAMember(groupKey,memberIndex)async{

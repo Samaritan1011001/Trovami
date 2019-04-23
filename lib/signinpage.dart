@@ -4,7 +4,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:locate_pal/httpClient/httpClient.dart';
 //import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,14 +14,20 @@ import 'main.dart';
 import 'signuppage.dart';
 import 'homepage.dart';
 import 'functionsForFirebaseApiCalls.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-final googleSignIn = new GoogleSignIn();
 String loggedinUser;
 var loggedInUsername;
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: [
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ],
+);
 
 TextStyle textStyle = new TextStyle(
     color: const Color.fromRGBO(255, 255, 255, 0.4),
@@ -73,11 +78,7 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
   AnimationController controller;
 
 
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      'email',
-    ],
-  );
+
 
 
 
@@ -97,30 +98,32 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
 //    }
 //  }
   _handleSubmitted1() async {
+
     setState(() {
         _isgooglesigincomplete = false;
-
     });
     try {
+      await _authenticateWithGoogle();
+
       print("inside handlesub");
 
-      _authenticateWithGoogle();
-
+      setState(() {
+        _isgooglesigincomplete = true;
+      });
     } catch (error) {
       print(error);
     }
 
   }
-
-   _authenticateWithGoogle() async {
-    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+  _authenticateWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
     await googleUser.authentication;
-    final FirebaseUser firebaseUser = await
-    _auth.signInWithGoogle(
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+    final FirebaseUser firebaseUser = await _auth.signInWithCredential(credential);
     GoogleSignInAccount user;
     setState(() {
       user = googleUser;
@@ -139,77 +142,33 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
 
       final String guserjson=jsonCodec.encode(guser);
 
-            final dynamic response= await getUsers();
-
-//                print("docs: ${response.value}");
+      final dynamic response= await getUsers();
 
       response.value.forEach((k,v){
-//                  print(v["emailid"]);
-//                  print(1);
+        if(v["emailid"]==user.email){
+          userexists=true;
+          loggedinUser=user.email;
+          loggedInUsername=user.displayName;
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Homepagelayout(users: response),),);
+        }
+      });
+      if(userexists==false){
+        HttpClientFireBase httpClient = HttpClientFireBase();
 
-                  if(v["emailid"]==user.email){
-                    userexists=true;
-                    loggedinUser=user.email;
-                    loggedInUsername=user.displayName;
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Homepagelayout(users: response),),);
-                  }
-        });
-        if(userexists==false){
-          HttpClientFireBase httpClient = HttpClientFireBase();
-
-          await httpClient.post(url: 'https://fir-trovami.firebaseio.com/users.json',body: guserjson);
+        await httpClient.post(url: 'https://fir-trovami.firebaseio.com/users.json',body: guserjson);
         loggedinUser=user.email;
         loggedInUsername=user.displayName;
-         Navigator.of(context).pushReplacementNamed('/b');
-        }else{
+        Navigator.of(context).pushReplacementNamed('/b');
+      }else{
         setState(() {
-        _isgooglesigincomplete=true;
+          _isgooglesigincomplete=true;
         });
-        }
-
-
-//      usrRef.orderByKey().equalTo("nolan@g.com",key: "emailid").once().then((data){
-//        print("data: ${data.value}");
-//      });
-
-
-//      response.transform(utf8.decoder).listen( (contents) async {
-//        print("contents: ${contents}");
-//
-//        Map users=_jsonCodec.decode(contents);
-//        print("users:");
-//
-//        users.forEach((k,v){
-//          if(v.EmailId==user.email){
-//            userexists=true;
-//            loggedinUser=user.email;
-//            loggedInUsername=user.displayName;
-//            Navigator.of(context).pushReplacementNamed('/b');
-//          }
-//        });
-//        if(userexists==false){
-//          HttpClientFireBase httpClient = HttpClientFireBase();
-//
-//          await httpClient.post(url: 'https://fir-trovami.firebaseio.com/users.json',body: guserjson);
-//        loggedinUser=user.email;
-//        loggedInUsername=user.displayName;
-//         Navigator.of(context).pushReplacementNamed('/b');
-//        }else{
-//        setState(() {
-//        _isgooglesigincomplete=true;
-//        });
-//        }
-//        print("usrmap : ${response}");
-//
-//
-//      });
-
+      }
     }
-//    Navigator.of(context).pushReplacementNamed('/b');
-
-     // do something with signed-in user
   }
+
+
 
   _handleSubmitted() async {
 
@@ -256,19 +215,11 @@ class signinformstate extends State<SignInForm> with SingleTickerProviderStateMi
     return null;
   }
 
-setGoogleSigninListener(){
-  _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async{
 
-    print("herrrrr");
-
-  });
-  _googleSignIn.signInSilently();
-}
 
   @override
   void initState() {
 
-    setGoogleSigninListener();
 
 
 
@@ -396,7 +347,7 @@ setGoogleSigninListener(){
                           backgroundColor: Colors.white,
                         ) : new FloatingActionButton(
                           child: new CircularProgressIndicator(valueColor: animation,),
-                          onPressed: _handleSubmitted1,
+//                          onPressed: _handleSubmitted1,
                           backgroundColor: Colors.white,
                         )),
 //                        secondChild: _scaffoldkeyhomepage,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:map_view/map_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:locate_pal/mapScreen.dart';
 
 import 'groupdetails.dart';
 import 'groupstatus.dart';
@@ -30,9 +30,7 @@ final ThemeData kDefaultTheme = new ThemeData(
 
 
 void main() {
-  defaultTargetPlatform == TargetPlatform.iOS
-      ? MapView.setApiKey("AIzaSyCLw1SjRi8TLDu_Nzcdo2Ufu68H1UXl9BU")
-      : MapView.setApiKey("AIzaSyB4xaxweIhP0F36ZCBpfeiDjpoPc741Oe0");
+
 
   runApp(new MaterialApp(
     title: "Trovami",
@@ -144,7 +142,7 @@ class logindetails {
 class groupDetails {
   groupDetails({this.groupname,this.groupmembers});
   String groupname = "";
-  List<UserData> groupmembers=[];
+  List<dynamic> groupmembers=[];
 
   groupDetails.fromJson(Map value){
     groupname=value["groupname"];
