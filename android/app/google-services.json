@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1099202702902",
+    "firebase_url": "https://trovami-bcd81.firebaseio.com",
+    "project_id": "trovami-bcd81",
+    "storage_bucket": "trovami-bcd81.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1099202702902:android:a7fa1916e557a6e1877297",
+        "android_client_info": {
+          "package_name": "com.example.trovami"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1099202702902-bqk5nbnj2rs13csvd1k4mnc0kivk0fml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trovami",
+            "certificate_hash": "7802b2eb7b00cdd981afe179426351ff4bc0ae20"
+          }
+        },
+        {
+          "client_id": "1099202702902-5ihn439b5sea1nivjovlbn663vm55m7e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_qeqzyzsy9pJbWfi19zA5DQsygzRDWIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1099202702902-5ihn439b5sea1nivjovlbn663vm55m7e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
