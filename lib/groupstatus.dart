@@ -140,7 +140,7 @@ updateDatabaseLocation (currLoc) async{
       if(v["groupname"]==groupStatusGroupname) {
         for(var i=0;i<v["members"].length;i++) {
           var response1 = await http.get("https://trovami-bcd81.firebaseio.com/groups/${k}/members/${i}.json");
-          print(response1);
+          print("response1->${response1}");
           Map result1=jsonCodec.decode(response1.body);
           if(result1["emailid"]==loggedinUser){
             if(result1["locationShare"]==true||result1["location"]==null) {

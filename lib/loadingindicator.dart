@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:trovami/groupdetails.dart';
 
 import 'groupstatus.dart';
 import 'homepage.dart';
@@ -62,6 +63,46 @@ class MapSampleState extends State<MapSample> {
       markers[markerId] = marker;
       return markers;
   }
+  StreamSubscription _getChangesSubscription;
+  @override
+  void initState() {
+    listenTochanges();
+  }
+  @override
+  void dispose() {
+    _getChangesSubscription?.cancel();
+    print("Groups listener disposed");
+    super.dispose();
+  }
+  void listenTochanges(){
+    print("Groups lister inistialised");
+    _getChangesSubscription = groupref.onChildChanged.listen((event) async{
+      if(groupStatusGroupname == event.snapshot.value["groupname"]){
+        List<dynamic> groupMems = event.snapshot.value["members"];
+        print("groupMems -> ${groupMems}");
+
+        for(var grpmem in groupMems){
+          print("mem -> ${grpmem["locationShare"]}");
+          if(grpmem["locationShare"]==true) {
+            for (var i = 0; i < widget.currentLocations.length; i++) {
+              if (widget.currentLocations[i]["emailid"] == grpmem["emailid"]) {
+                widget.currentLocations[i] = {
+                  "latitude": grpmem["location"]["latitude"],
+                  "longitude": grpmem["location"]["longitude"],
+                  "emailid": grpmem["emailid"]
+                };
+              }
+            }
+          }
+        }
+        setState(() {
+
+        });
+
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -69,7 +110,7 @@ class MapSampleState extends State<MapSample> {
           future: getLocsOfMembers(),
 //          initialData: widget.currentLocations,
           builder: (BuildContext context, snapshot) {
-//            print(snapshot.data);
+            print("snapshot.data ${snapshot.data}");
             if (snapshot.data == null || snapshot.data.length == 0) {
               return Center(
                 child: Text(
@@ -83,6 +124,7 @@ class MapSampleState extends State<MapSample> {
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
                   target: LatLng(snapshot.data[0]["latitude"], snapshot.data[0]["longitude"]),
+                  zoom: 14.4746,
 
                 ),
                 onMapCreated: (GoogleMapController controller) {
@@ -92,11 +134,6 @@ class MapSampleState extends State<MapSample> {
               );
             }
           }),
-//      floatingActionButton: FloatingActionButton.extended(
-//        onPressed: _goToTheLake,
-//        label: Text('To the lake!'),
-//        icon: Icon(Icons.directions_boat),
-//      ),
     );
   }
 
@@ -104,10 +141,8 @@ class MapSampleState extends State<MapSample> {
     HttpClientFireBase httpClient = HttpClientFireBase();
     String groupkey;
     int memcount = 0;
-
     final DataSnapshot grps = await getGroups();
     Map groupresmap = grps.value as Map;
-
     groupresmap.forEach((k, v) {
       if (v["groupname"] == groupStatusGroupname) {
         memcount = v["members"].length;
@@ -125,7 +160,7 @@ class MapSampleState extends State<MapSample> {
 
         if(widget.currentLocations.length == 0) {
           widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
-          print("hereeeeee ${widget.currentLocations}");
+          print("here 1 ${widget.currentLocations}");
 
         }else{
           var flag = 0;
@@ -147,21 +182,17 @@ class MapSampleState extends State<MapSample> {
         }
 
 
-//        if (flag == 0) {
-//          currentLoc currentLocation = new currentLoc();
-//          currentLocation.EmailId = result1["emailid"];
-//          currentLocation.currentLocation = resmap1;
-//          widget.currentLocations.add(currentLocation);
-//        }
       } else {
+        print("works till here");
+
         for (var i = 0; i < widget.currentLocations.length; i++) {
-          if (widget.currentLocations[i].EmailId == result1["emailid"]) {
+          if (widget.currentLocations[i]["emailid"] == result1["emailid"]) {
             widget.currentLocations.removeAt(i);
           }
         }
       }
     }
-    print("hereeeeee ${widget.currentLocations}");
+    print("here 2 ${widget.currentLocations}");
 
     return widget.currentLocations;
   }
