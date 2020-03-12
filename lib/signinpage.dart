@@ -34,10 +34,10 @@ ScrollController scrollController = new ScrollController();
 //const _jsonCodec=const JsonCodec(reviver: _reviver);
 
 //_reviver( key, value) {
-//  print("outside if key : ${key}, value : ${value}");
+////  print("outside if key : ${key}, value : ${value}");
 //
 //  if(key!=null&& value is Map && key.contains('-')){
-//    print("inside if value : ${value}");
+////    print("inside if value : ${value}");
 //    return new UserData.fromJson(value);
 //  }
 //  return value;
@@ -93,11 +93,11 @@ class signinformstate extends State<SignInForm>
       _isgooglesigincomplete = false;
     });
     try {
-      print("inside handlesub");
+//      print("inside handlesub");
 
       _authenticateWithGoogle();
     } catch (error) {
-      print(error);
+//      print(error);
     }
   }
 
@@ -117,7 +117,7 @@ class signinformstate extends State<SignInForm>
     });
 
     if (user != null) {
-      print("inside listener");
+//      print("inside listener");
 
       UserData guser = new UserData();
       guser.EmailId = user.email;
@@ -128,7 +128,7 @@ class signinformstate extends State<SignInForm>
 
       final DataSnapshot response = await getUsers();
 
-      print("docs: ${response}");
+//      print("docs: ${response}");
 
       if (response.value != null) {
         response.value.forEach((k, v) {
@@ -152,7 +152,11 @@ class signinformstate extends State<SignInForm>
             body: guserjson);
         loggedinUser = user.email;
         loggedInUsername = user.displayName;
-        Navigator.of(context).pushReplacementNamed('/b');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Homepagelayout(users: response),
+          ),
+        );
       } else {
         setState(() {
           _isgooglesigincomplete = true;
@@ -160,14 +164,14 @@ class signinformstate extends State<SignInForm>
       }
 
 //      usrRef.orderByKey().equalTo("nolan@g.com",key: "emailid").once().then((data){
-//        print("data: ${data.value}");
+////        print("data: ${data.value}");
 //      });
 
 //      response.transform(utf8.decoder).listen( (contents) async {
-//        print("contents: ${contents}");
+////        print("contents: ${contents}");
 //
 //        Map users=_jsonCodec.decode(contents);
-//        print("users:");
+////        print("users:");
 //
 //        users.forEach((k,v){
 //          if(v.EmailId==user.email){
@@ -189,7 +193,7 @@ class signinformstate extends State<SignInForm>
 //        _isgooglesigincomplete=true;
 //        });
 //        }
-//        print("usrmap : ${response}");
+////        print("usrmap : ${response}");
 //
 //
 //      });
@@ -214,7 +218,11 @@ class signinformstate extends State<SignInForm>
         if (logindet.EmailId == us["emailid"]) {
           loggedinUser = logindet.EmailId;
           loggedInUsername = us["name"];
-          await Navigator.of(context).pushReplacementNamed('/b');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => Homepagelayout(users: usrmap),
+            ),
+          );
         }
       });
       showInSnackBar(
@@ -242,7 +250,6 @@ class signinformstate extends State<SignInForm>
   setGoogleSigninListener() {
     _googleSignIn.onCurrentUserChanged
         .listen((GoogleSignInAccount account) async {
-      print("herrrrr");
     });
     _googleSignIn.signInSilently();
   }
@@ -364,26 +371,22 @@ class signinformstate extends State<SignInForm>
                           borderWidth: 0.0,
                           buttonColor: const Color.fromRGBO(100, 100, 100, 1.0),
                         ),
-//                      new AnimatedCrossFade(
-//                        duration: const Duration(seconds: 3),
-//                        firstChild:
-                        (_isgooglesigincomplete
-                            ? new FloatingActionButton(
-                                child:
-                                    new Image.asset('assets/google-logo.jpg'),
-                                onPressed: _handleSubmitted1,
-                                backgroundColor: Colors.white,
-                              )
-                            : new FloatingActionButton(
-                                child: new CircularProgressIndicator(
-                                  valueColor: animation,
-                                ),
-                                onPressed: _handleSubmitted1,
-                                backgroundColor: Colors.white,
-                              )),
-//                        secondChild: _scaffoldkeyhomepage,
-//                        crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-//                      ),
+
+/// UNCOMMENT IF YOU WANT TO SIGNIN THROUGH GOOGLE
+//                        (_isgooglesigincomplete
+//                            ? new FloatingActionButton(
+//                                child:
+//                                    new Image.asset('assets/google-logo.jpg'),
+//                                onPressed: _handleSubmitted1,
+//                                backgroundColor: Colors.white,
+//                              )
+//                            : new FloatingActionButton(
+//                                child: new CircularProgressIndicator(
+//                                  valueColor: animation,
+//                                ),
+//                                onPressed: _handleSubmitted1,
+//                                backgroundColor: Colors.white,
+//                              )),
                       ],
                     ),
                   ],

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -13,17 +12,12 @@ import 'Roundedbutton.dart';
 import 'main.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
+bool userexists = false;
+UserData user1 = new UserData();
+const jsonCodec = const JsonCodec(reviver: _reviver);
 
-
-bool  userexists=false;
-UserData user1=new UserData();
-const jsonCodec=const JsonCodec(reviver: _reviver);
-
-
-
-
-_reviver( key, value) {
-  if(key!=null&& value is Map && key.contains('-')){
+_reviver(key, value) {
+  if (key != null && value is Map && key.contains('-')) {
     return new UserData.fromJson(value);
   }
   return value;
@@ -32,86 +26,82 @@ _reviver( key, value) {
 TextStyle textStyle = new TextStyle(
     color: const Color.fromRGBO(255, 255, 255, 0.4),
     fontSize: 16.0,
-    fontWeight: FontWeight.bold
-);
-
+    fontWeight: FontWeight.bold);
 
 class SignupLayout extends StatefulWidget {
   @override
   signuplayoutstate createState() => new signuplayoutstate();
 }
 
-
-class signuplayoutstate extends State<SignupLayout>{
+class signuplayoutstate extends State<SignupLayout> {
   @override
-  Widget build(BuildContext context)=>
+  Widget build(BuildContext context) =>
       defaultTargetPlatform == TargetPlatform.iOS
           ? new CupertinoPageScaffold(child: new Signup()
 //        ,navigationBar: new CupertinoNavigationBar(middle: new Text("Sign-up"),backgroundColor:const Color.fromRGBO(0, 0, 0, 0.7),),
-      )
+              )
           : new Scaffold(
-        body: new Container(
-          child:new Signup(),
-        ),
-      );
+              body: new Container(
+                child: new Signup(),
+              ),
+            );
 }
-
 
 class Signup extends StatefulWidget {
   @override
   signupstate createState() => new signupstate();
 }
 
-class signupstate extends State<Signup>{
-
-  final GlobalKey<ScaffoldState> _scaffoldKeySecondary = new GlobalKey<ScaffoldState>();
+class signupstate extends State<Signup> {
+  final GlobalKey<ScaffoldState> _scaffoldKeySecondary =
+      new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKeySeondary = new GlobalKey<FormState>();
-  final GlobalKey<FormFieldState<String>> _passwordFieldKeySecondary = new GlobalKey<FormFieldState<String>>();
+  final GlobalKey<FormFieldState<String>> _passwordFieldKeySecondary =
+      new GlobalKey<FormFieldState<String>>();
 
   bool _autovalidate1 = false;
   bool _formWasEdited = false;
 
   final IconData mail = const IconData(0xe158, fontFamily: 'MaterialIcons');
-  final IconData lock_outline = const IconData(
-      0xe899, fontFamily: 'MaterialIcons');
-  final IconData signupicon=const IconData(0xe316, fontFamily: 'MaterialIcons');
-
+  final IconData lock_outline =
+      const IconData(0xe899, fontFamily: 'MaterialIcons');
+  final IconData signupicon =
+      const IconData(0xe316, fontFamily: 'MaterialIcons');
 
   void showInSnackBar(String value) {
-    _scaffoldKeySecondary.currentState.showSnackBar(
-      new SnackBar(
-        content: new Text(value)
-      )
-    );
+    _scaffoldKeySecondary.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
-  _handleSubmitted1() async{
+  _handleSubmitted1() async {
     final FormState form = _formKeySeondary.currentState;
     if (!form.validate()) {
       _autovalidate1 = true;
       showInSnackBar('Please fix the errors in red before submitting.');
     } else {
       form.save();
-      user1.location=null;
+      user1.location = null;
       user1.locationShare = false;
-      user1.groupsIamin=[];
+      user1.groupsIamin = [];
       users.add(user1);
-      var userjson= jsonCodec.encode(user1);
-      print("userjson:${userjson}");
-      final DataSnapshot usrmap=await getUsers();
+      var userjson = jsonCodec.encode(user1);
+//      print("userjson:${userjson}");
+      final DataSnapshot usrmap = await getUsers();
       Map usrs = usrmap.value as Map;
-//      print("usrmap:${usrs.values.runtimeType}");
+//      print("usrmap:${usrs.values}");
 
 //      usrs.values.forEach((x){print(x["emailid"]);});
-      usrs.values.forEach((x){
-        if(x["emailid"]==user1.EmailId){
-          userexists=true;
+      usrs.values.forEach((x) {
+        if (x["emailid"] == user1.EmailId) {
+          userexists = true;
         }
       });
-      if(userexists==false){
+      if (userexists == false) {
         HttpClientFireBase httpClient = HttpClientFireBase();
 
-        await httpClient.post(url: 'https://trovami-bcd81.firebaseio.com/users.json',body: userjson);
+        await httpClient.post(
+            url: 'https://trovami-bcd81.firebaseio.com/users.json',
+            body: userjson);
       } else {
         showInSnackBar('User already exits');
       }
@@ -121,25 +111,21 @@ class signupstate extends State<Signup>{
 
   String _validateName(String value) {
     _formWasEdited = true;
-    if (value.isEmpty)
-      return 'EmailID is required.';
+    if (value.isEmpty) return 'EmailID is required.';
     final RegExp nameExp = new RegExp(r'^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$');
-    if (!nameExp.hasMatch(value))
-      return 'Please enter correct EmailID';
+    if (!nameExp.hasMatch(value)) return 'Please enter correct EmailID';
     return null;
   }
-
 
   String _validatePassword(String value) {
     _formWasEdited = true;
-    final FormFieldState<String> passwordField1 = _passwordFieldKeySecondary.currentState;
+    final FormFieldState<String> passwordField1 =
+        _passwordFieldKeySecondary.currentState;
     if (passwordField1.value == null || passwordField1.value.isEmpty)
       return 'Please choose a password.';
-    if (passwordField1.value != value)
-      return 'Passwords don\'t match';
+    if (passwordField1.value != value) return 'Passwords don\'t match';
     return null;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +133,7 @@ class signupstate extends State<Signup>{
     return new Scaffold(
       key: _scaffoldKeySecondary,
       body: new Container(
-        child:new Form(
+        child: new Form(
           key: _formKeySeondary,
           autovalidate: _autovalidate1,
           child: new ListView(
@@ -156,29 +142,37 @@ class signupstate extends State<Signup>{
               new Container(
                 child: new TextFormField(
                   decoration: new InputDecoration(
-                    hintText: 'Name',
-                    labelText: 'Name',
-                    icon: new Icon(Icons.person),
-                    labelStyle: textStyle
-                  ),
-                  onSaved: (String value) { user1.name = value; },
-                ) ,
-                padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                      hintText: 'Name',
+                      labelText: 'Name',
+                      icon: new Icon(Icons.person),
+                      labelStyle: textStyle),
+                  onSaved: (String value) {
+                    user1.name = value;
+                  },
+                ),
+                padding:
+                    const EdgeInsets.only(bottom: 15.0, top: 0.0, right: 20.0),
+              ),
+              Container(
+                padding: const EdgeInsets.only(top:10.0,left: 30),
+                child: Text(
+                  "PLEASE DO NOT ENTER YOUR REAL EMAIL ADDRESS. APP IS PUBLIC.",
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
               ),
               new Container(
-                child: new Container(
-                  child: new TextFormField(
-                    decoration: new InputDecoration(
-                      icon: new Icon(mail),
-                      hintText: 'EmailID',
-                      labelText: 'EmailID',
-                    ),
-                    onSaved: (String value) { user1.EmailId = value; },
-                    validator: _validateName,
+                child: new TextFormField(
+                  decoration: new InputDecoration(
+                    icon: new Icon(mail),
+                    hintText: 'EmailID',
+                    labelText: 'EmailID',
                   ),
-                  padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                  onSaved: (String value) {
+                    user1.EmailId = value;
+                  },
+                  validator: _validateName,
                 ),
-                padding: const EdgeInsets.only(top:10.0),
+                padding: const EdgeInsets.only(top: 10.0),
               ),
               new Container(
                 child: new Container(
@@ -190,16 +184,18 @@ class signupstate extends State<Signup>{
                       icon: new Icon(lock_outline),
                     ),
                     obscureText: true,
-                    onSaved: (String value) { user1.password=value;
+                    onSaved: (String value) {
+                      user1.password = value;
                     },
                   ),
-                  padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                  padding: const EdgeInsets.only(
+                      bottom: 15.0, top: 0.0, right: 20.0),
                 ),
-                padding: const EdgeInsets.only(top:10.0),
+                padding: const EdgeInsets.only(top: 10.0),
               ),
               new Container(
                 child: new Container(
-                  child:new TextFormField(
+                  child: new TextFormField(
                     decoration: new InputDecoration(
                       hintText: 'Repeat Password',
                       labelText: 'Retype-Password *',
@@ -208,9 +204,10 @@ class signupstate extends State<Signup>{
                     obscureText: true,
                     validator: _validatePassword,
                   ),
-                  padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0 ),
+                  padding: const EdgeInsets.only(
+                      bottom: 15.0, top: 0.0, right: 20.0),
                 ),
-                padding: const EdgeInsets.only(top:10.0),
+                padding: const EdgeInsets.only(top: 10.0),
               ),
               new RoundedButton(
                 buttonName: 'Sign-up',
@@ -223,15 +220,15 @@ class signupstate extends State<Signup>{
               ),
               new Container(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: new Text('* indicates required field', style: Theme.of(context).textTheme.caption),
+                child: new Text('* indicates required field',
+                    style: Theme.of(context).textTheme.caption),
               ),
             ],
           ),
         ),
-        padding: const EdgeInsets.only(top:50.0),
+        padding: const EdgeInsets.only(top: 50.0),
       ),
       backgroundColor: const Color.fromRGBO(0, 0, 0, 0.7),
     );
   }
 }
-

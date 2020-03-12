@@ -79,7 +79,7 @@ class groupBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(snapshot.value);
+//    print(snapshot.value);
     return new SizeTransition(
       sizeFactor: new CurvedAnimation(
           parent: animation, curve: Curves.easeOut),
@@ -137,7 +137,7 @@ class groupBox extends StatelessWidget {
   //loggedinuser="m@g.com";
   //loggedinusername="man";
 
-      print("init");
+//      print("init");
       groupsToShow=new List<groupDetails>();
 
 
