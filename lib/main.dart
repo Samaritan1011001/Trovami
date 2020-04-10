@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'groupdetails.dart';
 import 'groupstatus.dart';
 import 'homepage.dart';
-import 'loadingindicator.dart';
+import 'map.dart';
 import 'signinpage.dart';
 import 'signuppage.dart';
 

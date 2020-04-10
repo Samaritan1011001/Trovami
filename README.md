@@ -1,3 +1,10 @@
+# DISCLAIMER
+I want to stress on three main points:
+* This was my first Flutter project so I have not used any best practices and it needs a lot of code refactoring.
+* DO NOT USE real emails during sign up
+* DO NOT USE real location when testing. They are NOT encrypted and the database is open to public!
+
+
 # Trovami
 
 A Live location sharing app created in Flutter using Firebase as the backend 

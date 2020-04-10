@@ -14,7 +14,7 @@ import 'package:location/location.dart';
 
 import 'homepage.dart';
 import 'httpClient/httpClient.dart';
-import 'loadingindicator.dart';
+import 'map.dart';
 import 'main.dart';
 import 'signinpage.dart';
 
@@ -298,6 +298,14 @@ class groupstatusstate extends State<groupstatus>{
         body :new Container(
           child: new ListView(
             children : <Widget> [
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                color: Colors.red,
+                height: 100,
+                child: Center(
+                  child: Text("DO NOT USE REAL LOCATION",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                ),
+              ),
               new Row(children :<Widget>[
                 new Container(child: new Text("Share Live Location:",style: new TextStyle(fontSize: 20.0)),
                   padding: const EdgeInsets.only( left:10.0),

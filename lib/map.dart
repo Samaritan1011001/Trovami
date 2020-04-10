@@ -196,6 +196,8 @@ class MapSampleState extends State<MapSample> {
 
     return widget.currentLocations;
   }
+
+
 //  Future<void> _goToTheLake() async {
 //    final GoogleMapController controller = await _controller.future;
 //    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));

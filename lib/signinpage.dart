@@ -163,45 +163,8 @@ class signinformstate extends State<SignInForm>
         });
       }
 
-//      usrRef.orderByKey().equalTo("nolan@g.com",key: "emailid").once().then((data){
-////        print("data: ${data.value}");
-//      });
-
-//      response.transform(utf8.decoder).listen( (contents) async {
-////        print("contents: ${contents}");
-//
-//        Map users=_jsonCodec.decode(contents);
-////        print("users:");
-//
-//        users.forEach((k,v){
-//          if(v.EmailId==user.email){
-//            userexists=true;
-//            loggedinUser=user.email;
-//            loggedInUsername=user.displayName;
-//            Navigator.of(context).pushReplacementNamed('/b');
-//          }
-//        });
-//        if(userexists==false){
-//          HttpClientFireBase httpClient = HttpClientFireBase();
-//
-//          await httpClient.post(url: 'https://fir-trovami.firebaseio.com/users.json',body: guserjson);
-//        loggedinUser=user.email;
-//        loggedInUsername=user.displayName;
-//         Navigator.of(context).pushReplacementNamed('/b');
-//        }else{
-//        setState(() {
-//        _isgooglesigincomplete=true;
-//        });
-//        }
-////        print("usrmap : ${response}");
-//
-//
-//      });
-
     }
-//    Navigator.of(context).pushReplacementNamed('/b');
 
-    // do something with signed-in user
   }
 
   _handleSubmitted() async {
@@ -238,15 +201,6 @@ class signinformstate extends State<SignInForm>
     return null;
   }
 
-  String _validatePassword(String value) {
-    _formWasEdited = true;
-    final FormFieldState<String> passwordField = _passwordFieldKey.currentState;
-    if (passwordField.value == null || passwordField.value.isEmpty)
-      return 'Please choose a password.';
-    if (passwordField.value != value) return 'Passwords don\'t match';
-    return null;
-  }
-
   setGoogleSigninListener() {
     _googleSignIn.onCurrentUserChanged
         .listen((GoogleSignInAccount account) async {
@@ -265,7 +219,6 @@ class signinformstate extends State<SignInForm>
           ..addListener(() {
             setState(() {});
           });
-//    controller.forward();
   }
 
   @override
