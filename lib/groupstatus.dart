@@ -12,10 +12,14 @@ import 'functionsForFirebaseApiCalls.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
+import 'helpers/RoutesHelper.dart';
 import 'homepage.dart';
 import 'httpClient/httpClient.dart';
 import 'map.dart';
 import 'main.dart';
+import 'model/Group.dart';
+import 'model/User.dart';
+import 'model/UserLocation.dart';
 import 'signinpage.dart';
 
 
@@ -25,7 +29,7 @@ final groupref = FirebaseDatabase.instance.reference().child('groups');         
 const jsonCodec1=const JsonCodec(reviver: _reviver1);
 const jsonCodec=const JsonCodec(reviver: _reviver);
 const locationJsonCodec=const JsonCodec(reviver: _locationReviver);
-List<currentLoc> currentLocations=new List<currentLoc>();
+List<Location> currentLocations=new List<Location>();
 bool locationShare;
 Timer t1;
 bool mapflag;
@@ -36,14 +40,14 @@ bool togglestate=false;
 _reviver(key,value) {
 
   if(key!=null&& value is Map) {
-    return new UserData.fromJson(value);
+    return new User.fromJson(value);
   }
   else return value;
 }
 
 _locationReviver(key,value) {
   if(key!=null) {
-    return new currentLoc.fromJson(value);
+    return new UserLocation.fromJson(value);
   }
   else return value;
 }
@@ -51,7 +55,7 @@ _locationReviver(key,value) {
 _reviver1(key,value) {
 
   if(key!=null&& value is Map){
-    return new groupDetails.fromJson(value);
+    return new Group.fromJson(value);
   }
   else return value;
 }
@@ -155,29 +159,29 @@ updateDatabaseLocation (currLoc) async{
 }
 
 
-class groupstatuslayout extends StatefulWidget {
+class GroupStatusLayout extends StatefulWidget {
   @override
-  groupstatuslayoutstate createState() => new groupstatuslayoutstate();
+  GroupStatusLayoutState createState() => new GroupStatusLayoutState();
 }
 
-class groupstatuslayoutstate extends State<groupstatuslayout>{
+class GroupStatusLayoutState extends State<GroupStatusLayout>{
 
   @override
   Widget build(BuildContext context)=>
       new Scaffold(
         body: new Container(
-          child:new groupstatus(),
+          child:new GroupStatus(),
         ),
       );
 }
 
 
-class groupstatus extends StatefulWidget {
+class GroupStatus extends StatefulWidget {
   @override
-  groupstatusstate createState() => new groupstatusstate();
+  GroupStatusState createState() => new GroupStatusState();
 }
 
-class groupstatusstate extends State<groupstatus>{
+class GroupStatusState extends State<GroupStatus>{
 
   var getMemFlag=0;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
@@ -285,8 +289,7 @@ class groupstatusstate extends State<groupstatus>{
           ),
           actions: <Widget>[
             new FlatButton(onPressed:()async {
-              await Navigator.of(context).pushNamed('/g');
-
+              await Navigator.of(context).pushNamed(ROUTE_MAP);
             },
                 child: new Text("Show Map")
             ),

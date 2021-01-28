@@ -7,13 +7,15 @@ import 'package:trovami/homepage.dart';
 import 'package:trovami/httpClient/httpClient.dart';
 
 import 'InputTextField.dart';
-import 'main.dart';
+import 'managers/GroupsManager.dart';
+import 'model/Group.dart';
+import 'model/User.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
 
 //var httpClient = createHttpClient();
-String _selectedChoice="";
+// String _selectedChoice="";
 var Json = const JsonCodec();
 var groupName="";
 Color textFieldColor = const Color.fromRGBO(0, 0, 0, 0.2);
@@ -33,7 +35,7 @@ ThemeData appTheme = new ThemeData(
   _reviver(key,value) {
 
     if(key!=null&& value is Map && key.contains('-')){
-      return new UserData.fromJson(value);
+      return new User.fromJson(value);
     }
     return value;
   }
@@ -41,28 +43,28 @@ ThemeData appTheme = new ThemeData(
   _reviver1(key,value) {
 
     if(key!=null&& value is Map && key.contains('-')){
-      return new groupDetails.fromJson(value);
+      return new Group.fromJson(value);
     }
     return value;
   }
 
-  class addGroup extends StatefulWidget {
+  class AddGroup extends StatefulWidget {
     dynamic users;
-    addGroup({this.users});
+    AddGroup({this.users});
     @override
-    addGroupstate createState() => new addGroupstate(users:users);
+    AddGroupstate createState() => new AddGroupstate(users:users);
   }
 
-  class addGroupstate extends State<addGroup>{
+  class AddGroupstate extends State<AddGroup>{
     dynamic users;
-    addGroupstate({this.users});
+    AddGroupstate({this.users});
     final GlobalKey<ScaffoldState> _scaffoldKeySecondary1 = new GlobalKey<ScaffoldState>();
     final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
 
     bool _autovalidate1 = false;
-    List<UserData> userstoShowGrpDetailsPage=new List<UserData>();
+    List<User> userstoShowGrpDetailsPage=new List<User>();
     List<Widget> children1=new List<Widget>();
-    List<UserData> members=[];
+    List<User> members=[];
     int count=0;
 
     void showInSnackBar(String value) {
@@ -84,27 +86,27 @@ ThemeData appTheme = new ThemeData(
   var httpClient = HttpClientFireBase();
       final FormState form = _groupformKey.currentState;
       form.save();
-      UserData loggedInMember = new UserData();
+      User loggedInMember = new User();
       loggedInMember.EmailId = loggedinUser;
       loggedInMember.locationShare = false;
       for (var i = 0; i < members.length; i++) {
-        grpd.groupmembers.add(members[i]);
+        GroupsManager().currentGroup().groupmembers.add(members[i]);
       }
       loggedInMember.name=loggedInUsername;
-      grpd.groupmembers.add(loggedInMember);
-      for (var i = 0; i < grpd.groupmembers.length; i++) {
+      GroupsManager().currentGroup().groupmembers.add(loggedInMember);
+      for (var i = 0; i < GroupsManager().currentGroup().groupmembers.length; i++) {
 
 
 //        final Map resstring = await getUsers();
 
 
         users.value.forEach((k, v) async {
-          if (v["emailid"] == grpd.groupmembers[i].EmailId) {
+          if (v["emailid"] == GroupsManager().currentGroup().groupmembers[i].EmailId) {
 
             print("v['groupsIamin'] : ${v["groupsIamin"]}");
             if (v["groupsIamin"] == null) {
               List<String> groupsIamin = [];
-              groupsIamin.add(grpd.groupname);
+              groupsIamin.add(GroupsManager().currentGroup().groupname);
               var groupsIaminjson = jsonCodec.encode(groupsIamin);
              await httpClient.put(
                   url: 'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
@@ -117,7 +119,7 @@ ThemeData appTheme = new ThemeData(
               resmap.addAll(response2.value["groupsIamin"]);
               print("resmap: ${resmap}");
 
-              resmap.add(grpd.groupname);
+              resmap.add(GroupsManager().currentGroup().groupname);
               var groupsIaminjson = jsonCodec.encode(resmap);
               var response1 = await httpClient.put( url:
                   'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
@@ -126,7 +128,7 @@ ThemeData appTheme = new ThemeData(
           }
         });
       }
-      var groupjson = jsonCodec1.encode(grpd);
+      var groupjson = jsonCodec1.encode(GroupsManager().currentGroup());
       var url = "https://trovami-bcd81.firebaseio.com/groups.json";
       await httpClient.post(url:url, body: groupjson);
 //  Navigator.of(context).pushReplacement(
@@ -137,7 +139,7 @@ ThemeData appTheme = new ThemeData(
 //      await Navigator.of(context).pushReplacementNamed('/b');
     }
 
-    void _select(UserData user) {
+    void _select(User user) {
       members.add(user);
       for(var i=0;i<userstoShowGrpDetailsPage.length;i++){
         if(userstoShowGrpDetailsPage[i].EmailId==user.EmailId){
@@ -145,7 +147,8 @@ ThemeData appTheme = new ThemeData(
         }
       }
       setState(() {
-        popflag=1;
+// TODO: Deprecate
+//        popflag=1;
         userstoShowGrpDetailsPage=userstoShowGrpDetailsPage;
         count = count + 1;
       });
@@ -154,7 +157,7 @@ ThemeData appTheme = new ThemeData(
     getusers(){
 
       users.value.forEach((k,v){
-        UserData usertoshow=new UserData();
+        User usertoshow=new User();
         usertoshow.name=v["name"];
         usertoshow.EmailId = v["emailid"];
         usertoshow.locationShare=false;
@@ -215,8 +218,8 @@ ThemeData appTheme = new ThemeData(
                     iconColor: Colors.grey,
                     bottomMargin: 20.0,
                     onSaved: (String value) {
-                      grpd.groupname=value;
-                      grpd.groupmembers=new List<UserData>();
+                      GroupsManager().currentGroup().groupname=value;
+                      GroupsManager().currentGroup().groupmembers=new List<User>();
                     }
                   ),
                   padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0),
@@ -232,11 +235,11 @@ ThemeData appTheme = new ThemeData(
                 ),
                 new Container(child:
                   new CircleAvatar(child:
-                    new PopupMenuButton<UserData>(
+                    new PopupMenuButton<User>(
                       icon: new Icon(Icons.add),
                       onSelected: _select,
-                      itemBuilder: (BuildContext context) => userstoShowGrpDetailsPage.map((UserData usertoshow) =>
-                           new PopupMenuItem<UserData>(
+                      itemBuilder: (BuildContext context) => userstoShowGrpDetailsPage.map((User usertoshow) =>
+                           new PopupMenuItem<User>(
                             value: usertoshow,
                             child: new Text(usertoshow.name),
                           )

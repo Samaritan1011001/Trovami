@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:trovami/helpers/RoutesHelper.dart';
 import 'package:trovami/httpClient/httpClient.dart';
 //import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'InputTextField.dart';
 import 'Roundedbutton.dart';
+import 'Strings.dart';
 import 'main.dart';
+import 'model/User.dart';
 import 'signuppage.dart';
 import 'homepage.dart';
 import 'functionsForFirebaseApiCalls.dart';
@@ -38,18 +41,18 @@ ScrollController scrollController = new ScrollController();
 //
 //  if(key!=null&& value is Map && key.contains('-')){
 ////    print("inside if value : ${value}");
-//    return new UserData.fromJson(value);
+//    return new User.fromJson(value);
 //  }
 //  return value;
 //}
 
 class SignInForm extends StatefulWidget {
   @override
-  signinformstate createState() => new signinformstate();
+  SigninFormState createState() => new SigninFormState();
 }
 
 // ignore: mixin_inherits_from_not_object
-class signinformstate extends State<SignInForm>
+class SigninFormState extends State<SignInForm>
     with SingleTickerProviderStateMixin {
   bool _isgooglesigincomplete = true;
   bool _first = true;
@@ -69,6 +72,9 @@ class signinformstate extends State<SignInForm>
       new GlobalKey<FormFieldState<String>>();
   Animation<Color> animation;
   AnimationController controller;
+
+  String email = '';
+  String password = '';
 
   GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -119,7 +125,7 @@ class signinformstate extends State<SignInForm>
     if (user != null) {
 //      print("inside listener");
 
-      UserData guser = new UserData();
+      User guser = new User();
       guser.EmailId = user.email;
       guser.name = user.displayName;
       guser.locationShare = false;
@@ -178,8 +184,8 @@ class signinformstate extends State<SignInForm>
       Map usrs = usrmap.value as Map;
 
       usrs.values.forEach((us) async {
-        if (logindet.EmailId == us["emailid"]) {
-          loggedinUser = logindet.EmailId;
+        if (email == us["emailid"]) {
+          loggedinUser = email;
           loggedInUsername = us["name"];
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -247,7 +253,7 @@ class signinformstate extends State<SignInForm>
                   children: <Widget>[
                     new Container(
                       child: new Text(
-                        'Trovami',
+                        Strings.appName,
                         textAlign: TextAlign.center,
                         style: new TextStyle(fontSize: 50.0),
                       ),
@@ -279,8 +285,8 @@ class signinformstate extends State<SignInForm>
                                     const Color.fromRGBO(255, 255, 255, 0.4),
                                 bottomMargin: 20.0,
                                 validateFunction: _validateName,
-                                onSaved: (String email) {
-                                  logindet.EmailId = email;
+                                onSaved: (String value) {
+                                  email = value;
                                 }),
                           ),
                           new InputField(
@@ -293,8 +299,8 @@ class signinformstate extends State<SignInForm>
                               icon: Icons.lock_outline,
                               iconColor: Colors.white,
                               bottomMargin: 20.0,
-                              onSaved: (String pass) {
-                                logindet.password = pass;
+                              onSaved: (String value) {
+                                password = value;
                               }),
                         ],
                       ),
@@ -314,7 +320,7 @@ class signinformstate extends State<SignInForm>
                         new RoundedButton(
                           buttonName: 'Sign-up',
                           onTap: () {
-                            Navigator.of(context).pushNamed('/a');
+                            RoutesHelper.pushRoute(context, ROUTE_SIGNUP);
                           },
                           highlightColor:
                               const Color.fromRGBO(255, 255, 255, 0.1),

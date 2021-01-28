@@ -12,7 +12,10 @@ import 'package:flutter/services.dart';
 
 
 import 'groupdetails.dart';
+import 'helpers/RoutesHelper.dart';
 import 'main.dart';
+import 'model/Group.dart';
+import 'model/User.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
@@ -20,12 +23,12 @@ var temp=[];
 String pageName='';
 var groupStatusGroupname='';
 double animValue=0.0;
-List<UserData> membersToShow=new List<UserData>();
+List<User> membersToShow=new List<User>();
 List<String> groupNamesToShow=new List<String>();
-List<groupDetails> groupsToShow=new List<groupDetails>();
-groupDetails grps=new groupDetails();
+List<Group> groupsToShow=new List<Group>();
+Group grps=new Group();
 const jsonCodec2=const JsonCodec();
-List<UserData> membersToShowHomepage=new List<UserData>();
+List<User> membersToShowHomepage=new List<User>();
 final groupref = FirebaseDatabase.instance.reference().child('groups');
 final usrref = FirebaseDatabase.instance.reference().child('users');
 //var _httpClient = createHttpClient();
@@ -38,7 +41,7 @@ bool _first=true;
 
 _reviver( key, value) {
   if(key!=null&& value is Map && key.contains('-')){
-    return new UserData.fromJson(value);
+    return new User.fromJson(value);
   }
   return value;
 }
@@ -98,7 +101,7 @@ class groupBox extends StatelessWidget {
       ),
           new FlatButton(onPressed: () {
            groupStatusGroupname = snapshot.value;
-           Navigator.of(context).pushNamed('/d');
+           RoutesHelper.pushRoute(context, ROUTE_GROUP);
          }, child: new Text(
             snapshot.value,))
         ],
@@ -122,14 +125,14 @@ class groupBox extends StatelessWidget {
     dynamic users;
     Homepage({this.users});
     @override
-    homepagestate createState() => new homepagestate(users:users);
+    HomePageState createState() => new HomePageState(users:users);
   }
 
-  class homepagestate extends State<Homepage> with TickerProviderStateMixin {
+  class HomePageState extends State<Homepage> with TickerProviderStateMixin {
     dynamic users;
     var userkey;
 
-    homepagestate({this.users});
+    HomePageState({this.users});
 
 
 
@@ -138,7 +141,7 @@ class groupBox extends StatelessWidget {
   //loggedinusername="man";
 
 //      print("init");
-      groupsToShow=new List<groupDetails>();
+      groupsToShow=new List<Group>();
 
 
 //             _refreshIndicatorKey.currentState?.show();
@@ -158,13 +161,8 @@ class groupBox extends StatelessWidget {
     @override
     void initState() => getgroups();
 
-
-
-
     @override
     Widget build(BuildContext context) {
-
-
       return new Scaffold(
         appBar: new AppBar(
         leading: new Container(),
@@ -173,7 +171,7 @@ class groupBox extends StatelessWidget {
             icon: new Icon(Icons.group_add), onPressed: ()async{
 
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => addGroup(users: users),
+              builder: (context) => AddGroup(users: users),
             ),);
               }
             ,iconSize: 42.0,

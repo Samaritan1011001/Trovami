@@ -3,22 +3,22 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:trovami/httpClient/httpClient.dart';
 
 import 'Roundedbutton.dart';
-import 'main.dart';
 import 'functionsForFirebaseApiCalls.dart';
+import 'managers/UsersManager.dart';
+import 'model/User.dart';
 
 bool userexists = false;
-UserData user1 = new UserData();
+User user1 = new User();
 const jsonCodec = const JsonCodec(reviver: _reviver);
 
 _reviver(key, value) {
   if (key != null && value is Map && key.contains('-')) {
-    return new UserData.fromJson(value);
+    return new User.fromJson(value);
   }
   return value;
 }
@@ -30,10 +30,10 @@ TextStyle textStyle = new TextStyle(
 
 class SignupLayout extends StatefulWidget {
   @override
-  signuplayoutstate createState() => new signuplayoutstate();
+  SignupLayoutState createState() => new SignupLayoutState();
 }
 
-class signuplayoutstate extends State<SignupLayout> {
+class SignupLayoutState extends State<SignupLayout> {
   @override
   Widget build(BuildContext context) =>
       defaultTargetPlatform == TargetPlatform.iOS
@@ -83,7 +83,7 @@ class signupstate extends State<Signup> {
       user1.location = null;
       user1.locationShare = false;
       user1.groupsIamin = [];
-      users.add(user1);
+      UsersManager().users.add(user1);
       var userjson = jsonCodec.encode(user1);
 //      print("userjson:${userjson}");
       final DataSnapshot usrmap = await getUsers();
