@@ -8,7 +8,7 @@
 //class UserAuth {
 //  String statusMsg="Account Created Successfully";
 //  //To create new User
-//  Future<String> createUser(UserData userData) async{
+//  Future<String> createUser(User userData) async{
 //    print(userData.EmailId);
 //    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 //    await firebaseAuth

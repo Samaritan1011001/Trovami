@@ -3,20 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-import 'groupdetails.dart';
-import 'groupstatus.dart';
-import 'homepage.dart';
-import 'map.dart';
+import 'Strings.dart';
+import 'helpers/RoutesHelper.dart';
 import 'signinpage.dart';
-import 'signuppage.dart';
 
+// TODO: Deprecate. Unsure what it is needed for
+//var popflag=0;
 
-
-var popflag=0;
-List<UserData> users=new List<UserData>();
-logindetails logindet = new logindetails();
-groupDetails grpd=new groupDetails();
-
+// TODO: Do login credentials need to be saved?
+//logindetails logindet = new logindetails();
 
 final ThemeData kIOSTheme = new ThemeData(
   primarySwatch: Colors.blueGrey,
@@ -35,50 +30,15 @@ void main() {
 //      : MapView.setApiKey("AIzaSyB4xaxweIhP0F36ZCBpfeiDjpoPc741Oe0");
 
   runApp(new MaterialApp(
-    title: "Trovami",
+    title: Strings.appName,
+    debugShowCheckedModeBanner: false,
     home: new SignInForm(),
     theme: defaultTargetPlatform == TargetPlatform.iOS
         ? kIOSTheme
         : kDefaultTheme,
       // ignore: missing_return
-      onGenerateRoute: (RouteSettings settings) {
-        // ignore: missing_return
-        switch (settings.name) {
-
-          case '/a': return defaultTargetPlatform == TargetPlatform.iOS
-              ? new CupertinoPageRoute(builder:  (_) => new SignupLayout(),settings: settings,)
-              : new MyCustomRoute(
-            builder: (_) => new SignupLayout(),
-            settings: settings,
-          );
-
-          case '/b': return defaultTargetPlatform == TargetPlatform.iOS
-              ? new CupertinoPageRoute(builder:  (_) => new Homepagelayout(),settings: settings,)
-              :new MyCustomRoute(
-            builder: (_) => new Homepagelayout(),
-            settings: settings,
-          );
-          case '/c': return defaultTargetPlatform == TargetPlatform.iOS
-              ? new CupertinoPageRoute(builder:  (_) => new addGroup(),settings: settings,)
-              :new MyCustomRoute1(
-            builder: (_) => new addGroup(),
-            settings: settings,
-          );
-          case '/d': return defaultTargetPlatform == TargetPlatform.iOS
-              ? new CupertinoPageRoute(builder:  (_) => new groupstatuslayout(),settings: settings,)
-              :new MyCustomRoute1(
-            builder: (_) => new groupstatuslayout(),
-            settings: settings,
-          );
-          case '/g': return defaultTargetPlatform == TargetPlatform.iOS
-              ? new CupertinoPageRoute(builder:  (_) => new MapSample(),settings: settings,)
-              :new MyCustomRoute1(
-            builder: (_) => new MapSample(),
-            settings: settings,
-          );
-        }
-        assert(false);
-      }
+      onGenerateRoute: RoutesHelper.provideRoute,
+      initialRoute: ROUTE_HOME,
   ),
   );
 }
@@ -92,8 +52,8 @@ class MyCustomRoute<T> extends MaterialPageRoute<T> {
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
-    if (settings.isInitialRoute)
-      return child;
+    // if (settings.isInitialRoute)
+    //   return child;
     return new FadeTransition( opacity: animation, child: child);
   }
 }
@@ -107,83 +67,10 @@ class MyCustomRoute1<T> extends MaterialPageRoute<T> {
       Animation<Offset> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
-    if (settings.isInitialRoute)
-      return child;
+    // if (settings.isInitialRoute)
+    //   return child;
     return new SlideTransition( position: animation, child: child);
   }
 }
 
-
-class UserData {
-  UserData({this.EmailId,this.password,this.name,this.locationShare,this.groupsIamin,this.location});
-   String EmailId ;
-   String password;
-   String name;
-   bool locationShare;
-  Map<String,double> location=null;
-   List<String> groupsIamin=[];
-
-
-  UserData.fromJson(Map value){
-    EmailId=value["emailid"];
-    name=value["name"];
-    locationShare=value["locationShare"];
-    groupsIamin=value["groupsIamin"];
-  }
-   Map toJson(){
-     return {"name": name,"locationShare": locationShare,"groupsIamin":groupsIamin,"emailid":EmailId,"location":location};
-   }
-}
-
-class logindetails {
-  logindetails({this.EmailId,this.password});
-  String EmailId = '';
-  String password = '';
-  //String name = '';
-}
-
-
-class groupDetails {
-  groupDetails({this.groupname,this.groupmembers});
-  String groupname = "";
-  List<UserData> groupmembers=[];
-
-  groupDetails.fromJson(Map value){
-    groupname=value["groupname"];
-//    print("value of members:${value["members"]}");
-      groupmembers=value["members"];
-
-  }
-  Map toJson(){
-    return {"groupname": groupname,"members":groupmembers};
-  }
-
-}
-
-
-class currentLoc{
-  String EmailId;
-  Map<String,double> currentLocation;
-  currentLoc({this.EmailId,this.currentLocation});
-
-  currentLoc.fromJson(Map value){
-    EmailId=value["emailid"];
-//    print("value of members:${value["members"]}");
-    currentLocation=value["location"];
-
-  }
-}
-
-class locationclass{
-
-  double latitude;
-  double longitude;
-
-  locationclass({this.latitude, this.longitude});
-
-  Map toJson(){
-    return {"latitude":latitude,"longitude":longitude};
-  }
-
-}
 
