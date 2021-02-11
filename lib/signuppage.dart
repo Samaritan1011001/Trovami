@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 import 'package:trovami/httpClient/httpClient.dart';
+import 'package:trovami/model/userModel.dart';
 
 import 'Roundedbutton.dart';
 import 'functionsForFirebaseApiCalls.dart';
 import 'managers/UsersManager.dart';
-import 'model/User.dart';
+import 'core/User.dart';
 
 bool userexists = false;
 User user1 = new User();
@@ -23,10 +25,7 @@ _reviver(key, value) {
   return value;
 }
 
-TextStyle textStyle = new TextStyle(
-    color: const Color.fromRGBO(255, 255, 255, 0.4),
-    fontSize: 16.0,
-    fontWeight: FontWeight.bold);
+TextStyle textStyle = new TextStyle(color: const Color.fromRGBO(255, 255, 255, 0.4), fontSize: 16.0, fontWeight: FontWeight.bold);
 
 class SignupLayout extends StatefulWidget {
   @override
@@ -35,16 +34,15 @@ class SignupLayout extends StatefulWidget {
 
 class SignupLayoutState extends State<SignupLayout> {
   @override
-  Widget build(BuildContext context) =>
-      defaultTargetPlatform == TargetPlatform.iOS
-          ? new CupertinoPageScaffold(child: new Signup()
+  Widget build(BuildContext context) => defaultTargetPlatform == TargetPlatform.iOS
+      ? new CupertinoPageScaffold(child: new Signup()
 //        ,navigationBar: new CupertinoNavigationBar(middle: new Text("Sign-up"),backgroundColor:const Color.fromRGBO(0, 0, 0, 0.7),),
-              )
-          : new Scaffold(
-              body: new Container(
-                child: new Signup(),
-              ),
-            );
+          )
+      : new Scaffold(
+          body: new Container(
+            child: new Signup(),
+          ),
+        );
 }
 
 class Signup extends StatefulWidget {
@@ -53,24 +51,19 @@ class Signup extends StatefulWidget {
 }
 
 class signupstate extends State<Signup> {
-  final GlobalKey<ScaffoldState> _scaffoldKeySecondary =
-      new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKeySecondary = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKeySeondary = new GlobalKey<FormState>();
-  final GlobalKey<FormFieldState<String>> _passwordFieldKeySecondary =
-      new GlobalKey<FormFieldState<String>>();
+  final GlobalKey<FormFieldState<String>> _passwordFieldKeySecondary = new GlobalKey<FormFieldState<String>>();
 
   bool _autovalidate1 = false;
   bool _formWasEdited = false;
 
   final IconData mail = const IconData(0xe158, fontFamily: 'MaterialIcons');
-  final IconData lock_outline =
-      const IconData(0xe899, fontFamily: 'MaterialIcons');
-  final IconData signupicon =
-      const IconData(0xe316, fontFamily: 'MaterialIcons');
+  final IconData lock_outline = const IconData(0xe899, fontFamily: 'MaterialIcons');
+  final IconData signupicon = const IconData(0xe316, fontFamily: 'MaterialIcons');
 
   void showInSnackBar(String value) {
-    _scaffoldKeySecondary.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+    _scaffoldKeySecondary.currentState.showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   _handleSubmitted1() async {
@@ -99,9 +92,7 @@ class signupstate extends State<Signup> {
       if (userexists == false) {
         HttpClientFireBase httpClient = HttpClientFireBase();
 
-        await httpClient.post(
-            url: 'https://trovami-bcd81.firebaseio.com/users.json',
-            body: userjson);
+        await httpClient.post(url: 'https://trovami-bcd81.firebaseio.com/users.json', body: userjson);
       } else {
         showInSnackBar('User already exits');
       }
@@ -119,10 +110,8 @@ class signupstate extends State<Signup> {
 
   String _validatePassword(String value) {
     _formWasEdited = true;
-    final FormFieldState<String> passwordField1 =
-        _passwordFieldKeySecondary.currentState;
-    if (passwordField1.value == null || passwordField1.value.isEmpty)
-      return 'Please choose a password.';
+    final FormFieldState<String> passwordField1 = _passwordFieldKeySecondary.currentState;
+    if (passwordField1.value == null || passwordField1.value.isEmpty) return 'Please choose a password.';
     if (passwordField1.value != value) return 'Passwords don\'t match';
     return null;
   }
@@ -141,20 +130,15 @@ class signupstate extends State<Signup> {
             children: <Widget>[
               new Container(
                 child: new TextFormField(
-                  decoration: new InputDecoration(
-                      hintText: 'Name',
-                      labelText: 'Name',
-                      icon: new Icon(Icons.person),
-                      labelStyle: textStyle),
+                  decoration: new InputDecoration(hintText: 'Name', labelText: 'Name', icon: new Icon(Icons.person), labelStyle: textStyle),
                   onSaved: (String value) {
                     user1.name = value;
                   },
                 ),
-                padding:
-                    const EdgeInsets.only(bottom: 15.0, top: 0.0, right: 20.0),
+                padding: const EdgeInsets.only(bottom: 15.0, top: 0.0, right: 20.0),
               ),
               Container(
-                padding: const EdgeInsets.only(top:10.0,left: 30),
+                padding: const EdgeInsets.only(top: 10.0, left: 30),
                 child: Text(
                   "PLEASE DO NOT ENTER YOUR REAL EMAIL ADDRESS. APP IS PUBLIC.",
                   style: TextStyle(color: Colors.red, fontSize: 16),
@@ -188,8 +172,7 @@ class signupstate extends State<Signup> {
                       user1.password = value;
                     },
                   ),
-                  padding: const EdgeInsets.only(
-                      bottom: 15.0, top: 0.0, right: 20.0),
+                  padding: const EdgeInsets.only(bottom: 15.0, top: 0.0, right: 20.0),
                 ),
                 padding: const EdgeInsets.only(top: 10.0),
               ),
@@ -204,24 +187,26 @@ class signupstate extends State<Signup> {
                     obscureText: true,
                     validator: _validatePassword,
                   ),
-                  padding: const EdgeInsets.only(
-                      bottom: 15.0, top: 0.0, right: 20.0),
+                  padding: const EdgeInsets.only(bottom: 15.0, top: 0.0, right: 20.0),
                 ),
                 padding: const EdgeInsets.only(top: 10.0),
               ),
-              new RoundedButton(
-                buttonName: 'Sign-up',
-                onTap: _handleSubmitted1,
-                width: screenSize.width,
-                height: 50.0,
-                bottomMargin: 10.0,
-                borderWidth: 0.0,
-                buttonColor: Colors.transparent,
-              ),
+              Consumer<UserModel>(builder: (context, user, child) {
+                return RoundedButton(
+                  buttonName: 'Sign-up',
+                  onTap: (){
+                    user.signUp(user1);
+                  },
+                  width: screenSize.width,
+                  height: 50.0,
+                  bottomMargin: 10.0,
+                  borderWidth: 0.0,
+                  buttonColor: Colors.transparent,
+                );
+              }),
               new Container(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: new Text('* indicates required field',
-                    style: Theme.of(context).textTheme.caption),
+                child: new Text('* indicates required field', style: Theme.of(context).textTheme.caption),
               ),
             ],
           ),

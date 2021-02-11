@@ -14,8 +14,8 @@ import 'package:flutter/services.dart';
 import 'groupdetails.dart';
 import 'helpers/RoutesHelper.dart';
 import 'main.dart';
-import 'model/Group.dart';
-import 'model/User.dart';
+import 'core/Group.dart';
+import 'core/User.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 

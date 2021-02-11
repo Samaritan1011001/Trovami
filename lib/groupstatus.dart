@@ -17,9 +17,9 @@ import 'homepage.dart';
 import 'httpClient/httpClient.dart';
 import 'map.dart';
 import 'main.dart';
-import 'model/Group.dart';
-import 'model/User.dart';
-import 'model/UserLocation.dart';
+import 'core/Group.dart';
+import 'core/User.dart';
+import 'core/UserLocation.dart';
 import 'signinpage.dart';
 
 

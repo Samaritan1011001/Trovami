@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 //import 'package:map_view/map_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:trovami/model/userModel.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
@@ -29,17 +31,22 @@ void main() {
 //      ? MapView.setApiKey("AIzaSyCLw1SjRi8TLDu_Nzcdo2Ufu68H1UXl9BU")
 //      : MapView.setApiKey("AIzaSyB4xaxweIhP0F36ZCBpfeiDjpoPc741Oe0");
 
-  runApp(new MaterialApp(
-    title: Strings.appName,
-    debugShowCheckedModeBanner: false,
-    home: new SignInForm(),
-    theme: defaultTargetPlatform == TargetPlatform.iOS
-        ? kIOSTheme
-        : kDefaultTheme,
-      // ignore: missing_return
-      onGenerateRoute: RoutesHelper.provideRoute,
-      initialRoute: ROUTE_HOME,
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserModel(),
+
+      child: new MaterialApp(
+      title: Strings.appName,
+      debugShowCheckedModeBanner: false,
+      home: new SignInForm(),
+      theme: defaultTargetPlatform == TargetPlatform.iOS
+          ? kIOSTheme
+          : kDefaultTheme,
+        // ignore: missing_return
+        onGenerateRoute: RoutesHelper.provideRoute,
+        initialRoute: ROUTE_HOME,
   ),
+    ),
   );
 }
 

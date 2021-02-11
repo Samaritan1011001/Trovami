@@ -8,8 +8,8 @@ import 'package:trovami/httpClient/httpClient.dart';
 
 import 'InputTextField.dart';
 import 'managers/GroupsManager.dart';
-import 'model/Group.dart';
-import 'model/User.dart';
+import 'core/Group.dart';
+import 'core/User.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 

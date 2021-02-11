@@ -1,4 +1,5 @@
-import 'User.dart';
+
+import 'package:trovami/core/User.dart';
 
 class Group {
   Group({this.groupname,this.groupmembers});
