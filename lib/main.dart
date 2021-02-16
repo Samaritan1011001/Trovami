@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/model/userModel.dart';
+import 'package:trovami/ui/splash/splash_screen.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
@@ -38,7 +39,7 @@ void main() {
       child: new MaterialApp(
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
-      home: new SignInForm(),
+      home: SplashScreen(),
       theme: defaultTargetPlatform == TargetPlatform.iOS
           ? kIOSTheme
           : kDefaultTheme,

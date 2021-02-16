@@ -2,6 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trovami/signinpage.dart';
+import 'package:trovami/ui/splash/splash_screen.dart';
 
 import '../groupdetails.dart';
 import '../groupstatus.dart';
@@ -15,6 +17,7 @@ const String ROUTE_GROUP      = '/group';
 const String ROUTE_HOME       = '/';
 const String ROUTE_MAP        = '/map';
 const String ROUTE_SIGNUP     = '/signup';
+const String ROUTE_LOGIN     = '/login';
 
 class RoutesHelper {
   static Route<dynamic> provideRoute(RouteSettings settings) {
@@ -50,6 +53,13 @@ class RoutesHelper {
           ? new CupertinoPageRoute(builder:  (_) => new MapSample(),settings: settings,)
           :new MyCustomRoute1(
         builder: (_) => new MapSample(),
+        settings: settings,
+      );
+
+      case ROUTE_LOGIN: return defaultTargetPlatform == TargetPlatform.iOS
+          ? new CupertinoPageRoute(builder:  (_) => new SignInForm(),settings: settings,)
+          :new MyCustomRoute(
+        builder: (_) => new SignInForm(),
         settings: settings,
       );
       default:
