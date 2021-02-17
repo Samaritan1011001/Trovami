@@ -23,12 +23,12 @@ var temp=[];
 String pageName='';
 var groupStatusGroupname='';
 double animValue=0.0;
-List<User> membersToShow=new List<User>();
+List<OldUser> membersToShow=new List<OldUser>();
 List<String> groupNamesToShow=new List<String>();
 List<Group> groupsToShow=new List<Group>();
 Group grps=new Group();
 const jsonCodec2=const JsonCodec();
-List<User> membersToShowHomepage=new List<User>();
+List<OldUser> membersToShowHomepage=new List<OldUser>();
 final groupref = FirebaseDatabase.instance.reference().child('groups');
 final usrref = FirebaseDatabase.instance.reference().child('users');
 //var _httpClient = createHttpClient();
@@ -41,7 +41,7 @@ bool _first=true;
 
 _reviver( key, value) {
   if(key!=null&& value is Map && key.contains('-')){
-    return new User.fromJson(value);
+    return new OldUser.fromJson(value);
   }
   return value;
 }

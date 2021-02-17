@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:trovami/core/User.dart';
 
 class UserModel extends ChangeNotifier {
-  final User _currentUser = User();
+  final OldUser _currentUser = OldUser();
 
-  void signUp(User user){
+  void signUp(OldUser user){
 
   }
 

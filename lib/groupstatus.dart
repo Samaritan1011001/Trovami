@@ -40,7 +40,7 @@ bool togglestate=false;
 _reviver(key,value) {
 
   if(key!=null&& value is Map) {
-    return new User.fromJson(value);
+    return new OldUser.fromJson(value);
   }
   else return value;
 }

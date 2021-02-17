@@ -111,11 +111,11 @@ class SigninFormState extends State<SignInForm>
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    FirebaseUser firebaseUser =
+    User firebaseUser =
         (await _auth.signInWithCredential(credential)).user;
     GoogleSignInAccount user;
     setState(() {
@@ -125,7 +125,7 @@ class SigninFormState extends State<SignInForm>
     if (user != null) {
 //      print("inside listener");
 
-      User guser = new User();
+      OldUser guser = new OldUser();
       guser.EmailId = user.email;
       guser.name = user.displayName;
       guser.locationShare = false;

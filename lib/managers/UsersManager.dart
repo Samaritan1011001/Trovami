@@ -1,10 +1,10 @@
 
 // Singleton to manage Users
+import 'dart:collection';
+
 import 'package:trovami/core/User.dart';
 
 class UsersManager {
-//  Map _items = new LinkedHashMap<String, FileImage>();
-
   static final UsersManager _instance = new UsersManager._internal();
 
   factory UsersManager() {
@@ -13,6 +13,12 @@ class UsersManager {
 
   UsersManager._internal();
 
-  List<User> users=new List<User>();
+  Map<String, OldUser> users = new LinkedHashMap<String, OldUser>();
+
+  String currentUserId;
+
+  OldUser currentUser() {
+    return users[currentUserId];
+  }
 
 }
