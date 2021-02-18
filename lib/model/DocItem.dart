@@ -6,7 +6,7 @@ abstract class  DocItem {
   String name;
   String id;
 
-  fromData(Map<String, Object> data);
+  fromMap(Map<String, Object> data);
   toJson();
 
   getName() {

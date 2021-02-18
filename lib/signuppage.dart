@@ -12,7 +12,7 @@ import 'package:trovami/model/userModel.dart';
 import 'Roundedbutton.dart';
 import 'functionsForFirebaseApiCalls.dart';
 import 'managers/UsersManager.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 
 bool userexists = false;
 OldUser user1 = new OldUser();

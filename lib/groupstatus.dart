@@ -18,7 +18,7 @@ import 'httpClient/httpClient.dart';
 import 'map.dart';
 import 'main.dart';
 import 'core/Group.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 import 'core/UserLocation.dart';
 import 'signinpage.dart';
 

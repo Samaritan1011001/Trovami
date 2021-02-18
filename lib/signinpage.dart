@@ -14,7 +14,7 @@ import 'InputTextField.dart';
 import 'Roundedbutton.dart';
 import 'Strings.dart';
 import 'main.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 import 'signuppage.dart';
 import 'homepage.dart';
 import 'functionsForFirebaseApiCalls.dart';

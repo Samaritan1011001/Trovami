@@ -2,7 +2,7 @@
 // Singleton to manage Users
 import 'dart:collection';
 
-import 'package:trovami/core/User.dart';
+import 'package:trovami/core/OldUser.dart';
 
 class UsersManager {
   static final UsersManager _instance = new UsersManager._internal();

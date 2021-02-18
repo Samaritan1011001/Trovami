@@ -1,9 +1,22 @@
-//import 'ItemsHelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trovami/model/DocItem.dart';
 
+class FirebaseResponse {
+  String error;
+  Map<String, Object> docs;
+  FirebaseResponse() {
+    error = "";
+    docs = Map<String, Object>();
+  }
+  String getError() {
+    return error;
+  }
+  bool hasError() {
+    return error.isNotEmpty;
+  }
+}
 class CloudFirebaseHelper {
-  Future addItemToCloud(DocItem item, String collectionName) async{
+  static Future addItemToCloud(DocItem item, String collectionName) async{
     CollectionReference collection = FirebaseFirestore.instance.collection(collectionName);
       return collection
           .add(item.toJson())
@@ -16,7 +29,7 @@ class CloudFirebaseHelper {
           .catchError((error) => print("Failed to add ${item.getName()}: $error"));
   }
 
-  Future deleteItem(DocItem item, String collectionName) async {
+  static Future deleteItem(DocItem item, String collectionName) async {
     CollectionReference collection = FirebaseFirestore.instance.collection(collectionName);
 
     collection.doc(item.id)
@@ -25,20 +38,24 @@ class CloudFirebaseHelper {
         .catchError((error) => print("Failed to delete ${item.getName()}: $error"));
   }
 
-  Future<Map<String, Object>> fetchDocs(String collectionName, DocItem item) async{
-    var items = Map<String, Object>();
-    FirebaseFirestore.instance
+  static Future<FirebaseResponse> fetchDocs(String collectionName, DocItem item) async{
+    var response = FirebaseResponse();
+    await FirebaseFirestore.instance
       .collection(collectionName)
       .get()
       .then((QuerySnapshot querySnapshot) => {
         querySnapshot.docs.forEach((doc) {
-          items.putIfAbsent(doc.id, () => item.fromData(doc.data()));
+          response.docs.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
         })
+      })
+      .catchError((error) => {
+        print("Failed to fetch $collectionName: $error"),
+        response.error = error.toString()
       });
-    return items;
+    return response;
   }
 
-  Future updateToCloud(DocItem item, collectionName) async{
+  static Future updateToCloud(DocItem item, collectionName) async{
     if (item.id != null) {
       Map<String, dynamic> data = item.toJson();
       CollectionReference collection = FirebaseFirestore.instance.collection(collectionName);

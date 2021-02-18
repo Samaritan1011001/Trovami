@@ -11,11 +11,12 @@ import 'package:flutter/services.dart';
 
 
 
+import 'UnitTests.dart';
 import 'groupdetails.dart';
 import 'helpers/RoutesHelper.dart';
 import 'main.dart';
 import 'core/Group.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
@@ -186,17 +187,12 @@ class groupBox extends StatelessWidget {
                     duration: const Duration(milliseconds: 500), vsync: this);
                 alpha = new Tween(begin: 0.0, end: 255.0).animate(controller)
                   ..addListener(() {
-//                    _scaffoldkeyhomepage.currentState.setState(() {
-//                      _first=false;
-//
-//                    });
-//                    _scaffoldkeyhomepage.currentState.setState(() {
-//                      animValue=alpha.value;
-//
-//                    });
                   });
                 controller.forward();
               },
+            iconSize: 35.0,),
+          new IconButton(
+            icon: new Icon(Icons.edit), onPressed: () => handleMoreMenu(),
             iconSize: 35.0,),
         ],
           title: new Text('Groups'),
@@ -224,7 +220,13 @@ class groupBox extends StatelessWidget {
       ])
       );
     }
+
+  handleMoreMenu() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => UnitTests(),
+    ),);
   }
+}
 
 
 
