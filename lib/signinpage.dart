@@ -47,6 +47,8 @@ ScrollController scrollController = new ScrollController();
 //}
 
 class SignInForm extends StatefulWidget {
+  SignInForm({Key key}):super(key: Key('sign_in_form'));
+
   @override
   SigninFormState createState() => new SigninFormState();
 }
