@@ -19,7 +19,7 @@ class Groups2Manager {
 
   Future<FirebaseResponse> acquire() async {
     var returnResponse = FirebaseResponse();
-    await CloudFirebaseHelper.fetchDocs("groups", Group2()).then((FirebaseResponse response) => {
+    await CloudFirebaseHelper.getItems("groups", Group2()).then((FirebaseResponse response) => {
         if (response.hasError()){
           print ("GroupsManager.fetchDocs failed with $response.getError()")
         } else {

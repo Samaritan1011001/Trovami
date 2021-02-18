@@ -16,7 +16,7 @@ class FirebaseResponse {
   }
 }
 class CloudFirebaseHelper {
-  static Future addItemToCloud(DocItem item, String collectionName) async{
+  static Future postItem(DocItem item, String collectionName) async{
     CollectionReference collection = FirebaseFirestore.instance.collection(collectionName);
       return collection
           .add(item.toJson())
@@ -38,7 +38,7 @@ class CloudFirebaseHelper {
         .catchError((error) => print("Failed to delete ${item.getName()}: $error"));
   }
 
-  static Future<FirebaseResponse> fetchDocs(String collectionName, DocItem item) async{
+  static Future<FirebaseResponse> getItems(String collectionName, DocItem item) async{
     var response = FirebaseResponse();
     await FirebaseFirestore.instance
       .collection(collectionName)
@@ -55,7 +55,7 @@ class CloudFirebaseHelper {
     return response;
   }
 
-  static Future updateToCloud(DocItem item, collectionName) async{
+  static Future updateItem(DocItem item, collectionName) async{
     if (item.id != null) {
       Map<String, dynamic> data = item.toJson();
       CollectionReference collection = FirebaseFirestore.instance.collection(collectionName);
