@@ -1,7 +1,3 @@
-
-// Singleton to manage Users
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/model/Group2.dart';
@@ -9,14 +5,14 @@ import 'package:trovami/model/Group2.dart';
 import 'ThemeManager.dart';
 
 class Groups2Manager {
+  //<editor-fold desc="Singleton Setup">
   static final Groups2Manager _instance = new Groups2Manager._internal();
-
   factory Groups2Manager() {
     return _instance;
   }
   Groups2Manager._internal();
+  //</editor-fold>
 
-//  var groups = new LinkedHashMap<String, Group>();
   var groups = Map<String, Object>();
 
   String currentGroupId;
