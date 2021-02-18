@@ -3,6 +3,7 @@ import 'package:trovami/Strings.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
 
 class SplashScreen extends StatefulWidget {
+  SplashScreen({Key key}):super(key: Key('splash_screen'));
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
