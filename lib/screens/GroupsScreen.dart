@@ -11,14 +11,14 @@ import 'package:flutter/services.dart';
 
 
 
-import 'UnitTests.dart';
-import 'AddGroup.dart';
-import 'helpers/RoutesHelper.dart';
-import 'main.dart';
-import 'core/Group.dart';
-import 'core/OldUser.dart';
-import 'signinpage.dart';
-import 'functionsForFirebaseApiCalls.dart';
+import 'UnitTestsScreen.dart';
+import 'AddGroupScreen.dart';
+import '../helpers/RoutesHelper.dart';
+import '../main.dart';
+import '../model/Group.dart';
+import '../model/OldUser.dart';
+import 'SignInScreen.dart';
+import '../helpers/functionsForFirebaseApiCalls.dart';
 
 var temp=[];
 String pageName='';
@@ -172,7 +172,7 @@ class groupBox extends StatelessWidget {
             icon: new Icon(Icons.group_add), onPressed: ()async{
 
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddGroup(users: users),
+              builder: (context) => AddGroupScreen(users: users),
             ),);
               }
             ,iconSize: 42.0,
@@ -223,7 +223,7 @@ class groupBox extends StatelessWidget {
 
   handleMoreMenu() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => UnitTests(),
+      builder: (context) => UnitTestsScreen(),
     ),);
   }
 }

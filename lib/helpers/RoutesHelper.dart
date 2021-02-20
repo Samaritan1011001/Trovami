@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../AddGroup.dart';
-import '../GroupDetails.dart';
-import '../GroupsScreen.dart';
+import '../screens/AddGroupScreen.dart';
+import '../screens/GroupDetailsScreen.dart';
+import '../screens/GroupsScreen.dart';
 import '../main.dart';
-import '../map.dart';
-import '../signuppage.dart';
+import '../screens/HomeScreen.dart';
+import '../screens/SignupScreen.dart';
 
 const String ROUTE_ADD_GROUP      = '/addgroup';
 const String ROUTE_GROUP_DETAILS  = '/groupdetails';
@@ -28,28 +28,28 @@ class RoutesHelper {
         );
 
       case ROUTE_SIGNUP: return defaultTargetPlatform == TargetPlatform.iOS
-          ? new CupertinoPageRoute(builder:  (_) => new SignupLayout(),settings: settings,)
+          ? new CupertinoPageRoute(builder:  (_) => new SignupScreen(),settings: settings,)
           : new MyCustomRoute(
-        builder: (_) => new SignupLayout(),
+        builder: (_) => new SignupScreen(),
         settings: settings,
       );
 
       case ROUTE_ADD_GROUP: return defaultTargetPlatform == TargetPlatform.iOS
-          ? new CupertinoPageRoute(builder:  (_) => new AddGroup(),settings: settings,)
+          ? new CupertinoPageRoute(builder:  (_) => new AddGroupScreen(),settings: settings,)
           :new MyCustomRoute1(
-        builder: (_) => new AddGroup(),
+        builder: (_) => new AddGroupScreen(),
         settings: settings,
       );
       case ROUTE_GROUP_DETAILS: return defaultTargetPlatform == TargetPlatform.iOS
-          ? new CupertinoPageRoute(builder:  (_) => new GroupDetails(),settings: settings,)
+          ? new CupertinoPageRoute(builder:  (_) => new GroupDetailsScreen(),settings: settings,)
           :new MyCustomRoute1(
-        builder: (_) => new GroupDetails(),
+        builder: (_) => new GroupDetailsScreen(),
         settings: settings,
       );
       case ROUTE_MAP: return defaultTargetPlatform == TargetPlatform.iOS
-          ? new CupertinoPageRoute(builder:  (_) => new MapSample(),settings: settings,)
+          ? new CupertinoPageRoute(builder:  (_) => new HomeScreen(),settings: settings,)
           :new MyCustomRoute1(
-        builder: (_) => new MapSample(),
+        builder: (_) => new HomeScreen(),
         settings: settings,
       );
       default:

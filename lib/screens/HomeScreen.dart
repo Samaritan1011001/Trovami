@@ -14,14 +14,14 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:trovami/AddGroup.dart';
+import 'package:trovami/screens/AddGroupScreen.dart';
 
-import 'GroupDetails.dart';
+import 'GroupDetailsScreen.dart';
 import 'GroupsScreen.dart';
-import 'httpClient/httpClient.dart';
-import 'main.dart';
-import 'signinpage.dart';
-import 'functionsForFirebaseApiCalls.dart';
+import '../helpers/httpClient.dart';
+import '../main.dart';
+import 'SignInScreen.dart';
+import '../helpers/functionsForFirebaseApiCalls.dart';
 
 final userref = FirebaseDatabase.instance.reference().child('users'); // new
 final groupref = FirebaseDatabase.instance.reference().child('groups');
@@ -31,13 +31,13 @@ var sec = const Duration(seconds: 1);
 Timer t2;
 //var httpClient = HttpClient();
 
-class MapSample extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   List currentLocations = [];
   @override
-  State<MapSample> createState() => MapSampleState();
+  State<HomeScreen> createState() => HomeScreenState();
 }
 
-class MapSampleState extends State<MapSample> {
+class HomeScreenState extends State<HomeScreen> {
   Completer<GoogleMapController> _controller = Completer();
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS

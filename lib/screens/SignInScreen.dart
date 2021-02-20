@@ -6,18 +6,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
-import 'package:trovami/httpClient/httpClient.dart';
+import 'package:trovami/helpers/httpClient.dart';
 //import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'InputTextField.dart';
-import 'Roundedbutton.dart';
-import 'Strings.dart';
-import 'main.dart';
-import 'core/OldUser.dart';
-import 'signuppage.dart';
+import '../widgets/InputTextField.dart';
+import '../widgets/Roundedbutton.dart';
+import '../Strings.dart';
+import '../main.dart';
+import '../model/OldUser.dart';
+import 'SignupScreen.dart';
 import 'GroupsScreen.dart';
-import 'functionsForFirebaseApiCalls.dart';
+import '../helpers/functionsForFirebaseApiCalls.dart';
 
 final googleSignIn = new GoogleSignIn();
 String loggedinUser;
@@ -46,13 +46,13 @@ ScrollController scrollController = new ScrollController();
 //  return value;
 //}
 
-class SignInForm extends StatefulWidget {
+class SignInScreen extends StatefulWidget {
   @override
   SigninFormState createState() => new SigninFormState();
 }
 
 // ignore: mixin_inherits_from_not_object
-class SigninFormState extends State<SignInForm>
+class SigninFormState extends State<SignInScreen>
     with SingleTickerProviderStateMixin {
   bool _isgooglesigincomplete = true;
   bool _first = true;

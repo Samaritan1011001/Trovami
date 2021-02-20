@@ -3,28 +3,28 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
-import 'package:trovami/GroupsScreen.dart';
-import 'package:trovami/httpClient/httpClient.dart';
+import 'package:trovami/screens/GroupsScreen.dart';
+import 'package:trovami/helpers/httpClient.dart';
 
-import 'InputTextField.dart';
-import 'helpers/RoutesHelper.dart';
-import 'managers/GroupsManager.dart';
-import 'core/Group.dart';
-import 'core/OldUser.dart';
-import 'managers/ThemeManager.dart';
-import 'signinpage.dart';
-import 'functionsForFirebaseApiCalls.dart';
+import '../widgets/InputTextField.dart';
+import '../helpers/RoutesHelper.dart';
+import '../managers/GroupsManager.dart';
+import '../model/Group.dart';
+import '../model/OldUser.dart';
+import '../managers/ThemeManager.dart';
+import 'SignInScreen.dart';
+import '../helpers/functionsForFirebaseApiCalls.dart';
 
-  class AddGroup extends StatefulWidget {
+  class AddGroupScreen extends StatefulWidget {
     dynamic users;
-    AddGroup({this.users});
+    AddGroupScreen({this.users});
     @override
-    AddGroupstate createState() => new AddGroupstate(users:users);
+    AddGroupScreenState createState() => new AddGroupScreenState(users:users);
   }
 
-  class AddGroupstate extends State<AddGroup>{
+  class AddGroupScreenState extends State<AddGroupScreen>{
     dynamic users;
-    AddGroupstate({this.users});
+    AddGroupScreenState({this.users});
     final GlobalKey<ScaffoldState> _scaffoldKeySecondary1 = new GlobalKey<ScaffoldState>();
     final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
 

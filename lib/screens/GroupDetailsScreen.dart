@@ -8,19 +8,19 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'functionsForFirebaseApiCalls.dart';
+import '../helpers/functionsForFirebaseApiCalls.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
-import 'helpers/RoutesHelper.dart';
+import '../helpers/RoutesHelper.dart';
 import 'GroupsScreen.dart';
-import 'httpClient/httpClient.dart';
-import 'map.dart';
-import 'main.dart';
-import 'core/Group.dart';
-import 'core/OldUser.dart';
-import 'core/UserLocation.dart';
-import 'signinpage.dart';
+import '../helpers/httpClient.dart';
+import 'HomeScreen.dart';
+import '../main.dart';
+import '../model/Group.dart';
+import '../model/OldUser.dart';
+import '../model/UserLocation.dart';
+import 'SignInScreen.dart';
 
 
 final userref = FirebaseDatabase.instance.reference().child('users');          // new
@@ -159,12 +159,12 @@ updateDatabaseLocation (currLoc) async{
 }
 
 
-class GroupDetails extends StatefulWidget {
+class GroupDetailsScreen extends StatefulWidget {
   @override
-  GroupDetailsState createState() => new GroupDetailsState();
+  GroupDetailsScreenState createState() => new GroupDetailsScreenState();
 }
 
-class GroupDetailsState extends State<GroupDetails>{
+class GroupDetailsScreenState extends State<GroupDetailsScreen>{
 
   @override
   Widget build(BuildContext context)=>

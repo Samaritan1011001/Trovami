@@ -6,13 +6,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
-import 'package:trovami/httpClient/httpClient.dart';
+import 'package:trovami/helpers/httpClient.dart';
 import 'package:trovami/model/userModel.dart';
 
-import 'Roundedbutton.dart';
-import 'functionsForFirebaseApiCalls.dart';
-import 'managers/UsersManager.dart';
-import 'core/OldUser.dart';
+import '../widgets/Roundedbutton.dart';
+import '../helpers/functionsForFirebaseApiCalls.dart';
+import '../managers/UsersManager.dart';
+import '../model/OldUser.dart';
 
 bool userexists = false;
 OldUser user1 = new OldUser();
@@ -27,12 +27,12 @@ _reviver(key, value) {
 
 TextStyle textStyle = new TextStyle(color: const Color.fromRGBO(255, 255, 255, 0.4), fontSize: 16.0, fontWeight: FontWeight.bold);
 
-class SignupLayout extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  SignupLayoutState createState() => new SignupLayoutState();
+  SignupScreenState createState() => new SignupScreenState();
 }
 
-class SignupLayoutState extends State<SignupLayout> {
+class SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) => defaultTargetPlatform == TargetPlatform.iOS
       ? new CupertinoPageScaffold(child: new Signup()

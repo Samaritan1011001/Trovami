@@ -9,7 +9,7 @@ import 'package:trovami/model/userModel.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
-import 'signinpage.dart';
+import 'screens/SignInScreen.dart';
 
 // TODO: Deprecate. Unsure what it is needed for
 //var popflag=0;
@@ -40,7 +40,7 @@ void main() {
       child: new MaterialApp(
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
-      home: new SignInForm(),
+      home: new SignInScreen(),
       theme: defaultTargetPlatform == TargetPlatform.iOS
           ? kIOSTheme
           : kDefaultTheme,

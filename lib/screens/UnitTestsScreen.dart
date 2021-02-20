@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:trovami/managers/Groups2Manager.dart';
-import 'helpers/CloudFirebaseHelper.dart';
-import 'managers/ThemeManager.dart';
+import '../helpers/CloudFirebaseHelper.dart';
+import '../managers/ThemeManager.dart';
 
-class UnitTests extends StatelessWidget {
-  UnitTests();
+class UnitTestsScreen extends StatelessWidget {
+  UnitTestsScreen();
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
