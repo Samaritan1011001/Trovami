@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:trovami/Strings.dart';
+import 'package:trovami/helpers/Strings.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
-import 'package:trovami/ui/splash/splash_screen.dart';
+import 'package:trovami/views/screens/splash_screen.dart';
 
 void main() {
-  testWidgets('Shows splash screen for a few seconds and Navigates to Log in page', (WidgetTester tester) async {
+  testWidgets(
+      'Shows splash screen for a few seconds and Navigates to Log in page',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       new MaterialApp(
         title: Strings.appName,

@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 //import 'package:map_view/camera_position.dart';
 //import 'package:map_view/location.dart';
 //import 'package:map_view/map_options.dart';
@@ -14,14 +11,10 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:trovami/groupdetails.dart';
 
-import 'groupstatus.dart';
 import 'homepage.dart';
-import 'httpClient/httpClient.dart';
-import 'main.dart';
-import 'signinpage.dart';
-import 'functionsForFirebaseApiCalls.dart';
+import 'package:trovami/helpers/httpClient/httpClient.dart';
+import 'package:trovami/helpers/functionsForFirebaseApiCalls.dart';
 
 final userref = FirebaseDatabase.instance.reference().child('users'); // new
 final groupref = FirebaseDatabase.instance.reference().child('groups');
@@ -40,7 +33,8 @@ class MapSample extends StatefulWidget {
 class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
 
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
+  Map<MarkerId, Marker> markers =
+      <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
 
   Map<MarkerId, Marker> _add(locData) {
     var markerIdVal = locData["emailid"];
@@ -59,31 +53,34 @@ class MapSampleState extends State<MapSample> {
       },
     );
 
-      // adding a new marker to map
-      markers[markerId] = marker;
-      return markers;
+    // adding a new marker to map
+    markers[markerId] = marker;
+    return markers;
   }
+
   StreamSubscription _getChangesSubscription;
   @override
   void initState() {
     listenTochanges();
   }
+
   @override
   void dispose() {
     _getChangesSubscription?.cancel();
     print("Groups listener disposed");
     super.dispose();
   }
-  void listenTochanges(){
+
+  void listenTochanges() {
     print("Groups lister inistialised");
-    _getChangesSubscription = groupref.onChildChanged.listen((event) async{
-      if(groupStatusGroupname == event.snapshot.value["groupname"]){
+    _getChangesSubscription = groupref.onChildChanged.listen((event) async {
+      if (groupStatusGroupname == event.snapshot.value["groupname"]) {
         List<dynamic> groupMems = event.snapshot.value["members"];
         print("groupMems -> ${groupMems}");
 
-        for(var grpmem in groupMems){
+        for (var grpmem in groupMems) {
           print("mem -> ${grpmem["locationShare"]}");
-          if(grpmem["locationShare"]==true) {
+          if (grpmem["locationShare"] == true) {
             for (var i = 0; i < widget.currentLocations.length; i++) {
               if (widget.currentLocations[i]["emailid"] == grpmem["emailid"]) {
                 widget.currentLocations[i] = {
@@ -95,10 +92,7 @@ class MapSampleState extends State<MapSample> {
             }
           }
         }
-        setState(() {
-
-        });
-
+        setState(() {});
       }
     });
   }
@@ -117,15 +111,15 @@ class MapSampleState extends State<MapSample> {
                     "No Live location sharing users, Go back and try again"),
               );
             } else {
-               widget.currentLocations.forEach((curr){
-                 markers = _add(curr);
-               });
+              widget.currentLocations.forEach((curr) {
+                markers = _add(curr);
+              });
               return GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(snapshot.data[0]["latitude"], snapshot.data[0]["longitude"]),
+                  target: LatLng(snapshot.data[0]["latitude"],
+                      snapshot.data[0]["longitude"]),
                   zoom: 14.4746,
-
                 ),
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
@@ -157,31 +151,37 @@ class MapSampleState extends State<MapSample> {
       print(result1["emailid"]);
       print(result1["locationShare"]);
       if (result1["locationShare"] == true) {
-
-        if(widget.currentLocations.length == 0) {
-          widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
+        if (widget.currentLocations.length == 0) {
+          widget.currentLocations.add({
+            "latitude": result1["location"]["latitude"],
+            "longitude": result1["location"]["longitude"],
+            "emailid": result1["emailid"]
+          });
           print("here 1 ${widget.currentLocations}");
-
-        }else{
+        } else {
           var flag = 0;
           for (var i = 0; i < widget.currentLocations.length; i++) {
             print("check hereee ${result1["emailid"]}");
             if (widget.currentLocations[i]["emailid"] == result1["emailid"]) {
-              flag=1;
+              flag = 1;
               print("curr loc ${widget.currentLocations}");
               print("${result1["emailid"]}");
               widget.currentLocations.removeAt(i);
-              widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
-
+              widget.currentLocations.add({
+                "latitude": result1["location"]["latitude"],
+                "longitude": result1["location"]["longitude"],
+                "emailid": result1["emailid"]
+              });
             }
           }
-          if(flag==0){
-            widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
+          if (flag == 0) {
+            widget.currentLocations.add({
+              "latitude": result1["location"]["latitude"],
+              "longitude": result1["location"]["longitude"],
+              "emailid": result1["emailid"]
+            });
           }
-
         }
-
-
       } else {
         print("works till here");
 
@@ -196,7 +196,6 @@ class MapSampleState extends State<MapSample> {
 
     return widget.currentLocations;
   }
-
 
 //  Future<void> _goToTheLake() async {
 //    final GoogleMapController controller = await _controller.future;

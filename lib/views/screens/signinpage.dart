@@ -1,23 +1,20 @@
-import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
-import 'package:trovami/httpClient/httpClient.dart';
+import 'package:trovami/helpers/httpClient/httpClient.dart';
 //import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'InputTextField.dart';
-import 'Roundedbutton.dart';
-import 'Strings.dart';
-import 'main.dart';
-import 'core/User.dart';
+import 'package:trovami/views/widgets/InputTextField.dart';
+import 'package:trovami/views/widgets/Roundedbutton.dart';
+import 'package:trovami/helpers/Strings.dart';
+import 'package:trovami/models/User.dart';
 import 'signuppage.dart';
 import 'homepage.dart';
-import 'functionsForFirebaseApiCalls.dart';
+import 'package:trovami/helpers/functionsForFirebaseApiCalls.dart';
 
 final googleSignIn = new GoogleSignIn();
 String loggedinUser;
@@ -47,7 +44,7 @@ ScrollController scrollController = new ScrollController();
 //}
 
 class SignInForm extends StatefulWidget {
-  SignInForm({Key key}):super(key: Key('sign_in_form'));
+  SignInForm({Key key}) : super(key: Key('sign_in_form'));
 
   @override
   SigninFormState createState() => new SigninFormState();
@@ -170,9 +167,7 @@ class SigninFormState extends State<SignInForm>
           _isgooglesigincomplete = true;
         });
       }
-
     }
-
   }
 
   _handleSubmitted() async {
@@ -211,8 +206,7 @@ class SigninFormState extends State<SignInForm>
 
   setGoogleSigninListener() {
     _googleSignIn.onCurrentUserChanged
-        .listen((GoogleSignInAccount account) async {
-    });
+        .listen((GoogleSignInAccount account) async {});
     _googleSignIn.signInSilently();
   }
 
@@ -333,7 +327,7 @@ class SigninFormState extends State<SignInForm>
                           buttonColor: const Color.fromRGBO(100, 100, 100, 1.0),
                         ),
 
-/// UNCOMMENT IF YOU WANT TO SIGNIN THROUGH GOOGLE
+                        /// UNCOMMENT IF YOU WANT TO SIGNIN THROUGH GOOGLE
 //                        (_isgooglesigincomplete
 //                            ? new FloatingActionButton(
 //                                child:
