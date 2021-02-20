@@ -11,11 +11,12 @@ import 'package:flutter/services.dart';
 
 
 
+import 'UnitTests.dart';
 import 'groupdetails.dart';
 import 'helpers/RoutesHelper.dart';
 import 'main.dart';
 import 'core/Group.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
@@ -23,12 +24,12 @@ var temp=[];
 String pageName='';
 var groupStatusGroupname='';
 double animValue=0.0;
-List<User> membersToShow=new List<User>();
+List<OldUser> membersToShow=new List<OldUser>();
 List<String> groupNamesToShow=new List<String>();
 List<Group> groupsToShow=new List<Group>();
 Group grps=new Group();
 const jsonCodec2=const JsonCodec();
-List<User> membersToShowHomepage=new List<User>();
+List<OldUser> membersToShowHomepage=new List<OldUser>();
 final groupref = FirebaseDatabase.instance.reference().child('groups');
 final usrref = FirebaseDatabase.instance.reference().child('users');
 //var _httpClient = createHttpClient();
@@ -41,7 +42,7 @@ bool _first=true;
 
 _reviver( key, value) {
   if(key!=null&& value is Map && key.contains('-')){
-    return new User.fromJson(value);
+    return new OldUser.fromJson(value);
   }
   return value;
 }
@@ -186,17 +187,12 @@ class groupBox extends StatelessWidget {
                     duration: const Duration(milliseconds: 500), vsync: this);
                 alpha = new Tween(begin: 0.0, end: 255.0).animate(controller)
                   ..addListener(() {
-//                    _scaffoldkeyhomepage.currentState.setState(() {
-//                      _first=false;
-//
-//                    });
-//                    _scaffoldkeyhomepage.currentState.setState(() {
-//                      animValue=alpha.value;
-//
-//                    });
                   });
                 controller.forward();
               },
+            iconSize: 35.0,),
+          new IconButton(
+            icon: new Icon(Icons.edit), onPressed: () => handleMoreMenu(),
             iconSize: 35.0,),
         ],
           title: new Text('Groups'),
@@ -224,7 +220,13 @@ class groupBox extends StatelessWidget {
       ])
       );
     }
+
+  handleMoreMenu() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => UnitTests(),
+    ),);
   }
+}
 
 
 

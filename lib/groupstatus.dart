@@ -18,7 +18,7 @@ import 'httpClient/httpClient.dart';
 import 'map.dart';
 import 'main.dart';
 import 'core/Group.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 import 'core/UserLocation.dart';
 import 'signinpage.dart';
 
@@ -40,7 +40,7 @@ bool togglestate=false;
 _reviver(key,value) {
 
   if(key!=null&& value is Map) {
-    return new User.fromJson(value);
+    return new OldUser.fromJson(value);
   }
   else return value;
 }

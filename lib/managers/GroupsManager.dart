@@ -1,7 +1,6 @@
-
 // Singleton to manage Users
 import 'package:trovami/core/Group.dart';
-import 'package:trovami/core/User.dart';
+import 'package:trovami/core/OldUser.dart';
 
 class GroupsManager {
 //  Map _items = new LinkedHashMap<String, FileImage>();
@@ -16,7 +15,7 @@ class GroupsManager {
 
   GroupsManager._internal();
 
-  List<User> users=new List<User>();
+  List<OldUser> users=new List<OldUser>();
 
   Group currentGroup() {
     return _currentGroup;

@@ -12,15 +12,15 @@ import 'package:trovami/model/userModel.dart';
 import 'Roundedbutton.dart';
 import 'functionsForFirebaseApiCalls.dart';
 import 'managers/UsersManager.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 
 bool userexists = false;
-User user1 = new User();
+OldUser user1 = new OldUser();
 const jsonCodec = const JsonCodec(reviver: _reviver);
 
 _reviver(key, value) {
   if (key != null && value is Map && key.contains('-')) {
-    return new User.fromJson(value);
+    return new OldUser.fromJson(value);
   }
   return value;
 }
@@ -76,7 +76,7 @@ class signupstate extends State<Signup> {
       user1.location = null;
       user1.locationShare = false;
       user1.groupsIamin = [];
-      UsersManager().users.add(user1);
+      UsersManager().users.putIfAbsent(user1.EmailId, () => user1);
       var userjson = jsonCodec.encode(user1);
 //      print("userjson:${userjson}");
       final DataSnapshot usrmap = await getUsers();

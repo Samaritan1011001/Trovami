@@ -9,7 +9,7 @@ import 'package:trovami/httpClient/httpClient.dart';
 import 'InputTextField.dart';
 import 'managers/GroupsManager.dart';
 import 'core/Group.dart';
-import 'core/User.dart';
+import 'core/OldUser.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
@@ -35,7 +35,7 @@ ThemeData appTheme = new ThemeData(
   _reviver(key,value) {
 
     if(key!=null&& value is Map && key.contains('-')){
-      return new User.fromJson(value);
+      return new OldUser.fromJson(value);
     }
     return value;
   }
@@ -62,9 +62,9 @@ ThemeData appTheme = new ThemeData(
     final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
 
     bool _autovalidate1 = false;
-    List<User> userstoShowGrpDetailsPage=new List<User>();
+    List<OldUser> userstoShowGrpDetailsPage=new List<OldUser>();
     List<Widget> children1=new List<Widget>();
-    List<User> members=[];
+    List<OldUser> members=[];
     int count=0;
 
     void showInSnackBar(String value) {
@@ -86,7 +86,7 @@ ThemeData appTheme = new ThemeData(
   var httpClient = HttpClientFireBase();
       final FormState form = _groupformKey.currentState;
       form.save();
-      User loggedInMember = new User();
+      OldUser loggedInMember = new OldUser();
       loggedInMember.EmailId = loggedinUser;
       loggedInMember.locationShare = false;
       for (var i = 0; i < members.length; i++) {
@@ -139,7 +139,7 @@ ThemeData appTheme = new ThemeData(
 //      await Navigator.of(context).pushReplacementNamed('/b');
     }
 
-    void _select(User user) {
+    void _select(OldUser user) {
       members.add(user);
       for(var i=0;i<userstoShowGrpDetailsPage.length;i++){
         if(userstoShowGrpDetailsPage[i].EmailId==user.EmailId){
@@ -157,7 +157,7 @@ ThemeData appTheme = new ThemeData(
     getusers(){
 
       users.value.forEach((k,v){
-        User usertoshow=new User();
+        OldUser usertoshow=new OldUser();
         usertoshow.name=v["name"];
         usertoshow.EmailId = v["emailid"];
         usertoshow.locationShare=false;
@@ -219,7 +219,7 @@ ThemeData appTheme = new ThemeData(
                     bottomMargin: 20.0,
                     onSaved: (String value) {
                       GroupsManager().currentGroup().groupname=value;
-                      GroupsManager().currentGroup().groupmembers=new List<User>();
+                      GroupsManager().currentGroup().groupmembers=new List<OldUser>();
                     }
                   ),
                   padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0),
@@ -235,11 +235,11 @@ ThemeData appTheme = new ThemeData(
                 ),
                 new Container(child:
                   new CircleAvatar(child:
-                    new PopupMenuButton<User>(
+                    new PopupMenuButton<OldUser>(
                       icon: new Icon(Icons.add),
                       onSelected: _select,
-                      itemBuilder: (BuildContext context) => userstoShowGrpDetailsPage.map((User usertoshow) =>
-                           new PopupMenuItem<User>(
+                      itemBuilder: (BuildContext context) => userstoShowGrpDetailsPage.map((OldUser usertoshow) =>
+                           new PopupMenuItem<OldUser>(
                             value: usertoshow,
                             child: new Text(usertoshow.name),
                           )

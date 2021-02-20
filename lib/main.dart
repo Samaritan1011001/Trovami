@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 //import 'package:map_view/map_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/model/userModel.dart';
 
 import 'Strings.dart';

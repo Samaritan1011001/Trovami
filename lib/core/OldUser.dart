@@ -1,5 +1,5 @@
-class User {
-  User({this.EmailId,this.password,this.name,this.locationShare,this.groupsIamin,this.location});
+class OldUser {
+  OldUser({this.EmailId,this.password,this.name,this.locationShare,this.groupsIamin,this.location});
    String EmailId ;
    String password;
    String name;
@@ -8,7 +8,7 @@ class User {
    List<String> groupsIamin=[];
 
 
-  User.fromJson(Map value){
+  OldUser.fromJson(Map value){
     EmailId=value["emailid"];
     name=value["name"];
     locationShare=value["locationShare"];
