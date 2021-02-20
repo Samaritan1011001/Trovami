@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../groupdetails.dart';
-import '../groupstatus.dart';
+import '../AddGroup.dart';
+import '../GroupDetails.dart';
 import '../homepage.dart';
 import '../main.dart';
 import '../map.dart';

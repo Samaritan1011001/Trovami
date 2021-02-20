@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 
 
 import 'UnitTests.dart';
-import 'groupdetails.dart';
+import 'AddGroup.dart';
 import 'helpers/RoutesHelper.dart';
 import 'main.dart';
 import 'core/Group.dart';

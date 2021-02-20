@@ -10,27 +10,16 @@ import 'InputTextField.dart';
 import 'managers/GroupsManager.dart';
 import 'core/Group.dart';
 import 'core/OldUser.dart';
+import 'managers/ThemeManager.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
-
-//var httpClient = createHttpClient();
-// String _selectedChoice="";
-var Json = const JsonCodec();
-var groupName="";
-Color textFieldColor = const Color.fromRGBO(0, 0, 0, 0.2);
 const jsonCodec=const JsonCodec(reviver: _reviver);
 const jsonCodec1=const JsonCodec(reviver: _reviver1);
-
-TextStyle textStyle = new TextStyle(
-    color:const Color.fromRGBO(0, 0, 0, 0.9),
-    fontSize: 16.0,
-    fontWeight: FontWeight.normal);
 
 ThemeData appTheme = new ThemeData(
   hintColor: Colors.white,
 );
-
 
   _reviver(key,value) {
 
@@ -212,7 +201,7 @@ ThemeData appTheme = new ThemeData(
                     obscureText: false,
                     textInputType: TextInputType.text,
                     textStyle: textStyle,
-                    textFieldColor: textFieldColor,
+                    textFieldColor: ThemeManager().getStyle(COLOR_TEXT_FIELD),
                     icon: Icons.group,
                     validateFunction: checkifnotnull,
                     iconColor: Colors.grey,

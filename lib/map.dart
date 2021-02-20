@@ -14,9 +14,9 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:trovami/groupdetails.dart';
+import 'package:trovami/AddGroup.dart';
 
-import 'groupstatus.dart';
+import 'GroupDetails.dart';
 import 'homepage.dart';
 import 'httpClient/httpClient.dart';
 import 'main.dart';
