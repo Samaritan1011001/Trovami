@@ -3,39 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
-import 'package:trovami/homepage.dart';
+import 'package:trovami/GroupsScreen.dart';
 import 'package:trovami/httpClient/httpClient.dart';
 
 import 'InputTextField.dart';
+import 'helpers/RoutesHelper.dart';
 import 'managers/GroupsManager.dart';
 import 'core/Group.dart';
 import 'core/OldUser.dart';
 import 'managers/ThemeManager.dart';
 import 'signinpage.dart';
 import 'functionsForFirebaseApiCalls.dart';
-
-const jsonCodec=const JsonCodec(reviver: _reviver);
-const jsonCodec1=const JsonCodec(reviver: _reviver1);
-
-ThemeData appTheme = new ThemeData(
-  hintColor: Colors.white,
-);
-
-  _reviver(key,value) {
-
-    if(key!=null&& value is Map && key.contains('-')){
-      return new OldUser.fromJson(value);
-    }
-    return value;
-  }
-
-  _reviver1(key,value) {
-
-    if(key!=null&& value is Map && key.contains('-')){
-      return new Group.fromJson(value);
-    }
-    return value;
-  }
 
   class AddGroup extends StatefulWidget {
     dynamic users;
@@ -72,7 +50,7 @@ ThemeData appTheme = new ThemeData(
     }
 
      _handleSubmitted() async {
-  var httpClient = HttpClientFireBase();
+//      var httpClient = HttpClientFireBase();
       final FormState form = _groupformKey.currentState;
       form.save();
       OldUser loggedInMember = new OldUser();
@@ -82,44 +60,39 @@ ThemeData appTheme = new ThemeData(
         GroupsManager().currentGroup().groupmembers.add(members[i]);
       }
       loggedInMember.name=loggedInUsername;
-      GroupsManager().currentGroup().groupmembers.add(loggedInMember);
-      for (var i = 0; i < GroupsManager().currentGroup().groupmembers.length; i++) {
-
-
-//        final Map resstring = await getUsers();
-
-
-        users.value.forEach((k, v) async {
-          if (v["emailid"] == GroupsManager().currentGroup().groupmembers[i].EmailId) {
-
-            print("v['groupsIamin'] : ${v["groupsIamin"]}");
-            if (v["groupsIamin"] == null) {
-              List<String> groupsIamin = [];
-              groupsIamin.add(GroupsManager().currentGroup().groupname);
-              var groupsIaminjson = jsonCodec.encode(groupsIamin);
-             await httpClient.put(
-                  url: 'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
-                  body: groupsIaminjson);
-            } else {
-
-              var response2 = await getUserById(k);
-
-              List resmap=[];
-              resmap.addAll(response2.value["groupsIamin"]);
-              print("resmap: ${resmap}");
-
-              resmap.add(GroupsManager().currentGroup().groupname);
-              var groupsIaminjson = jsonCodec.encode(resmap);
-              var response1 = await httpClient.put( url:
-                  'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
-                  body: groupsIaminjson);
-            }
-          }
-        });
-      }
-      var groupjson = jsonCodec1.encode(GroupsManager().currentGroup());
-      var url = "https://trovami-bcd81.firebaseio.com/groups.json";
-      await httpClient.post(url:url, body: groupjson);
+      // GroupsManager().currentGroup().groupmembers.add(loggedInMember);
+      // for (var i = 0; i < GroupsManager().currentGroup().groupmembers.length; i++) {
+      //   users.value.forEach((k, v) async {
+      //     if (v["emailid"] == GroupsManager().currentGroup().groupmembers[i].EmailId) {
+      //
+      //       print("v['groupsIamin'] : ${v["groupsIamin"]}");
+      //       if (v["groupsIamin"] == null) {
+      //         List<String> groupsIamin = [];
+      //         groupsIamin.add(GroupsManager().currentGroup().groupname);
+      //         var groupsIaminjson = jsonCodec.encode(groupsIamin);
+      //        await httpClient.put(
+      //             url: 'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
+      //             body: groupsIaminjson);
+      //       } else {
+      //
+      //         var response2 = await getUserById(k);
+      //
+      //         List resmap=[];
+      //         resmap.addAll(response2.value["groupsIamin"]);
+      //         print("resmap: ${resmap}");
+      //
+      //         resmap.add(GroupsManager().currentGroup().groupname);
+      //         var groupsIaminjson = jsonCodec.encode(resmap);
+      //         var response1 = await httpClient.put( url:
+      //             'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
+      //             body: groupsIaminjson);
+      //       }
+      //     }
+      //   });
+      // }
+      // var groupjson = jsonCodec1.encode(GroupsManager().currentGroup());
+      // var url = "https://trovami-bcd81.firebaseio.com/groups.json";
+      // await httpClient.post(url:url, body: groupjson);
 //  Navigator.of(context).pushReplacement(
 //    MaterialPageRoute(
 //    builder: (context) => Homepagelayout(users: users),
@@ -255,9 +228,10 @@ ThemeData appTheme = new ThemeData(
                 ),
                 new Container(
                   child:new FloatingActionButton(
-                    onPressed: (){   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Homepage(users: users),
-                    ),);
+                    onPressed: (){
+                      // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      // builder: (context) => Homepage(users: users),),);
+                      RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
                     },
                     child: new Icon(Icons.clear),
                     heroTag: null,

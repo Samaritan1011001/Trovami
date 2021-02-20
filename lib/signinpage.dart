@@ -16,7 +16,7 @@ import 'Strings.dart';
 import 'main.dart';
 import 'core/OldUser.dart';
 import 'signuppage.dart';
-import 'homepage.dart';
+import 'GroupsScreen.dart';
 import 'functionsForFirebaseApiCalls.dart';
 
 final googleSignIn = new GoogleSignIn();
@@ -144,7 +144,7 @@ class SigninFormState extends State<SignInForm>
             loggedInUsername = user.displayName;
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => Homepagelayout(users: response),
+                builder: (context) => GroupsScreen(users: response),
               ),
             );
           }
@@ -160,7 +160,7 @@ class SigninFormState extends State<SignInForm>
         loggedInUsername = user.displayName;
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => Homepagelayout(users: response),
+            builder: (context) => GroupsScreen(users: response),
           ),
         );
       } else {
@@ -189,7 +189,7 @@ class SigninFormState extends State<SignInForm>
           loggedInUsername = us["name"];
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => Homepagelayout(users: usrmap),
+              builder: (context) => GroupsScreen(users: usrmap),
             ),
           );
         }

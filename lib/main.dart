@@ -46,7 +46,7 @@ void main() {
           : kDefaultTheme,
         // ignore: missing_return
         onGenerateRoute: RoutesHelper.provideRoute,
-        initialRoute: ROUTE_HOME,
+        initialRoute: ROUTE_GROUPS,
   ),
     ),
   );

@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
 import 'helpers/RoutesHelper.dart';
-import 'homepage.dart';
+import 'GroupsScreen.dart';
 import 'httpClient/httpClient.dart';
 import 'map.dart';
 import 'main.dart';
@@ -159,12 +159,12 @@ updateDatabaseLocation (currLoc) async{
 }
 
 
-class GroupStatusLayout extends StatefulWidget {
+class GroupDetails extends StatefulWidget {
   @override
-  GroupStatusLayoutState createState() => new GroupStatusLayoutState();
+  GroupDetailsState createState() => new GroupDetailsState();
 }
 
-class GroupStatusLayoutState extends State<GroupStatusLayout>{
+class GroupDetailsState extends State<GroupDetails>{
 
   @override
   Widget build(BuildContext context)=>

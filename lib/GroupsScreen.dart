@@ -50,9 +50,9 @@ _reviver( key, value) {
 
 
 
-  class Homepagelayout extends StatelessWidget {
+  class GroupsScreen extends StatelessWidget {
     dynamic users;
-    Homepagelayout({this.users});
+    GroupsScreen({this.users});
     @override
     Widget build(BuildContext context) {
 
@@ -102,7 +102,7 @@ class groupBox extends StatelessWidget {
       ),
           new FlatButton(onPressed: () {
            groupStatusGroupname = snapshot.value;
-           RoutesHelper.pushRoute(context, ROUTE_GROUP);
+           RoutesHelper.pushRoute(context, ROUTE_GROUPS);
          }, child: new Text(
             snapshot.value,))
         ],

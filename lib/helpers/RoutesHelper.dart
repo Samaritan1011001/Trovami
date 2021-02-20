@@ -5,25 +5,25 @@ import 'package:flutter/material.dart';
 
 import '../AddGroup.dart';
 import '../GroupDetails.dart';
-import '../homepage.dart';
+import '../GroupsScreen.dart';
 import '../main.dart';
 import '../map.dart';
 import '../signuppage.dart';
 
-const String ROUTE_ADD_GROUP  = '/addgroup';
-const String ROUTE_GROUP      = '/group';
-const String ROUTE_HOME       = '/';
-const String ROUTE_MAP        = '/map';
-const String ROUTE_SIGNUP     = '/signup';
+const String ROUTE_ADD_GROUP      = '/addgroup';
+const String ROUTE_GROUP_DETAILS  = '/groupdetails';
+const String ROUTE_GROUPS           = '/';
+const String ROUTE_MAP            = '/map';
+const String ROUTE_SIGNUP         = '/signup';
 
 class RoutesHelper {
   static Route<dynamic> provideRoute(RouteSettings settings) {
     switch (settings.name) {
-      case ROUTE_HOME:
+      case ROUTE_GROUPS:
         return defaultTargetPlatform == TargetPlatform.iOS
-            ? new CupertinoPageRoute(builder:  (_) => new Homepagelayout(),settings: settings,)
+            ? new CupertinoPageRoute(builder:  (_) => new GroupsScreen(),settings: settings,)
             : new MyCustomRoute(
-          builder: (_) => new Homepagelayout(),
+          builder: (_) => new GroupsScreen(),
           settings: settings,
         );
 
@@ -40,10 +40,10 @@ class RoutesHelper {
         builder: (_) => new AddGroup(),
         settings: settings,
       );
-      case ROUTE_GROUP: return defaultTargetPlatform == TargetPlatform.iOS
-          ? new CupertinoPageRoute(builder:  (_) => new GroupStatusLayout(),settings: settings,)
+      case ROUTE_GROUP_DETAILS: return defaultTargetPlatform == TargetPlatform.iOS
+          ? new CupertinoPageRoute(builder:  (_) => new GroupDetails(),settings: settings,)
           :new MyCustomRoute1(
-        builder: (_) => new GroupStatusLayout(),
+        builder: (_) => new GroupDetails(),
         settings: settings,
       );
       case ROUTE_MAP: return defaultTargetPlatform == TargetPlatform.iOS

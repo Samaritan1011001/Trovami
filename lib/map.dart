@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:trovami/AddGroup.dart';
 
 import 'GroupDetails.dart';
-import 'homepage.dart';
+import 'GroupsScreen.dart';
 import 'httpClient/httpClient.dart';
 import 'main.dart';
 import 'signinpage.dart';
