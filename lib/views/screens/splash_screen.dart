@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 5), () {
       RoutesHelper.pushRoute(context, '/login');
     });
   }
@@ -29,11 +29,13 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.fitHeight,
             ),
           ),
-          Center(
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.25,
+            left: MediaQuery.of(context).size.width * 0.25,
             child: Text(
               Strings.appName,
               textAlign: TextAlign.center,
-              style: new TextStyle(fontSize: 50.0),
+              style: new TextStyle(fontSize: 64.0, color: Colors.white),
             ),
           ),
         ],
