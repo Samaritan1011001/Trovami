@@ -9,6 +9,7 @@ import 'package:trovami/helpers/RoutesHelper.dart';
 import 'package:trovami/helpers/httpClient.dart';
 //import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:trovami/managers/Groups2Manager.dart';
 
 import '../widgets/InputTextField.dart';
 import '../widgets/Roundedbutton.dart';
@@ -187,6 +188,10 @@ class SigninFormState extends State<SignInScreen>
         if (email == us["emailid"]) {
           loggedinUser = email;
           loggedInUsername = us["name"];
+
+          print("Trovami.SignInScreen: calling Groups2Manager().acquire");
+          Groups2Manager().acquire();
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => GroupsScreen(),

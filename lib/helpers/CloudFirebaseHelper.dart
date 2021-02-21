@@ -65,11 +65,11 @@ class CloudFirebaseHelper {
     return collection
         .add(item.toJson())
         .then((value) => {
-      print("Item ${item.getName()} (${item.id}) added to cloud"),
-      item.id = value.id,
-      value.update(item.toJson()),
-      print("Item ${item.getName()} (${item.id}) updated with id")
-    })
+          print("Item ${item.getName()} (${item.id}) added to cloud"),
+          item.id = value.id,
+          value.update(item.toJson()),
+          print("Item ${item.getName()} (${item.id}) updated with id")
+        })
         .catchError((error) => print("Failed to add ${item.getName()}: $error"));
   }
 

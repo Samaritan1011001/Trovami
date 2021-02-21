@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/helpers/TriggersHelper.dart';
 import 'package:trovami/model/Group2.dart';
 
 import 'ThemeManager.dart';
 
-class Groups2Manager {
+class Groups2Manager { // extends ChangeNotifier{
   //<editor-fold desc="Singleton Setup">
   static final Groups2Manager _instance = new Groups2Manager._internal();
   factory Groups2Manager() {
@@ -17,21 +18,41 @@ class Groups2Manager {
 
   String currentGroupId;
 
-  Future<FirebaseResponse> acquire() async {
-    var returnResponse = FirebaseResponse();
+  // Future<FirebaseResponse> acquire() async {
+  //   var returnResponse = FirebaseResponse();
+  //   await CloudFirebaseHelper.getItems("groups", Group2()).then((FirebaseResponse response) => {
+  //       if (response.hasError()){
+  //         print ("GroupsManager.fetchDocs failed with $response.getError()")
+  //       } else {
+  //         print ("GroupsManager.fetchDocs succeeded returning ${response.docs.length} docs")
+  //       },
+  //       returnResponse = response,
+  //       groups = returnResponse.docs
+  //     }
+  //   );
+  //   return returnResponse;
+  // }
+  acquire() async {
+    FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (response.hasError())
+      return;
+
     await CloudFirebaseHelper.getItems("groups", Group2()).then((FirebaseResponse response) => {
-        if (response.hasError()){
-          print ("GroupsManager.fetchDocs failed with $response.getError()")
-        } else {
-          print ("GroupsManager.fetchDocs succeeded returning ${response.docs.length} docs")
-        },
-        returnResponse = response,
-        groups = returnResponse.docs
-      }
-    );
-    return returnResponse;
+      if (response.hasError()){
+        print ("GroupsManager.fetchDocs failed with $response.getError()")
+      } else {
+        print ("GroupsManager.fetchDocs succeeded returning ${response.docs.length} docs")
+      },
+      groups = response.docs,
+//      notifyListeners()
+      TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED)
+    });
   }
-  
+
+  hasCurrentGroup() {
+    groups.containsKey(currentGroupId);
+  }
+
   Group2 currentGroup() {
     return groups[currentGroupId];
   }

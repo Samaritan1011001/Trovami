@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/helpers/TriggersHelper.dart';
 import 'package:trovami/managers/Groups2Manager.dart';
 import 'package:trovami/managers/ThemeManager.dart';
 import 'package:trovami/model/Group2.dart';
@@ -18,12 +19,18 @@ class _BodyState extends State<GroupsScreen> {
   _BodyState();
 
   @override
-  void initState();
+  void initState(){
+    TriggersHelper().addListener(TRIGGER_GROUPS_UPDATED, callback: ()  => {
+      setState(() {
+        print("${TRIGGER_GROUPS_UPDATED} Trigger received by GroupsScreen");
+      })
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
-//    Provider.of<GroupsScreen()>(context, listen: false);
+//    Provider.of<Groups2Manager>(context, listen: true);
 
     return new Scaffold(
         appBar: new AppBar(
@@ -61,7 +68,7 @@ class _BodyState extends State<GroupsScreen> {
         child: Text("Fetching Groups...", style: ThemeManager().getStyle(STYLE_NORMAL_BOLD),),
       );
     } else if (CloudFirebaseHelper().hasError()){
-      return <Widget>[ Text("Failed to connect to Firebase", style: ThemeManager().getStyle(STYLE_NORMAL_BOLD))];
+      return Text("Failed to connect to Firebase", style: ThemeManager().getStyle(STYLE_NORMAL_BOLD));
     }
 
   }
@@ -91,19 +98,19 @@ class _BodyState extends State<GroupsScreen> {
 
     if (groupWidgets.isEmpty){
       print("Trovami.GroupsScreen: No groups found");
-      return Text("No Groups Found");
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("No Groups Found", style: ThemeManager().getStyle(STYLE_NORMAL_BOLD),),
+      );
+
     }
 
     print("Trovami.GroupsScreen: Displaying ${groupWidgets.length} groups");
 
 
-    return Expanded(
-      flex: 3,
-      child:
-      SingleChildScrollView(
-        child: Column(
-          children: groupWidgets
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: groupWidgets
       ),
     );
   }
