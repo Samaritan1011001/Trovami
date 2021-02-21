@@ -144,7 +144,7 @@ class SigninFormState extends State<SignInScreen>
             loggedInUsername = user.displayName;
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => GroupsScreen(users: response),
+                builder: (context) => GroupsScreen(),
               ),
             );
           }
@@ -160,7 +160,7 @@ class SigninFormState extends State<SignInScreen>
         loggedInUsername = user.displayName;
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => GroupsScreen(users: response),
+            builder: (context) => GroupsScreen(),
           ),
         );
       } else {
@@ -189,7 +189,7 @@ class SigninFormState extends State<SignInScreen>
           loggedInUsername = us["name"];
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => GroupsScreen(users: usrmap),
+              builder: (context) => GroupsScreen(),
             ),
           );
         }

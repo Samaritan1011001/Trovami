@@ -22,6 +22,8 @@ import '../model/OldUser.dart';
 import '../model/UserLocation.dart';
 import 'SignInScreen.dart';
 
+var groupStatusGroupname='';
+
 
 final userref = FirebaseDatabase.instance.reference().child('users');          // new
 final groupref = FirebaseDatabase.instance.reference().child('groups');          // new
