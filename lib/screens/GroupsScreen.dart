@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/helpers/RoutesHelper.dart';
 import 'package:trovami/helpers/TriggersHelper.dart';
 import 'package:trovami/managers/Groups2Manager.dart';
 import 'package:trovami/managers/ThemeManager.dart';
@@ -81,8 +82,7 @@ class _BodyState extends State<GroupsScreen> {
           InkWell(
             splashColor: Colors.blue,
             onTap: () {
-//              handleGroupTap(context, player.id);
-              print(group.name);
+              handleGroupTap(context, group);
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -137,5 +137,10 @@ class _BodyState extends State<GroupsScreen> {
         builder: (context) => UnitTestsScreen(),
       ),
     );
+  }
+
+  void handleGroupTap(BuildContext context, Group2 group) {
+    Groups2Manager().setCurrent(group.id);
+    RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
   }
 }

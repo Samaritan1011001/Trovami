@@ -18,20 +18,6 @@ class Groups2Manager { // extends ChangeNotifier{
 
   String currentGroupId;
 
-  // Future<FirebaseResponse> acquire() async {
-  //   var returnResponse = FirebaseResponse();
-  //   await CloudFirebaseHelper.getItems("groups", Group2()).then((FirebaseResponse response) => {
-  //       if (response.hasError()){
-  //         print ("GroupsManager.fetchDocs failed with $response.getError()")
-  //       } else {
-  //         print ("GroupsManager.fetchDocs succeeded returning ${response.docs.length} docs")
-  //       },
-  //       returnResponse = response,
-  //       groups = returnResponse.docs
-  //     }
-  //   );
-  //   return returnResponse;
-  // }
   acquire() async {
     FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
     if (response.hasError())
@@ -49,12 +35,12 @@ class Groups2Manager { // extends ChangeNotifier{
     });
   }
 
-  hasCurrentGroup() {
-    groups.containsKey(currentGroupId);
-  }
-
   Group2 currentGroup() {
     return groups[currentGroupId];
+  }
+
+  hasCurrentGroup() {
+    groups.containsKey(currentGroupId);
   }
 
   List<Widget> getGroupWidgets(BuildContext context) {
@@ -80,6 +66,10 @@ class Groups2Manager { // extends ChangeNotifier{
       );
     }
     return groupWidgets;
+  }
+
+  setCurrent(String id){
+    currentGroupId = id;
   }
 
   //<editor-fold desc="Private Members">
