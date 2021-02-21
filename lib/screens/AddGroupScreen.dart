@@ -23,6 +23,8 @@ import 'SignInScreen.dart';
     List<Widget> children1=new List<Widget>();
     List<String> selectedIds=[];
 
+    var friends = ProfileManager().profile.friends;
+
     void showInSnackBar(String value) {
       _scaffoldKeySecondary1.currentState.showSnackBar(
           new SnackBar(
@@ -51,6 +53,16 @@ import 'SignInScreen.dart';
       });
     }
 
+    void toggleSelection(String id) {
+      setState(() {
+        if (selectedIds.contains(id)) {
+          selectedIds.remove(id);
+        } else {
+          selectedIds.add(id);
+        }
+      });
+    }
+
     @override
     void initState();
 
@@ -59,8 +71,7 @@ import 'SignInScreen.dart';
 
 
     if(ProfileManager().profile.friends.isNotEmpty) {
-      var friends = ProfileManager().profile.friends;
-      children1 = List.generate(friends.length, (int i) => new MemberList(ProfileManager().getFriendData(friends[i]).name));
+      children1 = List.generate(friends.length, (int i) => new FriendRow(friends[i], this));
     }
 
     return new Scaffold(
@@ -93,7 +104,7 @@ import 'SignInScreen.dart';
                     hintText: "Groupname",
                     obscureText: false,
                     textInputType: TextInputType.text,
-                    textStyle: textStyle,
+                    textStyle: ThemeManager().getStyle(STYLE_TEXT_EDIT),
                     textFieldColor: ThemeManager().getStyle(COLOR_TEXT_FIELD),
                     icon: Icons.group,
                     validateFunction: checkifnotnull,
@@ -117,6 +128,8 @@ import 'SignInScreen.dart';
               Column(
                 children:children1,
               ),
+              SizedBox(height:20.0),
+              // Submit/Cancel buttons
               Row(children: <Widget>[
                   Spacer(),
                   FloatingActionButton(
@@ -128,9 +141,8 @@ import 'SignInScreen.dart';
                   FloatingActionButton(
                     heroTag: "tag2",
                     onPressed: (){
-                      // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      // builder: (context) => Homepage(users: users),),);
-                      RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
+//                      RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
+                      Navigator.of(context).pop();
                     },
                     child: new Icon(Icons.clear),
                   ),
@@ -145,37 +157,44 @@ import 'SignInScreen.dart';
   }
 
 
-  class MemberList extends StatelessWidget {
-    final String name;
-    MemberList(this.name);
+  class FriendRow extends StatelessWidget {
+    final String friendId;
+    final AddGroupScreenState state;
+    var friendData;
+
+    FriendRow(this.friendId, this.state){
+      friendData = ProfileManager().getFriendData(friendId);
+    }
 
     @override
     Widget build(BuildContext context) =>
-    Container(
-      child: Column(
-        children: <Widget>[
-          Row(
+      GestureDetector(
+        onTap: () {state.toggleSelection(friendId);},
+        child: Container(
+          child: Column(
             children: <Widget>[
-              CircleAvatar(
-                child:new Icon(Icons.person),
-                backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
-              ),
-              Container(child:
-              Text(name,
-                  style: TextStyle(fontSize: 20.0),
-              ),
-                  padding: EdgeInsets.only( left:20.0)
-
+              Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    child:new Icon(Icons.person),
+                    backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
+                  ),
+                  Container(child:
+                  Text(friendData.name, style: TextStyle(fontSize: 20.0),),
+                      padding: EdgeInsets.only( left:20.0)
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-      padding: EdgeInsets.only( left:10.0,top: 5.0,bottom: 5.0),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(width: 0.0, color: const Color.fromRGBO(0, 0, 0, 0.2),),
+          padding: EdgeInsets.only( left:10.0,top: 5.0,bottom: 5.0),
+          decoration: BoxDecoration(
+            color: state.selectedIds.contains(friendId) ? ThemeManager().getColor(COLOR_PRIMARY)
+                : ThemeManager().getColor(COLOR_CANVAS),
+            border: Border(
+              bottom: BorderSide(color: const Color.fromRGBO(0, 0, 0, 0.2),),
+            ),
+          ),
         ),
-      ),
-    );
+      );
   }

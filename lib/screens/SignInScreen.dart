@@ -12,6 +12,7 @@ import 'package:trovami/helpers/httpClient.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/managers/ProfileManager.dart';
+import 'package:trovami/managers/ThemeManager.dart';
 import 'package:trovami/model/TrovUser.dart';
 
 import '../widgets/InputTextField.dart';
@@ -28,10 +29,10 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-TextStyle textStyle = new TextStyle(
-    color: const Color.fromRGBO(255, 255, 255, 0.4),
-    fontSize: 16.0,
-    fontWeight: FontWeight.normal);
+// TextStyle textStyle = new TextStyle(
+//     color: const Color.fromRGBO(255, 255, 255, 0.4),
+//     fontSize: 16.0,
+//     fontWeight: FontWeight.normal);
 
 Color textFieldColor = const Color.fromRGBO(0, 0, 0, 0.7);
 ScrollController scrollController = new ScrollController();
@@ -286,8 +287,8 @@ class SigninFormState extends State<SignInScreen>
                                 hintText: 'Email',
                                 obscureText: false,
                                 textInputType: TextInputType.text,
-                                textStyle: textStyle,
-                                hintStyle: textStyle,
+                                textStyle: ThemeManager().getStyle(STYLE_TEXT_EDIT),
+                                hintStyle: ThemeManager().getStyle(STYLE_TEXT_HINT),
                                 textFieldColor: textFieldColor,
                                 icon: Icons.mail_outline,
                                 iconColor:
@@ -302,8 +303,8 @@ class SigninFormState extends State<SignInScreen>
                               hintText: 'Password',
                               obscureText: true,
                               textInputType: TextInputType.text,
-                              textStyle: textStyle,
-                              hintStyle: textStyle,
+                              textStyle: ThemeManager().getStyle(STYLE_TEXT_EDIT),
+                              hintStyle: ThemeManager().getStyle(STYLE_TEXT_HINT),
                               textFieldColor: textFieldColor,
                               icon: Icons.lock_outline,
                               iconColor: Colors.white,

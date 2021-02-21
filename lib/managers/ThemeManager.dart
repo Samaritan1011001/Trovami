@@ -14,6 +14,7 @@ const String STYLE_NORMAL         = "StyleNormal";
 const String STYLE_NORMAL_BOLD    = "StyleNormalBold";
 const String STYLE_TITLE          = "StyleTitle";
 const String STYLE_TEXT_EDIT      = "StyleTextEdit";
+const String STYLE_TEXT_HINT      = "StyleTextHint";
 
 class ThemeManager {
   //<editor-fold desc="Singleton Setup">
@@ -40,14 +41,16 @@ class ThemeManager {
   _initialize(){
     _colors.putIfAbsent(COLOR_PRIMARY,      () => Colors.lightBlue);
     _colors.putIfAbsent(COLOR_SECONDARY,    () => Colors.purple[50]);
-    _colors.putIfAbsent(COLOR_CANVAS,       () => Colors.purple[50]);
+    _colors.putIfAbsent(COLOR_CANVAS,       () => Colors.white);
     _colors.putIfAbsent(COLOR_TEXT,         () => Colors.white);
     _colors.putIfAbsent(COLOR_TEXT_FIELD,   () => Color.fromRGBO(0, 0, 0, 0.2));
 
     _styles.putIfAbsent(STYLE_NORMAL,       () => TextStyle(fontSize: 22.0, color: Colors.black));
     _styles.putIfAbsent(STYLE_NORMAL_BOLD,  () => TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold));
     _styles.putIfAbsent(STYLE_TITLE,        () => TextStyle(fontSize: 30.0, color: Colors.black, fontWeight: FontWeight.bold));
-    _styles.putIfAbsent(STYLE_TEXT_EDIT,    () => TextStyle(fontSize: 16.0, color: Color.fromRGBO(0, 0, 0, 0.9),
+    _styles.putIfAbsent(STYLE_TEXT_EDIT,    () => TextStyle(fontSize: 20.0, color: Color.fromRGBO(0, 0, 0, 0.9),
                                                             fontWeight: FontWeight.normal,));
+    _styles.putIfAbsent(STYLE_TEXT_HINT,    () => TextStyle(fontSize: 20.0, color: Color.fromRGBO(0, 0, 0, 0.9),
+                                                            fontStyle: FontStyle.italic, fontWeight: FontWeight.normal,));
   }
 }
