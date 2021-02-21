@@ -34,7 +34,7 @@ class GroupsManager { // extends ChangeNotifier{
     });
   }
 
-  getOwned(String id) async {
+  Future getOwned(String id) async {
     FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
     if (response.hasError())
       return;

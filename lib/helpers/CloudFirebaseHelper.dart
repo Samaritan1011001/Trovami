@@ -98,7 +98,7 @@ class CloudFirebaseHelper {
         .get()
         .then((QuerySnapshot querySnapshot) => {
           response.items.putIfAbsent(querySnapshot.docs.first.id, () => item.fromMap(querySnapshot.docs.first.data())),
-          print("CloudFirebase.getItems() found ${querySnapshot.docs.length} items")
+          print("CloudFirebase.getItems($collectionName, $field, $value) found ${querySnapshot.docs.length} items")
         })
         .catchError((error) => {
       print("Failed to fetch $collectionName: $error"),
@@ -117,7 +117,7 @@ class CloudFirebaseHelper {
           querySnapshot.docs.forEach((doc) {
           response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
       }),
-      print("CloudFirebase.getItemsMatching() found ${querySnapshot.docs.length} items")
+      print("CloudFirebase.getItemsMatching($collectionName, $field, $value) found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
       print("Failed to fetch $collectionName: $error"),
@@ -148,13 +148,13 @@ class CloudFirebaseHelper {
     var response = FirebaseResponse();
     await FirebaseFirestore.instance
         .collection(collectionName)
-        .where(field, arrayContainsAny: list)
+        .where(field, arrayContains: list)
         .get()
         .then((QuerySnapshot querySnapshot) => {
           querySnapshot.docs.forEach((doc) {
           response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
       }),
-      print("CloudFirebase.getItemsArrayContains() found ${querySnapshot.docs.length} items")
+      print("CloudFirebase.getItemsArrayContains($collectionName, $field) found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
       print("Failed to fetch $collectionName: $error"),
@@ -173,7 +173,7 @@ class CloudFirebaseHelper {
           querySnapshot.docs.forEach((doc) {
           response.items.putIfAbsent(doc.id, () => doc.id);
       }),
-      print("CloudFirebase.getItems() found ${querySnapshot.docs.length} items")
+      print("CloudFirebase.getItems($collectionName, $field) found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
       print("Failed to fetch $collectionName: $error"),
@@ -182,6 +182,26 @@ class CloudFirebaseHelper {
     return response;
   }
 
+  static Future<FirebaseResponse> getItemsMatchingOneOf(String collectionName, String field, List list, DocItem item) async{
+    var response = FirebaseResponse();
+    await FirebaseFirestore.instance
+        .collection(collectionName)
+        .where(field, whereIn: list)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) {
+            response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
+          }),
+        print("CloudFirebase.getItemsMatchesOneOf($collectionName, $field) found ${querySnapshot.docs.length} items")
+      })
+        .catchError((error) => {
+      print("Failed to fetch $collectionName: $error"),
+      response.error = error.toString()
+    });
+    return response;
+  }
+
+  static void test() {}
   static Future updateItem(DocItem item, collectionName) async{
     if (item.id != null) {
       Map<String, dynamic> data = item.toJson();

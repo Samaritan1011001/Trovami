@@ -16,7 +16,7 @@ class ProfileManager { // extends ChangeNotifier{
   //</editor-fold>
 
   TrovUser profile;
-  Map<String, TrovUser> friends;
+  var friends = Map<String, TrovUser>();
 
   // addFriends(List<String> moreFriends){
   //   friends.addAll(moreFriends);
@@ -38,17 +38,19 @@ class ProfileManager { // extends ChangeNotifier{
 
     });
 //    await getFriends(profile.friends);
-    TriggersHelper().trigger(TRIGGER_PROFILE_UPDATED);
+//    TriggersHelper().trigger(TRIGGER_PROFILE_UPDATED);
     return profile;
   }
 
-  getFriends(List<String> friendIds) async{
+  Future<FirebaseResponse> getFriends() async{
     var response = await UsersManager().getThese(profile.friends);
     if (!response.hasError()){
       friends.clear();
-      for (TrovUser user in response.items as List<TrovUser>){
+      for (Object obj in response.items.values){
+        var user = obj as TrovUser;
         friends.putIfAbsent(user.id, () => user);
       }
     }
+    return response;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/managers/ProfileManager.dart';
 import '../managers/ThemeManager.dart';
 
 class UnitTestsScreen extends StatelessWidget {
@@ -28,7 +30,9 @@ class MainBodyState extends State<MainBody> {
 
   @override
   void initState() {
-    super.initState();
+    ProfileManager().getFriends().then((FirebaseResponse response){
+      print("Trovami.UnitTestScreen");
+    });
   }
 
   @override

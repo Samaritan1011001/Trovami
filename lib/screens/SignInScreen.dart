@@ -191,8 +191,10 @@ class SigninFormState extends State<SignInScreen>
           loggedInUsername = us["name"];
 
           print("Trovami.SignInScreen: retrieving profile then owned groups");
-          ProfileManager().get(email).then((value) => {GroupsManager().getOwned(value.id)})
-                                                                      .then((value)=>TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED));
+          ProfileManager().get(email)
+                          .then((value) => {GroupsManager().getOwned(value.id)})
+                          .then((value) => ProfileManager().getFriends())
+                          .then((value) => TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED));
 
           Navigator.of(context).push(
             MaterialPageRoute(

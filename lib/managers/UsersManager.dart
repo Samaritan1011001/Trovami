@@ -23,7 +23,7 @@ class UsersManager {
     if (response.hasError())
       return response;
 
-    await CloudFirebaseHelper.getItemsArrayContains(TABLE_USERS, DocItem.FLD_ID, ids, TrovUser()).then((FirebaseResponse response) => {
+    await CloudFirebaseHelper.getItemsMatchingOneOf(TABLE_USERS, DocItem.FLD_ID, ids, TrovUser()).then((FirebaseResponse response) => {
       if (response.hasError()){
         print ("usersManager.getItemsArrayContains failed with $response.getError()")
       } else {
