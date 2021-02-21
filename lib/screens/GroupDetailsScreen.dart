@@ -9,6 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:trovami/managers/Groups2Manager.dart';
+import '../Strings.dart';
 import '../helpers/functionsForFirebaseApiCalls.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
@@ -83,7 +84,7 @@ class GroupStatusState extends State<GroupStatus>{
           ),
         ],
         flexibleSpace: new FlexibleSpaceBar(
-          title: new Text('Group Status'),
+          title: new Text(Strings.groupDetails),
         ),
       ),
       body :new Container(
@@ -94,11 +95,11 @@ class GroupStatusState extends State<GroupStatus>{
               color: Colors.red,
               height: 100,
               child: Center(
-                child: Text("DO NOT USE REAL LOCATION",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                child: Text(Strings.dontUseRealLocation,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
               ),
             ),
             new Row(children :<Widget>[
-              new Container(child: new Text("Share Live Location:",style: new TextStyle(fontSize: 20.0)),
+              new Container(child: new Text(Strings.shareLiveLocation,style: new TextStyle(fontSize: 20.0)),
                 padding: const EdgeInsets.only( left:10.0),
               ),
               new Container(

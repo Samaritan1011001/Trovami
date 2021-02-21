@@ -23,13 +23,13 @@ class Groups2Manager { // extends ChangeNotifier{
     if (response.hasError())
       return;
 
-    await CloudFirebaseHelper.getItems("groups", Group2()).then((FirebaseResponse response) => {
+    await CloudFirebaseHelper.getItems(TABLE_GROUPS, Group2()).then((FirebaseResponse response) => {
       if (response.hasError()){
-        print ("GroupsManager.fetchDocs failed with $response.getError()")
+        print ("GroupsManager.getItems failed with $response.getError()")
       } else {
-        print ("GroupsManager.fetchDocs succeeded returning ${response.docs.length} docs")
+        print ("GroupsManager.getItems succeeded returning ${response.items.length} docs")
       },
-      groups = response.docs,
+      groups = response.items,
 //      notifyListeners()
       TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED)
     });

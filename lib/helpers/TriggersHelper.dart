@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const String TRIGGER_GROUPS_UPDATED            = "GroupsUpdated";
+const String TRIGGER_PROFILE_UPDATED           = "ProfileUpdated";
 
 class Msg {
   int value;
