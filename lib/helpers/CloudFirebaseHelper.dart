@@ -192,12 +192,13 @@ class CloudFirebaseHelper {
           querySnapshot.docs.forEach((doc) {
             response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
           }),
-        print("CloudFirebase.getItemsMatchesOneOf($collectionName, $field) found ${querySnapshot.docs.length} items")
-      })
+          print("Trovami.CloudFirebase.getItemsMatchesOneOf($collectionName, $field) found ${querySnapshot.docs.length} items")
+        })
         .catchError((error) => {
-      print("Failed to fetch $collectionName: $error"),
-      response.error = error.toString()
-    });
+          print("Trovami.CloudFirebase.getItemsMatchingOneOf: Failed to fetch $collectionName: $error"),
+          response.error = error.toString()
+        });
+    print("Trovami.CloudFirebase.getItemsMatchingOneOf: returning");
     return response;
   }
 

@@ -175,7 +175,7 @@ class SigninFormState extends State<SignInScreen>
 
   }
 
-  _handleSubmitted() async {
+  _handleSubmit() async {
     final FormState form = _formKey.currentState;
     if (!form.validate()) {
       _autovalidate = true;
@@ -319,7 +319,7 @@ class SigninFormState extends State<SignInScreen>
                       children: <Widget>[
                         new RoundedButton(
                           buttonName: 'Sign-In',
-                          onTap: _handleSubmitted,
+                          onTap: _handleSubmit,
                           width: screenSize.width,
                           height: 50.0,
                           bottomMargin: 10.0,

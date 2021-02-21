@@ -16,12 +16,17 @@ class ProfileManager { // extends ChangeNotifier{
   //</editor-fold>
 
   TrovUser profile;
-  var friends = Map<String, TrovUser>();
+
+  var friendsData = Map<String, TrovUser>();
 
   // addFriends(List<String> moreFriends){
   //   friends.addAll(moreFriends);
   // }
 
+  TrovUser getFriendData(String id){
+    return friendsData[id];
+  }
+  //<editor-fold desc="DB Calls">
   Future<TrovUser> get(String email) async {
     FirebaseResponse initResponse = await CloudFirebaseHelper().assureFireBaseInitialized();
     if (initResponse.hasError())
@@ -41,16 +46,25 @@ class ProfileManager { // extends ChangeNotifier{
 //    TriggersHelper().trigger(TRIGGER_PROFILE_UPDATED);
     return profile;
   }
-
   Future<FirebaseResponse> getFriends() async{
-    var response = await UsersManager().getThese(profile.friends);
-    if (!response.hasError()){
-      friends.clear();
-      for (Object obj in response.items.values){
-        var user = obj as TrovUser;
-        friends.putIfAbsent(user.id, () => user);
+    // var response = await UsersManager().getThese(profile.friends);
+    // if (!response.hasError()){
+    //   friendsData.clear();
+    //   for (Object obj in response.items.values){
+    //     var user = obj as TrovUser;
+    //     friendsData.putIfAbsent(user.id, () => user);
+    //   }
+    // }
+    // return response;
+    UsersManager().getThese(profile.friends).then((FirebaseResponse response)=>{
+      print("Trovami.ProfileManager.getFriends: returned from UsersManager.getThese"),
+      if (!response.hasError()){
+          friendsData.clear(),
+        for (Object obj in response.items.values){
+          friendsData.putIfAbsent((obj as TrovUser).id, () => (obj as TrovUser))
+        }
       }
-    }
-    return response;
+    });
   }
+//</editor-fold>
 }

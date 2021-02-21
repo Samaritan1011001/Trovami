@@ -19,20 +19,24 @@ class UsersManager {
 //  String currentUserId;
 
   Future<FirebaseResponse> getThese(List<String> ids) async {
-    FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
-    if (response.hasError())
-      return response;
+    FirebaseResponse initResponse = await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (initResponse.hasError())
+      return initResponse;
+
+    var returnResponse;
 
     await CloudFirebaseHelper.getItemsMatchingOneOf(TABLE_USERS, DocItem.FLD_ID, ids, TrovUser()).then((FirebaseResponse response) => {
       if (response.hasError()){
-        print ("usersManager.getItemsArrayContains failed with $response.getError()")
+        print ("Trovami.UsersManager.getItemsArrayContains failed with $response.getError()")
       } else {
-        print ("GroupsManager.getItemsArrayContains succeeded returning ${response.items.length} docs")
+        print ("Trovami.UsersManager.getItemsArrayContains succeeded returning ${response.items.length} docs")
       },
+      returnResponse = response
 //      TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED)
     });
     // users = response.items;
-    return response;
+    print("Trovami.UsersManager.getThese: returning");
+    return returnResponse;
   }
 
   // TrovUser currentUser() {
