@@ -190,9 +190,8 @@ class SigninFormState extends State<SignInScreen>
           loggedinUser = email;
           loggedInUsername = us["name"];
 
-          print("Trovami.SignInScreen: calling Groups2Manager().acquire");
-          Groups2Manager().acquire();
-          ProfileManager().acquire(email);
+          print("Trovami.SignInScreen: retrieving profile then owned groups");
+          ProfileManager().get(email).then((value) => {Groups2Manager().getOwned(value.id)});
 
           Navigator.of(context).push(
             MaterialPageRoute(

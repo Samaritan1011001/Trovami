@@ -8,6 +8,7 @@ const String TABLE_LOCATIONS  = "locations";
 const String TABLE_USERS      = "users";
 
 const String FIELD_ID         = "id";
+const String FIELD_OWNER      = "owner";
 
 class FirebaseResponse {
   String error;
@@ -88,6 +89,8 @@ class CloudFirebaseHelper {
         .catchError((error) => print("Failed to delete ${item.getName()}: $error"));
   }
 
+  // getItem() may be redundent.  Can use getItemsMatching for same purpose
+  // getItem() assumes only 1 item returned and doesn't iterate through QuerySnapshots
   static Future<FirebaseResponse> getItem(String collectionName, String field, String value, DocItem item) async{
     var response = FirebaseResponse();
     await FirebaseFirestore.instance
@@ -105,7 +108,26 @@ class CloudFirebaseHelper {
     return response;
   }
 
-  static Future<FirebaseResponse> getItems(String collectionName, DocItem item) async{
+  static Future<FirebaseResponse> getItemsMatching(String collectionName, String field, String value, DocItem item) async{
+    var response = FirebaseResponse();
+    await FirebaseFirestore.instance
+        .collection(collectionName)
+        .where(field, isEqualTo: value)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) {
+          response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
+      }),
+      print("CloudFirebase.getItemsMatching() found ${querySnapshot.docs.length} items")
+    })
+        .catchError((error) => {
+      print("Failed to fetch $collectionName: $error"),
+      response.error = error.toString()
+    });
+    return response;
+  }
+
+  static Future<FirebaseResponse> getAllItems(String collectionName, DocItem item) async{
     var response = FirebaseResponse();
     await FirebaseFirestore.instance
         .collection(collectionName)
@@ -115,6 +137,25 @@ class CloudFirebaseHelper {
           response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
         }),
       print("CloudFirebase.getItems() found ${querySnapshot.docs.length} items")
+    })
+        .catchError((error) => {
+      print("Failed to fetch $collectionName: $error"),
+      response.error = error.toString()
+    });
+    return response;
+  }
+
+  static Future<FirebaseResponse> getItemsArrayContains(String collectionName, String field, List list, DocItem item) async{
+    var response = FirebaseResponse();
+    await FirebaseFirestore.instance
+        .collection(collectionName)
+        .where(field, arrayContainsAny: list)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) {
+          response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
+      }),
+      print("CloudFirebase.getItemsArrayContains() found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
       print("Failed to fetch $collectionName: $error"),

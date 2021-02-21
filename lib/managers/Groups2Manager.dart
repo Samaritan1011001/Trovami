@@ -18,12 +18,12 @@ class Groups2Manager { // extends ChangeNotifier{
 
   String currentGroupId;
 
-  acquire() async {
+  getAll() async {
     FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
     if (response.hasError())
       return;
 
-    await CloudFirebaseHelper.getItems(TABLE_GROUPS, Group2()).then((FirebaseResponse response) => {
+    await CloudFirebaseHelper.getAllItems(TABLE_GROUPS, Group2()).then((FirebaseResponse response) => {
       if (response.hasError()){
         print ("GroupsManager.getItems failed with $response.getError()")
       } else {
@@ -35,6 +35,40 @@ class Groups2Manager { // extends ChangeNotifier{
     });
   }
 
+  getOwned(String id) async {
+    FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (response.hasError())
+      return;
+
+    await CloudFirebaseHelper.getItemsMatching(TABLE_GROUPS, FIELD_OWNER, id, Group2()).then((FirebaseResponse response) => {
+      if (response.hasError()){
+        print ("getItemsArrayContains.getItems failed with $response.getError()")
+      } else {
+        print ("getItemsArrayContains.getItems succeeded returning ${response.items.length} docs")
+      },
+      groups = response.items,
+//      notifyListeners()
+      TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED)
+    });
+  }
+
+  getThese(List<String> ids) async {
+    FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (response.hasError())
+      return;
+
+    await CloudFirebaseHelper.getItemsArrayContains(TABLE_GROUPS, FIELD_ID, ids, Group2()).then((FirebaseResponse response) => {
+      if (response.hasError()){
+        print ("getItemsArrayContains.getItems failed with $response.getError()")
+      } else {
+        print ("getItemsArrayContains.getItems succeeded returning ${response.items.length} docs")
+      },
+      groups = response.items,
+//      notifyListeners()
+      TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED)
+    });
+  }
+  
   Group2 currentGroup() {
     return groups[currentGroupId];
   }

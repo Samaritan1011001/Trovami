@@ -26,7 +26,7 @@ class UsersManager {
     if (response.hasError())
       return;
 
-    await CloudFirebaseHelper.getItems(TABLE_USERS, TrovUser()).then((FirebaseResponse response) => {
+    await CloudFirebaseHelper.getAllItems(TABLE_USERS, TrovUser()).then((FirebaseResponse response) => {
       if (response.hasError()){
         print ("usersManager.getItems failed with $response.getError()")
       } else {

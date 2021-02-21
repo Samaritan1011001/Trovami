@@ -19,10 +19,10 @@ class ProfileManager { // extends ChangeNotifier{
 
   TrovUser profile;
 
-  acquire(String email) async {
+  Future<TrovUser> get(String email) async {
     FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
     if (response.hasError())
-      return;
+      return null;
 
     await CloudFirebaseHelper.getItem(TABLE_USERS, FIELD_EMAIL, email, TrovUser()).then((FirebaseResponse response) => {
       if (response.hasError()){
@@ -34,5 +34,6 @@ class ProfileManager { // extends ChangeNotifier{
 //      notifyListeners()
       TriggersHelper().trigger(TRIGGER_PROFILE_UPDATED)
     });
+    return profile;
   }
 }
