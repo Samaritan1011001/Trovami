@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
 import 'package:trovami/helpers/TriggersHelper.dart';
-import 'package:trovami/managers/Groups2Manager.dart';
+import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/managers/ThemeManager.dart';
-import 'package:trovami/model/Group2.dart';
+import 'package:trovami/model/Group.dart';
 import 'UnitTestsScreen.dart';
 import 'AddGroupScreen.dart';
 
@@ -77,7 +77,7 @@ class _BodyState extends State<GroupsScreen> {
   Widget getGroupWidgets(BuildContext context) {
     List <Widget> groupWidgets = new List<Widget>();
 
-    for (Group2 group in Groups2Manager().groups.values) {
+    for (Group group in GroupsManager().groups.values) {
       groupWidgets.add(
           InkWell(
             splashColor: Colors.blue,
@@ -116,7 +116,7 @@ class _BodyState extends State<GroupsScreen> {
   }
 
   //<editor-fold desc="Private Members">
-  _getGroup(Group2 group) {
+  _getGroup(Group group) {
     Widget widget;
 
     widget = Row (
@@ -139,8 +139,8 @@ class _BodyState extends State<GroupsScreen> {
     );
   }
 
-  void handleGroupTap(BuildContext context, Group2 group) {
-    Groups2Manager().setCurrent(group.id);
+  void handleGroupTap(BuildContext context, Group group) {
+    GroupsManager().setCurrent(group.id);
     RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
   }
 }

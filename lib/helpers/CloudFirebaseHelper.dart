@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:trovami/managers/Groups2Manager.dart';
 import 'package:trovami/model/DocItem.dart';
 
 const String TABLE_GROUPS     = "groups";

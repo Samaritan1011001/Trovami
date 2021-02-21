@@ -6,23 +6,23 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
+import 'package:trovami/helpers/TriggersHelper.dart';
 import 'package:trovami/helpers/httpClient.dart';
 //import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trovami/managers/Groups2Manager.dart';
+import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/managers/ProfileManager.dart';
+import 'package:trovami/model/TrovUser.dart';
 
 import '../widgets/InputTextField.dart';
 import '../widgets/Roundedbutton.dart';
 import '../Strings.dart';
-import '../main.dart';
-import '../model/OldUser.dart';
 import 'SignupScreen.dart';
 import 'GroupsScreen.dart';
 import '../helpers/functionsForFirebaseApiCalls.dart';
 
 final googleSignIn = new GoogleSignIn();
-String loggedinUser;
+String loggedInUserEmail;
 var loggedInUsername;
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -36,17 +36,17 @@ TextStyle textStyle = new TextStyle(
 Color textFieldColor = const Color.fromRGBO(0, 0, 0, 0.7);
 ScrollController scrollController = new ScrollController();
 
-//const _jsonCodec=const JsonCodec(reviver: _reviver);
+const _jsonCodec=const JsonCodec(reviver: _reviver);
 
-//_reviver( key, value) {
-////  print("outside if key : ${key}, value : ${value}");
-//
-//  if(key!=null&& value is Map && key.contains('-')){
-////    print("inside if value : ${value}");
-//    return new User.fromJson(value);
-//  }
-//  return value;
-//}
+_reviver( key, value) {
+//  print("outside if key : ${key}, value : ${value}");
+
+ if(key!=null&& value is Map && key.contains('-')){
+//    print("inside if value : ${value}");
+   return new TrovUser.fromJson(value);
+ }
+ return value;
+}
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -127,12 +127,12 @@ class SigninFormState extends State<SignInScreen>
     if (user != null) {
 //      print("inside listener");
 
-      OldUser guser = new OldUser();
-      guser.EmailId = user.email;
+      TrovUser guser = TrovUser();
+      guser.email = user.email;
       guser.name = user.displayName;
-      guser.locationShare = false;
+      guser.shareLocation = false;
 
-      final String guserjson = jsonCodec.encode(guser);
+      final String guserjson = _jsonCodec.encode(guser);
 
       final DataSnapshot response = await getUsers();
 
@@ -142,7 +142,7 @@ class SigninFormState extends State<SignInScreen>
         response.value.forEach((k, v) {
           if (v["emailid"] == user.email) {
             userexists = true;
-            loggedinUser = user.email;
+            loggedInUserEmail = user.email;
             loggedInUsername = user.displayName;
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -158,7 +158,7 @@ class SigninFormState extends State<SignInScreen>
         await httpClient.post(
             url: 'https://trovami-bcd81.firebaseio.com/users.json',
             body: guserjson);
-        loggedinUser = user.email;
+        loggedInUserEmail = user.email;
         loggedInUsername = user.displayName;
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -187,11 +187,12 @@ class SigninFormState extends State<SignInScreen>
 
       usrs.values.forEach((us) async {
         if (email == us["emailid"]) {
-          loggedinUser = email;
+          loggedInUserEmail = email;
           loggedInUsername = us["name"];
 
           print("Trovami.SignInScreen: retrieving profile then owned groups");
-          ProfileManager().get(email).then((value) => {Groups2Manager().getOwned(value.id)});
+          ProfileManager().get(email).then((value) => {GroupsManager().getOwned(value.id)})
+                                                                      .then((value)=>TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED));
 
           Navigator.of(context).push(
             MaterialPageRoute(

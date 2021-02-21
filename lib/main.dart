@@ -1,19 +1,12 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-//import 'package:map_view/map_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
-import 'package:trovami/managers/GroupsManager.dart';
-import 'package:trovami/model/userModel.dart';
 import 'package:trovami/screens/SplashScreen.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
-import 'screens/SignInScreen.dart';
-
-// TODO: Deprecate. Unsure what it is needed for
-//var popflag=0;
+import 'model/userModel.dart';
 
 // TODO: Do login credentials need to be saved?
 //logindetails logindet = new logindetails();
@@ -35,7 +28,7 @@ void main() {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => UserModel(),
+      create: (context) => UserModel(), // TODO: Placeholder for ChangeNotifierProvider, UserModel not used
       child: new MaterialApp(
         title: Strings.appName,
         debugShowCheckedModeBanner: false,

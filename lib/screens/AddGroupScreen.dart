@@ -1,38 +1,26 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
-import 'package:trovami/screens/GroupsScreen.dart';
-import 'package:trovami/helpers/httpClient.dart';
+import 'package:trovami/managers/ProfileManager.dart';
 
 import '../widgets/InputTextField.dart';
 import '../helpers/RoutesHelper.dart';
-import '../managers/GroupsManager.dart';
-import '../model/Group.dart';
-import '../model/OldUser.dart';
 import '../managers/ThemeManager.dart';
 import 'SignInScreen.dart';
-import '../helpers/functionsForFirebaseApiCalls.dart';
 
   class AddGroupScreen extends StatefulWidget {
-    dynamic users;
-    AddGroupScreen({this.users});
+    AddGroupScreen();
     @override
-    AddGroupScreenState createState() => new AddGroupScreenState(users:users);
+    AddGroupScreenState createState() => new AddGroupScreenState();
   }
 
   class AddGroupScreenState extends State<AddGroupScreen>{
-    dynamic users;
-    AddGroupScreenState({this.users});
+    AddGroupScreenState();
     final GlobalKey<ScaffoldState> _scaffoldKeySecondary1 = new GlobalKey<ScaffoldState>();
     final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
 
-    bool _autovalidate1 = false;
-    List<OldUser> userstoShowGrpDetailsPage=new List<OldUser>();
     List<Widget> children1=new List<Widget>();
-    List<OldUser> members=[];
-    int count=0;
+    List<String> members=[];
 
     void showInSnackBar(String value) {
       _scaffoldKeySecondary1.currentState.showSnackBar(
@@ -53,87 +41,24 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
 //      var httpClient = HttpClientFireBase();
       final FormState form = _groupformKey.currentState;
       form.save();
-      OldUser loggedInMember = new OldUser();
-      loggedInMember.EmailId = loggedinUser;
-      loggedInMember.locationShare = false;
-      for (var i = 0; i < members.length; i++) {
-        GroupsManager().currentGroup().groupmembers.add(members[i]);
-      }
-      loggedInMember.name=loggedInUsername;
-      // GroupsManager().currentGroup().groupmembers.add(loggedInMember);
-      // for (var i = 0; i < GroupsManager().currentGroup().groupmembers.length; i++) {
-      //   users.value.forEach((k, v) async {
-      //     if (v["emailid"] == GroupsManager().currentGroup().groupmembers[i].EmailId) {
-      //
-      //       print("v['groupsIamin'] : ${v["groupsIamin"]}");
-      //       if (v["groupsIamin"] == null) {
-      //         List<String> groupsIamin = [];
-      //         groupsIamin.add(GroupsManager().currentGroup().groupname);
-      //         var groupsIaminjson = jsonCodec.encode(groupsIamin);
-      //        await httpClient.put(
-      //             url: 'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
-      //             body: groupsIaminjson);
-      //       } else {
-      //
-      //         var response2 = await getUserById(k);
-      //
-      //         List resmap=[];
-      //         resmap.addAll(response2.value["groupsIamin"]);
-      //         print("resmap: ${resmap}");
-      //
-      //         resmap.add(GroupsManager().currentGroup().groupname);
-      //         var groupsIaminjson = jsonCodec.encode(resmap);
-      //         var response1 = await httpClient.put( url:
-      //             'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
-      //             body: groupsIaminjson);
-      //       }
-      //     }
-      //   });
-      // }
-      // var groupjson = jsonCodec1.encode(GroupsManager().currentGroup());
-      // var url = "https://trovami-bcd81.firebaseio.com/groups.json";
-      // await httpClient.post(url:url, body: groupjson);
-//  Navigator.of(context).pushReplacement(
-//    MaterialPageRoute(
-//    builder: (context) => Homepagelayout(users: users),
-//  ),);
+      // TrovUser loggedInMember = new TrovUser();
+      // loggedInMember.email = loggedInUserEmail;
+      // loggedInMember.shareLocation = false;
+      // ProfileManager().addFriends(members);
+      // loggedInMember.name=loggedInUsername;
      Navigator.of(context).pop();
 //      await Navigator.of(context).pushReplacementNamed('/b');
     }
 
-    void _select(OldUser user) {
-      members.add(user);
-      for(var i=0;i<userstoShowGrpDetailsPage.length;i++){
-        if(userstoShowGrpDetailsPage[i].EmailId==user.EmailId){
-          userstoShowGrpDetailsPage.removeAt(i);
-        }
-      }
+    void _select(String friendId) {
+//      members.add(user);
       setState(() {
-// TODO: Deprecate
-//        popflag=1;
-        userstoShowGrpDetailsPage=userstoShowGrpDetailsPage;
-        count = count + 1;
-      });
-    }
-
-    getusers(){
-
-      users.value.forEach((k,v){
-        OldUser usertoshow=new OldUser();
-        usertoshow.name=v["name"];
-        usertoshow.EmailId = v["emailid"];
-        usertoshow.locationShare=false;
-        if(usertoshow.EmailId==loggedinUser){
-
-        }else {
-          userstoShowGrpDetailsPage.add(usertoshow);
-        }
+        print("Trovami.AddGroupToScreen: New member selected");
       });
     }
 
     @override
-    void initState() => getusers();
-
+    void initState();
 
     @override
     Widget build(BuildContext context) {
@@ -141,7 +66,7 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
 
     if(members.isNotEmpty) {
       children1 =
-      new List.generate(count, (int i) => new memberlist(members[i].name));
+      new List.generate(members.length, (int i) => new MemberList(ProfileManager().friends[i].name));
     }
 
     return new Scaffold(
@@ -180,8 +105,9 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
                     iconColor: Colors.grey,
                     bottomMargin: 20.0,
                     onSaved: (String value) {
-                      GroupsManager().currentGroup().groupname=value;
-                      GroupsManager().currentGroup().groupmembers=new List<OldUser>();
+                      // GroupsManager().currentGroup().groupname=value;
+                      // GroupsManager().currentGroup().groupmembers=new List<TrovUser>();
+                      print("Trovami.AddGroupScreen: SAVE GROUP NOT IMPLEMENTED");
                     }
                   ),
                   padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0),
@@ -197,13 +123,13 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
                 ),
                 new Container(child:
                   new CircleAvatar(child:
-                    new PopupMenuButton<OldUser>(
+                    new PopupMenuButton<String>(
                       icon: new Icon(Icons.add),
                       onSelected: _select,
-                      itemBuilder: (BuildContext context) => userstoShowGrpDetailsPage.map((OldUser usertoshow) =>
-                           new PopupMenuItem<OldUser>(
-                            value: usertoshow,
-                            child: new Text(usertoshow.name),
+                      itemBuilder: (BuildContext context) => ProfileManager().profile.friends.map((String friendId) =>
+                           new PopupMenuItem<String>(
+                            value: friendId,
+                            child: new Text(ProfileManager().friends[friendId].name),
                           )
                         ).toList()
                     ),
@@ -248,9 +174,9 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
   }
 
 
-  class memberlist extends StatelessWidget {
+  class MemberList extends StatelessWidget {
         final String mem;
-        memberlist(this.mem);
+        MemberList(this.mem);
 
         @override
         Widget build(BuildContext context) =>

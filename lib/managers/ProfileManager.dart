@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/helpers/TriggersHelper.dart';
-import 'package:trovami/model/Group2.dart';
 import 'package:trovami/model/TrovUser.dart';
 
-import 'ThemeManager.dart';
+import 'UsersManager.dart';
 
 const String FIELD_EMAIL         = "email";
 
@@ -18,13 +16,18 @@ class ProfileManager { // extends ChangeNotifier{
   //</editor-fold>
 
   TrovUser profile;
+  Map<String, TrovUser> friends;
+
+  // addFriends(List<String> moreFriends){
+  //   friends.addAll(moreFriends);
+  // }
 
   Future<TrovUser> get(String email) async {
-    FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
-    if (response.hasError())
+    FirebaseResponse initResponse = await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (initResponse.hasError())
       return null;
 
-    await CloudFirebaseHelper.getItem(TABLE_USERS, FIELD_EMAIL, email, TrovUser()).then((FirebaseResponse response) => {
+    await CloudFirebaseHelper.getItem(TABLE_USERS, FIELD_EMAIL, email, TrovUser()).then((response) async => {
       if (response.hasError()){
         print ("ProfileManager.getItem failed with $response.getError()")
       } else {
@@ -32,8 +35,20 @@ class ProfileManager { // extends ChangeNotifier{
       },
       profile = response.items.values.first,
 //      notifyListeners()
-      TriggersHelper().trigger(TRIGGER_PROFILE_UPDATED)
+
     });
+//    await getFriends(profile.friends);
+    TriggersHelper().trigger(TRIGGER_PROFILE_UPDATED);
     return profile;
+  }
+
+  getFriends(List<String> friendIds) async{
+    var response = await UsersManager().getThese(profile.friends);
+    if (!response.hasError()){
+      friends.clear();
+      for (TrovUser user in response.items as List<TrovUser>){
+        friends.putIfAbsent(user.id, () => user);
+      }
+    }
   }
 }

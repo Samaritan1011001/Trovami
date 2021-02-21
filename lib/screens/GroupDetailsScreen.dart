@@ -1,28 +1,12 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:trovami/managers/Groups2Manager.dart';
+import 'package:trovami/managers/GroupsManager.dart';
 import '../Strings.dart';
-import '../helpers/functionsForFirebaseApiCalls.dart';
-import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
-
 import '../helpers/RoutesHelper.dart';
-import 'GroupsScreen.dart';
-import '../helpers/httpClient.dart';
-import 'HomeScreen.dart';
-import '../main.dart';
-import '../model/Group.dart';
-import '../model/OldUser.dart';
-import '../model/UserLocation.dart';
-import 'SignInScreen.dart';
 
 class GroupDetailsScreen extends StatefulWidget {
   @override
@@ -61,8 +45,8 @@ class GroupStatusState extends State<GroupStatus>{
 
   @override
   Widget build(BuildContext context) {
-    var curGroup = Groups2Manager().currentGroup();
-    var children = new List.generate(curGroup.members.length, (int i) => memberlist(curGroup.members[i]));
+    var curGroup = GroupsManager().currentGroup();
+    var children = new List.generate(curGroup.members.length, (int i) => MemberList(curGroup.members[i]));
     bool togglestate = true;
 
     return Scaffold(
@@ -168,9 +152,9 @@ class GroupStatusState extends State<GroupStatus>{
   }
 }
 
-class memberlist extends StatelessWidget {
+class MemberList extends StatelessWidget {
   String memberId;
-  memberlist(this.memberId);
+  MemberList(this.memberId);
 
   @override
   Widget build(BuildContext context) =>
