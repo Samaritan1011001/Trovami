@@ -1,27 +1,10 @@
-import 'dart:convert';
-import 'dart:math';
 import 'dart:async';
-
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-//import 'package:map_view/camera_position.dart';
-//import 'package:map_view/location.dart';
-//import 'package:map_view/map_options.dart';
-//import 'package:map_view/map_view.dart';
-//import 'package:map_view/marker.dart';
-//import 'package:map_view/toolbar_action.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'package:trovami/screens/AddGroupScreen.dart';
-
-import 'GroupDetailsScreen.dart';
-import 'GroupsScreen.dart';
-import '../helpers/httpClient.dart';
-import '../main.dart';
-import 'SignInScreen.dart';
-import '../helpers/functionsForFirebaseApiCalls.dart';
+import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/managers/ProfileManager.dart';
 
 class HomeScreen extends StatefulWidget {
   List currentLocations = [];
@@ -31,10 +14,11 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController mapController;
+
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{
   }; // CLASS MEMBER, MAP OF MARKS
   var initialLocation = LatLng(30.274143, -97.740669);
-
 //  Map<MarkerId, Marker> _add(locData) {
 //     final MarkerId markerId = MarkerId(markerIdVal);
 //
@@ -71,20 +55,76 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body:
-      GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: initialLocation,
-          zoom: 14.4746,
-
-        ),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: Set<Marker>.of(markers.values),
-      ),
+    return StreamBuilder<QuerySnapshot>(
+          stream: CloudFirebaseHelper.getLocationsStream(ProfileManager().profile.friends),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            print("Building");
+            var markerSet = _getMarkers(snapshot);
+            if (mapController != null) {
+              mapController.moveCamera(_getCameraUpdate());
+            }
+            return GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: initialLocation,
+                zoom: 14.4746,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                mapController = controller;
+              },
+              markers: markerSet,
+            );
+        }
     );
   }
+  _getMarkers(AsyncSnapshot<QuerySnapshot> querySnapshot) {
+
+    if (querySnapshot.connectionState == ConnectionState.waiting) {
+      return Set<Marker>();
+    }
+
+    for (DocumentSnapshot docSnapshot in querySnapshot.data.docs) {
+      var id = docSnapshot.data()[FIELD_ID] as String;
+      // var lat = docSnapshot.data()[FIELD_LAT] as double;
+      // var lng = docSnapshot.data()[FIELD_LNG] as double;
+      var location = docSnapshot.data()[FIELD_LOCATION] as GeoPoint;
+      print("Trovami.HomeScreen: $id, $location");
+      var marker = _getMarker(id, location);
+      markers[marker.markerId] = marker;
+    }
+    return Set.of(markers.values);
+  }
+  _getMarker(String id, GeoPoint location){
+    return Marker(
+      markerId: MarkerId(id),
+      position: LatLng(location.latitude,location.longitude,),
+      infoWindow: InfoWindow(title: id, snippet: '*'),
+      onTap: () {
+//        _onMarkerTapped(markerId);
+      },
+    );}
+
+  _getCameraUpdate() {
+    if (markers.length == 0){
+      return CameraUpdate.newLatLng(initialLocation);
+    } else if (markers.length == 1){
+      return CameraUpdate.newLatLng(markers.values.first.position);
+    }
+
+    var minLat = double.maxFinite;
+    var maxLat = double.minPositive;
+    var minLng = double.maxFinite;
+    var maxLng = -1000.0; // double.minPositive;
+
+    for (Marker marker in markers.values){
+      minLat = min(minLat, marker.position.latitude);
+      maxLat = max(maxLat, marker.position.latitude);
+      minLng = min(minLng, marker.position.longitude);
+      maxLng = max(maxLng, marker.position.longitude);
+    }
+    return CameraUpdate.newLatLngBounds(LatLngBounds(southwest: LatLng(minLat, minLng), northeast: LatLng(maxLat, maxLng)), 10.0);
+  }
+
 }
+
