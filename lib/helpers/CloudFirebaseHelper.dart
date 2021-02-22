@@ -49,10 +49,10 @@ class CloudFirebaseHelper {
     try {
       await Firebase.initializeApp().then ((FirebaseApp app) => {
         _initialized = true,
-        print("CloudFirebaseHelper initialized")
+        print("Trovami.CloudFirebaseHelper initialized")
       });
     } catch(e) {
-      print("CloudFirebaseHelper.initializedApp encountered error");
+      print("Trovami.CloudFirebaseHelper.initializedApp encountered error");
       _errorInitializing = true;
       return FirebaseResponse().setError(e.toString());
     }
@@ -74,12 +74,12 @@ class CloudFirebaseHelper {
     return collection
         .add(item.toJson())
         .then((value) => {
-          print("Item ${item.getName()} (${item.id}) added to cloud"),
+          print("Trovami.postItem: Item ${item.getName()} (${item.id}) added to cloud"),
           item.id = value.id,
           value.update(item.toJson()),
-          print("Item ${item.getName()} (${item.id}) updated with id")
+          print("Trovami.postItem: Item ${item.getName()} (${item.id}) updated with id")
         })
-        .catchError((error) => print("Failed to add ${item.getName()}: $error"));
+        .catchError((error) => print("Trovami.postItem: Failed to add ${item.getName()}: $error"));
   }
 
   static Future deleteItem(DocItem item, String collectionName) async {
@@ -87,8 +87,8 @@ class CloudFirebaseHelper {
 
     collection.doc(item.id)
         .delete()
-        .then((value) => print("FirebaseHelper.deleteItem(): ${item.getName()} deleted"))
-        .catchError((error) => print("Failed to delete ${item.getName()}: $error"));
+        .then((value) => print("Trovami.FirebaseHelper.deleteItem(): ${item.getName()} deleted"))
+        .catchError((error) => print("Trovami.deleteItem: Failed to delete ${item.getName()}: $error"));
   }
 
   // getItem() may be redundent.  Can use getItemsMatching for same purpose
@@ -101,10 +101,10 @@ class CloudFirebaseHelper {
         .get()
         .then((QuerySnapshot querySnapshot) => {
           response.items.putIfAbsent(querySnapshot.docs.first.id, () => item.fromMap(querySnapshot.docs.first.data())),
-          print("CloudFirebase.getItems($collectionName, $field, $value) found ${querySnapshot.docs.length} items")
+          print("Trovami.CloudFirebase.getItems($collectionName, $field, $value) found ${querySnapshot.docs.length} items")
         })
         .catchError((error) => {
-      print("Failed to fetch $collectionName: $error"),
+      print("Trovami.getItem: Failed to fetch $collectionName: $error"),
       response.error = error.toString()
     });
     return response;
@@ -120,10 +120,10 @@ class CloudFirebaseHelper {
           querySnapshot.docs.forEach((doc) {
           response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
       }),
-      print("CloudFirebase.getItemsMatching($collectionName, $field, $value) found ${querySnapshot.docs.length} items")
+      print("Trovami.CloudFirebase.getItemsMatching($collectionName, $field, $value) found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
-      print("Failed to fetch $collectionName: $error"),
+      print("Trovami.getItemMatching: Failed to fetch $collectionName: $error"),
       response.error = error.toString()
     });
     return response;
@@ -138,10 +138,10 @@ class CloudFirebaseHelper {
           querySnapshot.docs.forEach((doc) {
           response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
         }),
-      print("CloudFirebase.getItems() found ${querySnapshot.docs.length} items")
+      print("Trovami.CloudFirebase.getItems() found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
-      print("Failed to fetch $collectionName: $error"),
+      print("Trovami.getAllItems: Failed to fetch $collectionName: $error"),
       response.error = error.toString()
     });
     return response;
@@ -157,10 +157,10 @@ class CloudFirebaseHelper {
           querySnapshot.docs.forEach((doc) {
           response.items.putIfAbsent(doc.id, () => item.fromMap(doc.data()));
       }),
-      print("CloudFirebase.getItemsArrayContains($collectionName, $field) found ${querySnapshot.docs.length} items")
+      print("Trovami.CloudFirebase: getItemsArrayContains($collectionName, $field) found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
-      print("Failed to fetch $collectionName: $error"),
+      print("Trovami.getItemsArrayContains: Failed to fetch $collectionName: $error"),
       response.error = error.toString()
     });
     return response;
@@ -176,10 +176,10 @@ class CloudFirebaseHelper {
           querySnapshot.docs.forEach((doc) {
           response.items.putIfAbsent(doc.id, () => doc.id);
       }),
-      print("CloudFirebase.getItems($collectionName, $field) found ${querySnapshot.docs.length} items")
+      print("Trovami.getItemIdsArrayContains: CloudFirebase.getItems($collectionName, $field) found ${querySnapshot.docs.length} items")
     })
         .catchError((error) => {
-      print("Failed to fetch $collectionName: $error"),
+      print("Trovami.getItemIdsArrayContains: Failed to fetch $collectionName: $error"),
       response.error = error.toString()
     });
     return response;
