@@ -64,7 +64,7 @@ class GroupStatusState extends State<GroupStatus>{
           new FlatButton(onPressed:()async {
             await Navigator.of(context).pushNamed(ROUTE_MAP);
           },
-              child: new Text("Show Map")
+              child: new Text(Strings.showMap)
           ),
         ],
         flexibleSpace: new FlexibleSpaceBar(

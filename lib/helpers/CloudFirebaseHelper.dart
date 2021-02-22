@@ -202,7 +202,6 @@ class CloudFirebaseHelper {
     return response;
   }
 
-  static void test() {}
   static Future updateItem(DocItem item, collectionName) async{
     if (item.id != null) {
       Map<String, dynamic> data = item.toJson();
