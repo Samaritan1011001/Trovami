@@ -41,9 +41,9 @@ class GroupsManager { // extends ChangeNotifier{
 
     await CloudFirebaseHelper.getItemsMatching(TABLE_GROUPS, FIELD_OWNER, id, Group()).then((FirebaseResponse response) => {
       if (response.hasError()){
-        print ("getItemsArrayContains.getItems failed with $response.getError()")
+        print ("Trovami.getOwned: error detected: $response.getError()")
       } else {
-        print ("getItemsArrayContains.getItems succeeded returning ${response.items.length} docs")
+        print ("Trovami.getOwned: succeeded returning ${response.items.length} docs")
       },
       groups = response.items,
 //      notifyListeners()
