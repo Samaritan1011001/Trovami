@@ -7,7 +7,6 @@ import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/managers/ProfileManager.dart';
 
 class HomeScreen extends StatefulWidget {
-  List currentLocations = [];
   @override
   State<HomeScreen> createState() => HomeScreenState();
 }
@@ -16,41 +15,15 @@ class HomeScreenState extends State<HomeScreen> {
   Completer<GoogleMapController> _controller = Completer();
   GoogleMapController mapController;
 
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{
-  }; // CLASS MEMBER, MAP OF MARKS
-  var initialLocation = LatLng(30.274143, -97.740669);
-//  Map<MarkerId, Marker> _add(locData) {
-//     final MarkerId markerId = MarkerId(markerIdVal);
-//
-//     // creating a new MARKER
-//     final Marker marker = Marker(
-//       markerId: markerId,
-//       position: LatLng(
-//         locData["latitude"],
-//         locData["longitude"],
-//       ),
-//       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
-//       onTap: () {
-// //        _onMarkerTapped(markerId);
-//       },
-//     );
-
-  // adding a new marker to map
-  // markers[markerId] = marker;
-  // return markers;
-//  }
-
-//  StreamSubscription _getChangesSubscription;
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  var initialLocation = LatLng(30.274143, -97.740669); // TODO: Use device current location
 
   @override
-  void initState() {
-  }
+  void initState();
 
   @override
   void dispose() {
-//    _getChangesSubscription?.cancel();
-//    print("Groups listener disposed");
-//    super.dispose();
+   super.dispose();
   }
 
   @override
@@ -86,8 +59,6 @@ class HomeScreenState extends State<HomeScreen> {
 
     for (DocumentSnapshot docSnapshot in querySnapshot.data.docs) {
       var id = docSnapshot.data()[FIELD_ID] as String;
-      // var lat = docSnapshot.data()[FIELD_LAT] as double;
-      // var lng = docSnapshot.data()[FIELD_LNG] as double;
       var location = docSnapshot.data()[FIELD_LOCATION] as GeoPoint;
       print("Trovami.HomeScreen: $id, $location");
       var marker = _getMarker(id, location);
