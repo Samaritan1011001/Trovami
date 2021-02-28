@@ -1,8 +1,8 @@
-
 // Singleton to manage Users
-import 'dart:collection';
 
-import 'package:trovami/model/OldUser.dart';
+import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/model/DocItem.dart';
+import 'package:trovami/model/TrovUser.dart';
 
 class UsersManager {
   static final UsersManager _instance = new UsersManager._internal();
@@ -13,12 +13,34 @@ class UsersManager {
 
   UsersManager._internal();
 
-  Map<String, OldUser> users = new LinkedHashMap<String, OldUser>();
+// TODO: Deprecate.  No need to store many users
+// Only need current user (Profile) and friends (stored with Profile)
+//  Map<String, TrovUser> users = new LinkedHashMap<String, TrovUser>();
+//  String currentUserId;
 
-  String currentUserId;
+  Future<FirebaseResponse> getThese(List<String> ids) async {
+    FirebaseResponse initResponse = await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (initResponse.hasError())
+      return initResponse;
 
-  OldUser currentUser() {
-    return users[currentUserId];
+    var returnResponse;
+
+    await CloudFirebaseHelper.getItemsMatchingOneOf(TABLE_USERS, DocItem.FLD_ID, ids, TrovUser()).then((FirebaseResponse response) => {
+      if (response.hasError()){
+        print ("Trovami.UsersManager.getItemsArrayContains failed with $response.getError()")
+      } else {
+        print ("Trovami.UsersManager.getItemsArrayContains succeeded returning ${response.items.length} docs")
+      },
+      returnResponse = response
+//      TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED)
+    });
+    // users = response.items;
+    print("Trovami.UsersManager.getThese: returning");
+    return returnResponse;
   }
+
+  // TrovUser currentUser() {
+  //   return users[currentUserId];
+  // }
 
 }

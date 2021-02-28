@@ -1,29 +1,16 @@
-import 'dart:convert';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
-import 'package:trovami/helpers/httpClient.dart';
+import 'package:trovami/model/TrovUser.dart';
 import 'package:trovami/model/userModel.dart';
 
 import '../widgets/Roundedbutton.dart';
-import '../helpers/functionsForFirebaseApiCalls.dart';
-import '../managers/UsersManager.dart';
-import '../model/OldUser.dart';
 
 bool userexists = false;
-OldUser user1 = new OldUser();
-const jsonCodec = const JsonCodec(reviver: _reviver);
-
-_reviver(key, value) {
-  if (key != null && value is Map && key.contains('-')) {
-    return new OldUser.fromJson(value);
-  }
-  return value;
-}
+TrovUser user = new TrovUser();
+String password;
 
 TextStyle textStyle = new TextStyle(color: const Color.fromRGBO(255, 255, 255, 0.4), fontSize: 16.0, fontWeight: FontWeight.bold);
 
@@ -73,29 +60,26 @@ class signupstate extends State<Signup> {
       showInSnackBar('Please fix the errors in red before submitting.');
     } else {
       form.save();
-      user1.location = null;
-      user1.locationShare = false;
-      user1.groupsIamin = [];
-      UsersManager().users.putIfAbsent(user1.EmailId, () => user1);
-      var userjson = jsonCodec.encode(user1);
-//      print("userjson:${userjson}");
-      final DataSnapshot usrmap = await getUsers();
-      Map usrs = usrmap.value as Map;
-//      print("usrmap:${usrs.values}");
-
-//      usrs.values.forEach((x){print(x["emailid"]);});
-      usrs.values.forEach((x) {
-        if (x["emailid"] == user1.EmailId) {
-          userexists = true;
-        }
-      });
-      if (userexists == false) {
-        HttpClientFireBase httpClient = HttpClientFireBase();
-
-        await httpClient.post(url: 'https://trovami-bcd81.firebaseio.com/users.json', body: userjson);
-      } else {
-        showInSnackBar('User already exits');
-      }
+      // user1.location = null;
+      // user1.locationShare = false;
+      // user1.groupsIamin = [];
+      // UsersManager().users.putIfAbsent(user1.EmailId, () => user1);
+      // var userjson = jsonCodec.encode(user1);
+      // final DataSnapshot usrmap = await getUsers();
+      // Map usrs = usrmap.value as Map;
+      // usrs.values.forEach((x) {
+      //   if (x["emailid"] == user1.EmailId) {
+      //     userexists = true;
+      //   }
+      // });
+      // if (userexists == false) {
+      //   HttpClientFireBase httpClient = HttpClientFireBase();
+      //
+      //   await httpClient.post(url: 'https://trovami-bcd81.firebaseio.com/users.json', body: userjson);
+      // } else {
+      //   showInSnackBar('User already exits');
+      // }
+      print("Trovami.SignupScreen SAVE NOT IMPLEMENTED");
       Navigator.of(context).pop();
     }
   }
@@ -132,7 +116,7 @@ class signupstate extends State<Signup> {
                 child: new TextFormField(
                   decoration: new InputDecoration(hintText: 'Name', labelText: 'Name', icon: new Icon(Icons.person), labelStyle: textStyle),
                   onSaved: (String value) {
-                    user1.name = value;
+                    user.name = value;
                   },
                 ),
                 padding: const EdgeInsets.only(bottom: 15.0, top: 0.0, right: 20.0),
@@ -152,7 +136,7 @@ class signupstate extends State<Signup> {
                     labelText: 'EmailID',
                   ),
                   onSaved: (String value) {
-                    user1.EmailId = value;
+                    user.email = value;
                   },
                   validator: _validateName,
                 ),
@@ -169,7 +153,7 @@ class signupstate extends State<Signup> {
                     ),
                     obscureText: true,
                     onSaved: (String value) {
-                      user1.password = value;
+                      password = value;
                     },
                   ),
                   padding: const EdgeInsets.only(bottom: 15.0, top: 0.0, right: 20.0),
@@ -191,11 +175,11 @@ class signupstate extends State<Signup> {
                 ),
                 padding: const EdgeInsets.only(top: 10.0),
               ),
-              Consumer<UserModel>(builder: (context, user, child) {
+              Consumer<TrovUser>(builder: (context, user, child) {
                 return RoundedButton(
                   buttonName: 'Sign-up',
                   onTap: (){
-                    user.signUp(user1);
+                    print("Trovami.SignupScreen: Sign-Up NOT IMPLEMENTED");
                   },
                   width: screenSize.width,
                   height: 50.0,

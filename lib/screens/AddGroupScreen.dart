@@ -1,38 +1,29 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
-import 'package:trovami/screens/GroupsScreen.dart';
-import 'package:trovami/helpers/httpClient.dart';
+import 'package:trovami/managers/ProfileManager.dart';
 
+import '../Strings.dart';
 import '../widgets/InputTextField.dart';
 import '../helpers/RoutesHelper.dart';
-import '../managers/GroupsManager.dart';
-import '../model/Group.dart';
-import '../model/OldUser.dart';
 import '../managers/ThemeManager.dart';
 import 'SignInScreen.dart';
-import '../helpers/functionsForFirebaseApiCalls.dart';
 
   class AddGroupScreen extends StatefulWidget {
-    dynamic users;
-    AddGroupScreen({this.users});
+    AddGroupScreen();
     @override
-    AddGroupScreenState createState() => new AddGroupScreenState(users:users);
+    AddGroupScreenState createState() => new AddGroupScreenState();
   }
 
   class AddGroupScreenState extends State<AddGroupScreen>{
-    dynamic users;
-    AddGroupScreenState({this.users});
+    AddGroupScreenState();
     final GlobalKey<ScaffoldState> _scaffoldKeySecondary1 = new GlobalKey<ScaffoldState>();
     final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
 
-    bool _autovalidate1 = false;
-    List<OldUser> userstoShowGrpDetailsPage=new List<OldUser>();
     List<Widget> children1=new List<Widget>();
-    List<OldUser> members=[];
-    int count=0;
+    List<String> selectedIds=[];
+
+    var friends = ProfileManager().profile.friends;
 
     void showInSnackBar(String value) {
       _scaffoldKeySecondary1.currentState.showSnackBar(
@@ -53,95 +44,34 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
 //      var httpClient = HttpClientFireBase();
       final FormState form = _groupformKey.currentState;
       form.save();
-      OldUser loggedInMember = new OldUser();
-      loggedInMember.EmailId = loggedinUser;
-      loggedInMember.locationShare = false;
-      for (var i = 0; i < members.length; i++) {
-        GroupsManager().currentGroup().groupmembers.add(members[i]);
-      }
-      loggedInMember.name=loggedInUsername;
-      // GroupsManager().currentGroup().groupmembers.add(loggedInMember);
-      // for (var i = 0; i < GroupsManager().currentGroup().groupmembers.length; i++) {
-      //   users.value.forEach((k, v) async {
-      //     if (v["emailid"] == GroupsManager().currentGroup().groupmembers[i].EmailId) {
-      //
-      //       print("v['groupsIamin'] : ${v["groupsIamin"]}");
-      //       if (v["groupsIamin"] == null) {
-      //         List<String> groupsIamin = [];
-      //         groupsIamin.add(GroupsManager().currentGroup().groupname);
-      //         var groupsIaminjson = jsonCodec.encode(groupsIamin);
-      //        await httpClient.put(
-      //             url: 'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
-      //             body: groupsIaminjson);
-      //       } else {
-      //
-      //         var response2 = await getUserById(k);
-      //
-      //         List resmap=[];
-      //         resmap.addAll(response2.value["groupsIamin"]);
-      //         print("resmap: ${resmap}");
-      //
-      //         resmap.add(GroupsManager().currentGroup().groupname);
-      //         var groupsIaminjson = jsonCodec.encode(resmap);
-      //         var response1 = await httpClient.put( url:
-      //             'https://trovami-bcd81.firebaseio.com/users/${k}/groupsIamin.json?',
-      //             body: groupsIaminjson);
-      //       }
-      //     }
-      //   });
-      // }
-      // var groupjson = jsonCodec1.encode(GroupsManager().currentGroup());
-      // var url = "https://trovami-bcd81.firebaseio.com/groups.json";
-      // await httpClient.post(url:url, body: groupjson);
-//  Navigator.of(context).pushReplacement(
-//    MaterialPageRoute(
-//    builder: (context) => Homepagelayout(users: users),
-//  ),);
      Navigator.of(context).pop();
-//      await Navigator.of(context).pushReplacementNamed('/b');
     }
 
-    void _select(OldUser user) {
-      members.add(user);
-      for(var i=0;i<userstoShowGrpDetailsPage.length;i++){
-        if(userstoShowGrpDetailsPage[i].EmailId==user.EmailId){
-          userstoShowGrpDetailsPage.removeAt(i);
-        }
-      }
+    void _select(String friendId) {
       setState(() {
-// TODO: Deprecate
-//        popflag=1;
-        userstoShowGrpDetailsPage=userstoShowGrpDetailsPage;
-        count = count + 1;
+        print("Trovami.AddGroupToScreen: New member selected");
       });
     }
 
-    getusers(){
-
-      users.value.forEach((k,v){
-        OldUser usertoshow=new OldUser();
-        usertoshow.name=v["name"];
-        usertoshow.EmailId = v["emailid"];
-        usertoshow.locationShare=false;
-        if(usertoshow.EmailId==loggedinUser){
-
-        }else {
-          userstoShowGrpDetailsPage.add(usertoshow);
+    void toggleSelection(String id) {
+      setState(() {
+        if (selectedIds.contains(id)) {
+          selectedIds.remove(id);
+        } else {
+          selectedIds.add(id);
         }
       });
     }
 
     @override
-    void initState() => getusers();
-
+    void initState();
 
     @override
     Widget build(BuildContext context) {
 
 
-    if(members.isNotEmpty) {
-      children1 =
-      new List.generate(count, (int i) => new memberlist(members[i].name));
+    if(ProfileManager().profile.friends.isNotEmpty) {
+      children1 = List.generate(friends.length, (int i) => new FriendRow(friends[i], this));
     }
 
     return new Scaffold(
@@ -154,8 +84,8 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
             children: <Widget>[
               new Container(
                 child: new Container(
-                  child: new Text("Add a Group",
-                    style: new TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),
+                  child: new Text(Strings.addGroup,
+                    style: ThemeManager().getStyle(STYLE_TITLE),
                     textAlign: TextAlign.center,
                   ),
                   padding: const EdgeInsets.only(bottom:20.0),
@@ -167,77 +97,56 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
                   ),
                 ),
               ),
-              new Container(
+              // Group Name
+              Container(
                 child: new Container(
                   child: new InputField(
                     hintText: "Groupname",
                     obscureText: false,
                     textInputType: TextInputType.text,
-                    textStyle: textStyle,
+                    textStyle: ThemeManager().getStyle(STYLE_TEXT_EDIT),
                     textFieldColor: ThemeManager().getStyle(COLOR_TEXT_FIELD),
                     icon: Icons.group,
                     validateFunction: checkifnotnull,
                     iconColor: Colors.grey,
                     bottomMargin: 20.0,
                     onSaved: (String value) {
-                      GroupsManager().currentGroup().groupname=value;
-                      GroupsManager().currentGroup().groupmembers=new List<OldUser>();
+                      // GroupsManager().currentGroup().groupname=value;
+                      // GroupsManager().currentGroup().groupmembers=new List<TrovUser>();
+                      print("Trovami.AddGroupScreen: SAVE GROUP NOT IMPLEMENTED");
                     }
                   ),
                   padding: const EdgeInsets.only( bottom:15.0, top:0.0,right: 20.0),
                 ),
                   padding: const EdgeInsets.only( top:30.0)
               ),
-              new Row(children: <Widget>[
-                new Container(child:
-                new Text("Add a member:",style: new TextStyle(fontSize: 16.0,
-                    fontWeight: FontWeight.bold),
-                ),
-                    padding: new EdgeInsets.only( left:13.0)
-                ),
-                new Container(child:
-                  new CircleAvatar(child:
-                    new PopupMenuButton<OldUser>(
-                      icon: new Icon(Icons.add),
-                      onSelected: _select,
-                      itemBuilder: (BuildContext context) => userstoShowGrpDetailsPage.map((OldUser usertoshow) =>
-                           new PopupMenuItem<OldUser>(
-                            value: usertoshow,
-                            child: new Text(usertoshow.name),
-                          )
-                        ).toList()
-                    ),
-                    backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
-                  ),
-                    padding: const EdgeInsets.only( left:50.0)
-                ),
-              ],
+              // Select Friends instructions
+              Center(child:
+                Text(Strings.selectFriendsForGroup,style: ThemeManager().getStyle(STYLE_NORMAL)),
               ),
-              new Column(
+              SizedBox(height:20.0),
+              Column(
                 children:children1,
               ),
-              new Row(children: <Widget>[
-
-                new Container(
-                  alignment: Alignment.bottomCenter,
-                  child: new FloatingActionButton(
+              SizedBox(height:20.0),
+              // Submit/Cancel buttons
+              Row(children: <Widget>[
+                  Spacer(),
+                  FloatingActionButton(
+                    heroTag: "tag1",
                     onPressed: _handleSubmitted,
-                    child: new Icon(Icons.check),
+                    child: Icon(Icons.check),
                   ),
-                  padding: const EdgeInsets.only( top:50.0,left: 100.0) ,
-                ),
-                new Container(
-                  child:new FloatingActionButton(
+                  SizedBox(width: 40.0),
+                  FloatingActionButton(
+                    heroTag: "tag2",
                     onPressed: (){
-                      // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      // builder: (context) => Homepage(users: users),),);
-                      RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
+//                      RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
+                      Navigator.of(context).pop();
                     },
                     child: new Icon(Icons.clear),
-                    heroTag: null,
                   ),
-                  padding: const EdgeInsets.only( top:50.0,left: 50.0) ,
-                ),
+                Spacer(),
               ],
               ),
             ],
@@ -248,39 +157,44 @@ import '../helpers/functionsForFirebaseApiCalls.dart';
   }
 
 
-  class memberlist extends StatelessWidget {
-        final String mem;
-        memberlist(this.mem);
+  class FriendRow extends StatelessWidget {
+    final String friendId;
+    final AddGroupScreenState state;
+    var friendData;
 
-        @override
-        Widget build(BuildContext context) =>
-        new Container(
-          child: new Column(
+    FriendRow(this.friendId, this.state){
+      friendData = ProfileManager().getFriendData(friendId);
+    }
+
+    @override
+    Widget build(BuildContext context) =>
+      GestureDetector(
+        onTap: () {state.toggleSelection(friendId);},
+        child: Container(
+          child: Column(
             children: <Widget>[
-              new Row(
+              Row(
                 children: <Widget>[
-                  new CircleAvatar(
+                  CircleAvatar(
                     child:new Icon(Icons.person),
                     backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
                   ),
-                  new Container(child:
-                  new Text(
-                      "${mem}",
-                      style: new TextStyle(fontSize: 20.0),
-                  ),
-                      padding: new EdgeInsets.only( left:20.0)
-
+                  Container(child:
+                  Text(friendData.name, style: TextStyle(fontSize: 20.0),),
+                      padding: EdgeInsets.only( left:20.0)
                   ),
                 ],
               ),
             ],
           ),
-          padding: new EdgeInsets.only( left:10.0,top: 5.0,bottom: 5.0),
-          decoration: new BoxDecoration(
-            border: new Border(
-              bottom: new BorderSide(width: 0.0, color: const Color.fromRGBO(0, 0, 0, 0.2),),
+          padding: EdgeInsets.only( left:10.0,top: 5.0,bottom: 5.0),
+          decoration: BoxDecoration(
+            color: state.selectedIds.contains(friendId) ? ThemeManager().getColor(COLOR_PRIMARY)
+                : ThemeManager().getColor(COLOR_CANVAS),
+            border: Border(
+              bottom: BorderSide(color: const Color.fromRGBO(0, 0, 0, 0.2),),
             ),
           ),
-        );
-
+        ),
+      );
   }

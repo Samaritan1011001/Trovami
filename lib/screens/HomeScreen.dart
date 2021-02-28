@@ -66,7 +66,7 @@ class HomeScreenState extends State<HomeScreen> {
   StreamSubscription _getChangesSubscription;
   @override
   void initState() {
-    listenTochanges();
+    //listenTochanges();
   }
   @override
   void dispose() {
@@ -74,40 +74,40 @@ class HomeScreenState extends State<HomeScreen> {
     print("Groups listener disposed");
     super.dispose();
   }
-  void listenTochanges(){
-    print("Groups lister inistialised");
-    _getChangesSubscription = groupref.onChildChanged.listen((event) async{
-      if(groupStatusGroupname == event.snapshot.value["groupname"]){
-        List<dynamic> groupMems = event.snapshot.value["members"];
-        print("groupMems -> ${groupMems}");
-
-        for(var grpmem in groupMems){
-          print("mem -> ${grpmem["locationShare"]}");
-          if(grpmem["locationShare"]==true) {
-            for (var i = 0; i < widget.currentLocations.length; i++) {
-              if (widget.currentLocations[i]["emailid"] == grpmem["emailid"]) {
-                widget.currentLocations[i] = {
-                  "latitude": grpmem["location"]["latitude"],
-                  "longitude": grpmem["location"]["longitude"],
-                  "emailid": grpmem["emailid"]
-                };
-              }
-            }
-          }
-        }
-        setState(() {
-
-        });
-
-      }
-    });
-  }
+  // void listenTochanges(){
+  //   print("Groups lister inistialised");
+  //   _getChangesSubscription = groupref.onChildChanged.listen((event) async{
+  //     if(groupStatusGroupname == event.snapshot.value["groupname"]){
+  //       List<dynamic> groupMems = event.snapshot.value["members"];
+  //       print("groupMems -> ${groupMems}");
+  //
+  //       for(var grpmem in groupMems){
+  //         print("mem -> ${grpmem["locationShare"]}");
+  //         if(grpmem["locationShare"]==true) {
+  //           for (var i = 0; i < widget.currentLocations.length; i++) {
+  //             if (widget.currentLocations[i]["emailid"] == grpmem["emailid"]) {
+  //               widget.currentLocations[i] = {
+  //                 "latitude": grpmem["location"]["latitude"],
+  //                 "longitude": grpmem["location"]["longitude"],
+  //                 "emailid": grpmem["emailid"]
+  //               };
+  //             }
+  //           }
+  //         }
+  //       }
+  //       setState(() {
+  //
+  //       });
+  //
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: FutureBuilder(
-          future: getLocsOfMembers(),
+//          future: getLocsOfMembers(),
 //          initialData: widget.currentLocations,
           builder: (BuildContext context, snapshot) {
             print("snapshot.data ${snapshot.data}");
@@ -137,65 +137,65 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future getLocsOfMembers() async {
-    HttpClientFireBase httpClient = HttpClientFireBase();
-    String groupkey;
-    int memcount = 0;
-    final DataSnapshot grps = await getGroups();
-    Map groupresmap = grps.value as Map;
-    groupresmap.forEach((k, v) {
-      if (v["groupname"] == groupStatusGroupname) {
-        memcount = v["members"].length;
-        print("groupstatusgroupname:${groupStatusGroupname}");
-        groupkey = k;
-      }
-    });
-    for (var i = 0; i < memcount; i++) {
-      var response1 = await http.get(
-          "https://trovami-bcd81.firebaseio.com/groups/${groupkey}/members/${i}.json");
-      Map result1 = jsonDecode(response1.body);
-      print(result1["emailid"]);
-      print(result1["locationShare"]);
-      if (result1["locationShare"] == true) {
-
-        if(widget.currentLocations.length == 0) {
-          widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
-          print("here 1 ${widget.currentLocations}");
-
-        }else{
-          var flag = 0;
-          for (var i = 0; i < widget.currentLocations.length; i++) {
-            print("check hereee ${result1["emailid"]}");
-            if (widget.currentLocations[i]["emailid"] == result1["emailid"]) {
-              flag=1;
-              print("curr loc ${widget.currentLocations}");
-              print("${result1["emailid"]}");
-              widget.currentLocations.removeAt(i);
-              widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
-
-            }
-          }
-          if(flag==0){
-            widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
-          }
-
-        }
-
-
-      } else {
-        print("works till here");
-
-        for (var i = 0; i < widget.currentLocations.length; i++) {
-          if (widget.currentLocations[i]["emailid"] == result1["emailid"]) {
-            widget.currentLocations.removeAt(i);
-          }
-        }
-      }
-    }
-    print("here 2 ${widget.currentLocations}");
-
-    return widget.currentLocations;
-  }
+  // Future getLocsOfMembers() async {
+  //   HttpClientFireBase httpClient = HttpClientFireBase();
+  //   String groupkey;
+  //   int memcount = 0;
+  //   final DataSnapshot grps = await getGroups();
+  //   Map groupresmap = grps.value as Map;
+  //   groupresmap.forEach((k, v) {
+  //     if (v["groupname"] == groupStatusGroupname) {
+  //       memcount = v["members"].length;
+  //       print("groupstatusgroupname:${groupStatusGroupname}");
+  //       groupkey = k;
+  //     }
+  //   });
+  //   for (var i = 0; i < memcount; i++) {
+  //     var response1 = await http.get(
+  //         "https://trovami-bcd81.firebaseio.com/groups/${groupkey}/members/${i}.json");
+  //     Map result1 = jsonDecode(response1.body);
+  //     print(result1["emailid"]);
+  //     print(result1["locationShare"]);
+  //     if (result1["locationShare"] == true) {
+  //
+  //       if(widget.currentLocations.length == 0) {
+  //         widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
+  //         print("here 1 ${widget.currentLocations}");
+  //
+  //       }else{
+  //         var flag = 0;
+  //         for (var i = 0; i < widget.currentLocations.length; i++) {
+  //           print("check hereee ${result1["emailid"]}");
+  //           if (widget.currentLocations[i]["emailid"] == result1["emailid"]) {
+  //             flag=1;
+  //             print("curr loc ${widget.currentLocations}");
+  //             print("${result1["emailid"]}");
+  //             widget.currentLocations.removeAt(i);
+  //             widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
+  //
+  //           }
+  //         }
+  //         if(flag==0){
+  //           widget.currentLocations.add({"latitude":result1["location"]["latitude"],"longitude":result1["location"]["longitude"],"emailid":result1["emailid"]});
+  //         }
+  //
+  //       }
+  //
+  //
+  //     } else {
+  //       print("works till here");
+  //
+  //       for (var i = 0; i < widget.currentLocations.length; i++) {
+  //         if (widget.currentLocations[i]["emailid"] == result1["emailid"]) {
+  //           widget.currentLocations.removeAt(i);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   print("here 2 ${widget.currentLocations}");
+  //
+  //   return widget.currentLocations;
+  // }
 
 
 //  Future<void> _goToTheLake() async {
