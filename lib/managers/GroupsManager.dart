@@ -19,18 +19,17 @@ class GroupsManager { // extends ChangeNotifier{
   String currentGroupId;
 
   getAll() async {
-    FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
-    if (response.hasError())
+    FirebaseResponse initializeResponse = await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (initializeResponse.hasError())
       return;
 
-    await CloudFirebaseHelper.getAllItems(TABLE_GROUPS, Group()).then((FirebaseResponse response) => {
+    return await CloudFirebaseHelper.getAllItems(TABLE_GROUPS, Group()).then((FirebaseResponse response) => {
       if (response.hasError()){
         print ("GroupsManager.getItems failed with $response.getError()")
       } else {
         print ("GroupsManager.getItems succeeded returning ${response.items.length} docs")
       },
-      groups = response.items,
-//      notifyListeners()
+//      groups = response.items,
     });
   }
 
@@ -41,9 +40,9 @@ class GroupsManager { // extends ChangeNotifier{
 
     await CloudFirebaseHelper.getItemsMatching(TABLE_GROUPS, FIELD_OWNER, id, Group()).then((FirebaseResponse response) => {
       if (response.hasError()){
-        print ("getItemsArrayContains.getItems failed with $response.getError()")
+        print ("Trovami.getOwned: error detected: $response.getError()")
       } else {
-        print ("getItemsArrayContains.getItems succeeded returning ${response.items.length} docs")
+        print ("Trovami.getOwned: succeeded returning ${response.items.length} docs")
       },
       groups = response.items,
 //      notifyListeners()

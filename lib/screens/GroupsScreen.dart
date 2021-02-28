@@ -13,7 +13,7 @@ import 'AddGroupScreen.dart';
 class GroupsScreen extends StatefulWidget {
   String selectedGroup = "";
   @override
-  _BodyState createState() => new _BodyState();
+  _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<GroupsScreen> {
@@ -30,15 +30,12 @@ class _BodyState extends State<GroupsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-//    Provider.of<Groups2Manager>(context, listen: true);
-
-    return new Scaffold(
-        appBar: new AppBar(
-          leading: new Container(),
+    return Scaffold(
+        appBar: AppBar(
+          leading: Container(),
           actions: <Widget>[
-            new IconButton(
-              icon: new Icon(Icons.group_add),
+            IconButton(
+              icon: Icon(Icons.group_add),
               onPressed: () async {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -48,13 +45,13 @@ class _BodyState extends State<GroupsScreen> {
               },
               iconSize: 42.0,
             ),
-            new IconButton(
-              icon: new Icon(Icons.edit),
+            IconButton(
+              icon: Icon(Icons.edit),
               onPressed: () => handleMoreMenu(),
               iconSize: 35.0,
             ),
           ],
-          title: new Text('Groups'),
+          title: Text('Groups'),
         ),
         body: _groupsWidget()
     );
@@ -75,7 +72,7 @@ class _BodyState extends State<GroupsScreen> {
   }
 
   Widget getGroupWidgets(BuildContext context) {
-    List <Widget> groupWidgets = new List<Widget>();
+    List <Widget> groupWidgets = List<Widget>();
 
     for (Group group in GroupsManager().groups.values) {
       groupWidgets.add(

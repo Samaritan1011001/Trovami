@@ -56,7 +56,7 @@ class ProfileManager { // extends ChangeNotifier{
     //   }
     // }
     // return response;
-    UsersManager().getThese(profile.friends).then((FirebaseResponse response)=>{
+    await UsersManager().getThese(profile.friends).then((FirebaseResponse response)=>{
       print("Trovami.ProfileManager.getFriends: returned from UsersManager.getThese"),
       if (!response.hasError()){
           friendsData.clear(),

@@ -5,4 +5,6 @@ class Strings {
   static String shareLiveLocation     = 'Share Live Location:';
   static String addGroup              = 'Add a Group';
   static String selectFriendsForGroup = 'Select friends to add to group:';
+
+  static String showMap               = 'Show Map';
 }

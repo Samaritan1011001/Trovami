@@ -8,6 +8,9 @@ const String TABLE_USERS      = "users";
 
 const String FIELD_ID         = "id";
 const String FIELD_OWNER      = "owner";
+const String FIELD_LOCATION   = "location";
+const String FIELD_LAT        = "latitude";
+const String FIELD_LNG        = "longitude";
 
 class FirebaseResponse {
   String error;
@@ -202,7 +205,11 @@ class CloudFirebaseHelper {
     return response;
   }
 
-  static void test() {}
+  static Stream getLocationsStream(List<String> list) {
+    return FirebaseFirestore.instance
+        .collection(TABLE_LOCATIONS)
+        .where(FIELD_ID, whereIn: list).snapshots();
+  }
   static Future updateItem(DocItem item, collectionName) async{
     if (item.id != null) {
       Map<String, dynamic> data = item.toJson();
