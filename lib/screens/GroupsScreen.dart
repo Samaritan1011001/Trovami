@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
-import 'package:trovami/helpers/TriggersHelper.dart';
 import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/managers/ThemeManager.dart';
 import 'package:trovami/model/Group.dart';
@@ -19,17 +18,15 @@ class GroupsScreen extends StatefulWidget {
 class _BodyState extends State<GroupsScreen> {
   _BodyState();
 
+  GroupsManager groupsMgr;
+
   @override
-  void initState(){
-    TriggersHelper().addListener(TRIGGER_GROUPS_UPDATED, callback: ()  => {
-      setState(() {
-        print("${TRIGGER_GROUPS_UPDATED} Trigger received by GroupsScreen");
-      })
-    });
-  }
+  void initState();
 
   @override
   Widget build(BuildContext context) {
+    groupsMgr = Provider.of<GroupsManager>(context);
+
     return Scaffold(
         appBar: AppBar(
           leading: Container(),
@@ -68,13 +65,12 @@ class _BodyState extends State<GroupsScreen> {
     } else if (CloudFirebaseHelper().hasError()){
       return Text("Failed to connect to Firebase", style: ThemeManager().getStyle(STYLE_NORMAL_BOLD));
     }
-
   }
 
   Widget getGroupWidgets(BuildContext context) {
     List <Widget> groupWidgets = List<Widget>();
 
-    for (Group group in GroupsManager().groups.values) {
+    for (Group group in groupsMgr.groups.values) {
       groupWidgets.add(
           InkWell(
             splashColor: Colors.blue,
@@ -137,7 +133,8 @@ class _BodyState extends State<GroupsScreen> {
   }
 
   void handleGroupTap(BuildContext context, Group group) {
-    GroupsManager().setCurrent(group.id);
+    groupsMgr.setCurrent(group.id);
+
     RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
   }
 }

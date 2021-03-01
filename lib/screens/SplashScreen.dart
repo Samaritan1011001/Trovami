@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:trovami/Strings.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
+import 'package:trovami/managers/ProfileManager.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,13 +13,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(Duration(seconds: 5), () {
-      RoutesHelper.pushRoute(context, '/login');
+      RoutesHelper.replaceRoute(context, ROUTE_LOGIN);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ProfileManager>(context, listen: false).load("trovami@kleymeyer.com");
+
     return Material(
       child: Stack(
         children: [

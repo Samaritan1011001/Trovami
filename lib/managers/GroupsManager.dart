@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
-import 'package:trovami/helpers/TriggersHelper.dart';
 import 'package:trovami/model/Group.dart';
 
 import 'ThemeManager.dart';
 
-class GroupsManager { // extends ChangeNotifier{
-  //<editor-fold desc="Singleton Setup">
-  static final GroupsManager _instance = new GroupsManager._internal();
-  factory GroupsManager() {
-    return _instance;
+class GroupsManager extends ChangeNotifier{
+  GroupsManager(String userId) {
+    print("GroupsManager Instantiated");
+    getOwned(userId);
   }
-  GroupsManager._internal();
-  //</editor-fold>
 
   var groups = Map<String, Object>();
 
@@ -33,19 +29,21 @@ class GroupsManager { // extends ChangeNotifier{
     });
   }
 
-  Future getOwned(String id) async {
-    FirebaseResponse response = await CloudFirebaseHelper().assureFireBaseInitialized();
-    if (response.hasError())
-      return;
-
-    await CloudFirebaseHelper.getItemsMatching(TABLE_GROUPS, FIELD_OWNER, id, Group()).then((FirebaseResponse response) => {
-      if (response.hasError()){
-        print ("Trovami.getOwned: error detected: $response.getError()")
-      } else {
-        print ("Trovami.getOwned: succeeded returning ${response.items.length} docs")
-      },
-      groups = response.items,
-//      notifyListeners()
+  getOwned(String id) {
+    CloudFirebaseHelper().assureFireBaseInitialized()
+    .then((response) => {
+      CloudFirebaseHelper.getItemsMatching(TABLE_GROUPS, FIELD_OWNER, id, Group()).then((FirebaseResponse response) => {
+        if (response.hasError()){
+          print ("Trovami.getOwned: error detected: $response.getError()")
+        } else {
+          print ("Trovami.getOwned: succeeded returning ${response.items.length} docs")
+        },
+        groups = response.items,
+        notifyListeners()
+      })
+    })
+    .catchError((error) => {
+      print("Trovami.GroupsManager.getOwned() failed")
     });
   }
 
@@ -100,6 +98,7 @@ class GroupsManager { // extends ChangeNotifier{
 
   setCurrent(String id){
     currentGroupId = id;
+    notifyListeners();
   }
 
   //<editor-fold desc="Private Members">

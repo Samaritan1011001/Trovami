@@ -1,77 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'package:trovami/managers/ProfileManager.dart';
+import 'package:trovami/model/TrovUser.dart';
 
 import '../Strings.dart';
 import '../widgets/InputTextField.dart';
-import '../helpers/RoutesHelper.dart';
 import '../managers/ThemeManager.dart';
-import 'SignInScreen.dart';
 
-  class AddGroupScreen extends StatefulWidget {
-    AddGroupScreen();
-    @override
-    AddGroupScreenState createState() => new AddGroupScreenState();
+class AddGroupScreen extends StatefulWidget {
+  AddGroupScreen();
+  @override
+  AddGroupScreenState createState() => new AddGroupScreenState();
+}
+
+class AddGroupScreenState extends State<AddGroupScreen>{
+  AddGroupScreenState();
+  final GlobalKey<ScaffoldState> _scaffoldKeySecondary1 = new GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
+
+  List<Widget> children1=new List<Widget>();
+  List<String> selectedIds=[];
+
+  void showInSnackBar(String value) {
+    _scaffoldKeySecondary1.currentState.showSnackBar(
+        new SnackBar(
+            content: new Text(value)
+        )
+    );
   }
 
-  class AddGroupScreenState extends State<AddGroupScreen>{
-    AddGroupScreenState();
-    final GlobalKey<ScaffoldState> _scaffoldKeySecondary1 = new GlobalKey<ScaffoldState>();
-    final GlobalKey<FormState> _groupformKey = new GlobalKey<FormState>();
-
-    List<Widget> children1=new List<Widget>();
-    List<String> selectedIds=[];
-
-    var friends = ProfileManager().profile.friends;
-
-    void showInSnackBar(String value) {
-      _scaffoldKeySecondary1.currentState.showSnackBar(
-          new SnackBar(
-              content: new Text(value)
-          )
-      );
+  String checkifnotnull(String value){
+    if(value.isEmpty) {
+      return 'Groupname must not be empty';
     }
+    return null;
+  }
 
-    String checkifnotnull(String value){
-      if(value.isEmpty) {
-        return 'Groupname must not be empty';
-      }
-      return null;
-    }
-
-     _handleSubmitted() async {
+   _handleSubmitted() async {
 //      var httpClient = HttpClientFireBase();
-      final FormState form = _groupformKey.currentState;
-      form.save();
-     Navigator.of(context).pop();
-    }
+    final FormState form = _groupformKey.currentState;
+    form.save();
+   Navigator.of(context).pop();
+  }
 
-    void _select(String friendId) {
-      setState(() {
-        print("Trovami.AddGroupToScreen: New member selected");
-      });
-    }
+  void _select(String friendId) {
+    setState(() {
+      print("Trovami.AddGroupToScreen: New member selected");
+    });
+  }
 
-    void toggleSelection(String id) {
-      setState(() {
-        if (selectedIds.contains(id)) {
-          selectedIds.remove(id);
-        } else {
-          selectedIds.add(id);
-        }
-      });
-    }
+  void toggleSelection(String id) {
+    setState(() {
+      if (selectedIds.contains(id)) {
+        selectedIds.remove(id);
+      } else {
+        selectedIds.add(id);
+      }
+    });
+  }
 
-    @override
-    void initState();
+  @override
+  void initState();
 
-    @override
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
 
+    ProfileManager profileMgr = Provider.of<ProfileManager>(context);
 
-    if(ProfileManager().profile.friends.isNotEmpty) {
-      children1 = List.generate(friends.length, (int i) => new FriendRow(friends[i], this));
+    if(profileMgr.profile.friends.isNotEmpty) {
+      children1 = List.generate(profileMgr.profile.friends.length, (int i) => new FriendRow(profileMgr, i, this));
     }
 
     return new Scaffold(
@@ -141,7 +140,7 @@ import 'SignInScreen.dart';
                   FloatingActionButton(
                     heroTag: "tag2",
                     onPressed: (){
-//                      RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
+  //                      RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);
                       Navigator.of(context).pop();
                     },
                     child: new Icon(Icons.clear),
@@ -156,45 +155,49 @@ import 'SignInScreen.dart';
     }
   }
 
+class FriendRow extends StatelessWidget {
+  final ProfileManager profileMgr;
+  final friendIdx;
+  final AddGroupScreenState state;
+  var friendData;
 
-  class FriendRow extends StatelessWidget {
-    final String friendId;
-    final AddGroupScreenState state;
-    var friendData;
+  FriendRow(this.profileMgr, this.friendIdx, this.state){
+    friendData = profileMgr.getFriendData(profileMgr.profile.friends[friendIdx]);
+  }
 
-    FriendRow(this.friendId, this.state){
-      friendData = ProfileManager().getFriendData(friendId);
-    }
-
-    @override
-    Widget build(BuildContext context) =>
-      GestureDetector(
-        onTap: () {state.toggleSelection(friendId);},
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    child:new Icon(Icons.person),
-                    backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
-                  ),
-                  Container(child:
-                  Text(friendData.name, style: TextStyle(fontSize: 20.0),),
-                      padding: EdgeInsets.only( left:20.0)
-                  ),
-                ],
-              ),
-            ],
-          ),
-          padding: EdgeInsets.only( left:10.0,top: 5.0,bottom: 5.0),
-          decoration: BoxDecoration(
-            color: state.selectedIds.contains(friendId) ? ThemeManager().getColor(COLOR_PRIMARY)
-                : ThemeManager().getColor(COLOR_CANVAS),
-            border: Border(
-              bottom: BorderSide(color: const Color.fromRGBO(0, 0, 0, 0.2),),
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        state.toggleSelection(profileMgr.profile.friends[friendIdx]);
+      },
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                CircleAvatar(
+                  child: new Icon(Icons.person),
+                  backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
+                ),
+                Container(child:
+                Text(friendData.name, style: TextStyle(fontSize: 20.0),),
+                    padding: EdgeInsets.only(left: 20.0)
+                ),
+              ],
             ),
+          ],
+        ),
+        padding: EdgeInsets.only(left: 10.0, top: 5.0, bottom: 5.0),
+        decoration: BoxDecoration(
+          color: state.selectedIds.contains(profileMgr.profile.friends[friendIdx]) ? ThemeManager().getColor(
+              COLOR_PRIMARY)
+              : ThemeManager().getColor(COLOR_CANVAS),
+          border: Border(
+            bottom: BorderSide(color: const Color.fromRGBO(0, 0, 0, 0.2),),
           ),
         ),
-      );
+      ),
+    );
   }
+}

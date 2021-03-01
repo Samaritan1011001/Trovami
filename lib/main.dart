@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/screens/SplashScreen.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
-import 'model/userModel.dart';
+import 'managers/ProfileManager.dart';
+import 'managers/UsersManager.dart';
 
 // TODO: Do login credentials need to be saved?
 //logindetails logindet = new logindetails();
@@ -22,13 +24,13 @@ final ThemeData kDefaultTheme = new ThemeData(
 );
 
 void main() {
-//  defaultTargetPlatform == TargetPlatform.iOS
-//      ? MapView.setApiKey("AIzaSyCLw1SjRi8TLDu_Nzcdo2Ufu68H1UXl9BU")
-//      : MapView.setApiKey("AIzaSyB4xaxweIhP0F36ZCBpfeiDjpoPc741Oe0");
-
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserModel(), // TODO: Placeholder for ChangeNotifierProvider, UserModel not used
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ProfileManager>(create: (_) => ProfileManager()),
+        ChangeNotifierProvider<GroupsManager>(create: (_) => GroupsManager("alan")),
+//        ChangeNotifierProvider<UsersManager>(create: (_) => UsersManager()),
+      ],
       child: new MaterialApp(
         title: Strings.appName,
         debugShowCheckedModeBanner: false,

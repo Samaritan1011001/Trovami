@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/managers/ProfileManager.dart';
+import 'package:trovami/model/TrovUser.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -28,8 +30,10 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    TrovUser profile = Provider.of<ProfileManager>(context).profile;
+
     return StreamBuilder<QuerySnapshot>(
-          stream: CloudFirebaseHelper.getLocationsStream(ProfileManager().profile.friends),
+          stream: CloudFirebaseHelper.getLocationsStream(profile.friends),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             print("Building");
             var markerSet = _getMarkers(snapshot);
