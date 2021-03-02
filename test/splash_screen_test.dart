@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trovami/Strings.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
-import 'package:trovami/screens/SplashScreen.dart';
 
 void main() {
   // testWidgets(

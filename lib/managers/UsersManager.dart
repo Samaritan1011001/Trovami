@@ -1,17 +1,28 @@
 // Singleton to manage Users
 
+import 'package:flutter/material.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/helpers/authHelper.dart';
 import 'package:trovami/model/DocItem.dart';
 import 'package:trovami/model/TrovUser.dart';
 
-class UsersManager {
-  static final UsersManager _instance = new UsersManager._internal();
+class UserManager extends ChangeNotifier {
+  UserManager(
+      UserAuthHelper authRepository, CloudFirebaseHelper firebaseRepository)
+      : _authRepository = authRepository,
+        _firebaseRepository = firebaseRepository;
 
-  factory UsersManager() {
-    return _instance;
+  final UserAuthHelper _authRepository;
+  final CloudFirebaseHelper _firebaseRepository;
+
+  Future<bool> signUp(TrovUser user, String password) async {
+    FirebaseResponse initResponse =
+        await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (initResponse.hasError()) return false;
+    await _authRepository.createUser(user.email, password);
+    notifyListeners();
+    return true;
   }
-
-  UsersManager._internal();
 
 // TODO: Deprecate.  No need to store many users
 // Only need current user (Profile) and friends (stored with Profile)
@@ -19,28 +30,30 @@ class UsersManager {
 //  String currentUserId;
 
   Future<FirebaseResponse> getThese(List<String> ids) async {
-    FirebaseResponse initResponse = await CloudFirebaseHelper().assureFireBaseInitialized();
-    if (initResponse.hasError())
-      return initResponse;
+    FirebaseResponse initResponse =
+        await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (initResponse.hasError()) return initResponse;
 
     var returnResponse;
 
-    await CloudFirebaseHelper.getItemsMatchingOneOf(TABLE_USERS, DocItem.FLD_ID, ids, TrovUser()).then((FirebaseResponse response) => {
-      if (response.hasError()){
-        print ("Trovami.UsersManager.getItemsArrayContains failed with $response.getError()")
-      } else {
-        print ("Trovami.UsersManager.getItemsArrayContains succeeded returning ${response.items.length} docs")
-      },
-      returnResponse = response
+    await CloudFirebaseHelper.getItemsMatchingOneOf(
+            TABLE_USERS, DocItem.FLD_ID, ids, TrovUser())
+        .then((FirebaseResponse response) => {
+              if (response.hasError())
+                {
+                  print(
+                      "Trovami.UsersManager.getItemsArrayContains failed with $response.getError()")
+                }
+              else
+                {
+                  print(
+                      "Trovami.UsersManager.getItemsArrayContains succeeded returning ${response.items.length} docs")
+                },
+              returnResponse = response
 //      TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED)
-    });
+            });
     // users = response.items;
     print("Trovami.UsersManager.getThese: returning");
     return returnResponse;
   }
-
-  // TrovUser currentUser() {
-  //   return users[currentUserId];
-  // }
-
 }

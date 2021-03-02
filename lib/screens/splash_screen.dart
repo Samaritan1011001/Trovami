@@ -12,8 +12,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 5), () {
-      RoutesHelper.pushRoute(context, '/login');
+    Future.delayed(Duration(seconds: 2), () {
+      RoutesHelper.pushRoute(context, '/signup');
     });
   }
 

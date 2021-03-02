@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trovami/screens/SignInScreen.dart';
+import 'package:trovami/screens/signup.dart';
 
 import '../screens/AddGroupScreen.dart';
 import '../screens/GroupDetailsScreen.dart';
 import '../screens/GroupsScreen.dart';
 import '../main.dart';
 import '../screens/HomeScreen.dart';
-import '../screens/SignupScreen.dart';
 
 const String ROUTE_ADD_GROUP = '/addgroup';
 const String ROUTE_GROUP_DETAILS = '/groupdetails';
@@ -34,11 +34,11 @@ class RoutesHelper {
       case ROUTE_SIGNUP:
         return defaultTargetPlatform == TargetPlatform.iOS
             ? new CupertinoPageRoute(
-                builder: (_) => new SignupScreen(),
+                builder: (_) => new SignUp(),
                 settings: settings,
               )
             : new MyCustomRoute(
-                builder: (_) => new SignupScreen(),
+                builder: (_) => new SignUp(),
                 settings: settings,
               );
 

@@ -18,7 +18,6 @@ import 'package:trovami/model/TrovUser.dart';
 import '../widgets/InputTextField.dart';
 import '../widgets/Roundedbutton.dart';
 import '../Strings.dart';
-import 'SignupScreen.dart';
 import 'GroupsScreen.dart';
 import '../helpers/functionsForFirebaseApiCalls.dart';
 
@@ -37,16 +36,16 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 Color textFieldColor = const Color.fromRGBO(0, 0, 0, 0.7);
 ScrollController scrollController = new ScrollController();
 
-const _jsonCodec=const JsonCodec(reviver: _reviver);
+const _jsonCodec = const JsonCodec(reviver: _reviver);
 
-_reviver( key, value) {
+_reviver(key, value) {
 //  print("outside if key : ${key}, value : ${value}");
 
- if(key!=null&& value is Map && key.contains('-')){
+  if (key != null && value is Map && key.contains('-')) {
 //    print("inside if value : ${value}");
-   return new TrovUser.fromJson(value);
- }
- return value;
+    return new TrovUser.fromJson(value);
+  }
+  return value;
 }
 
 class SignInScreen extends StatefulWidget {
@@ -118,8 +117,7 @@ class SigninFormState extends State<SignInScreen>
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    User firebaseUser =
-        (await _auth.signInWithCredential(credential)).user;
+    User firebaseUser = (await _auth.signInWithCredential(credential)).user;
     GoogleSignInAccount user;
     setState(() {
       user = googleUser;
@@ -139,41 +137,39 @@ class SigninFormState extends State<SignInScreen>
 
 //      print("docs: ${response}");
 
-      if (response.value != null) {
-        response.value.forEach((k, v) {
-          if (v["emailid"] == user.email) {
-            userexists = true;
-            loggedInUserEmail = user.email;
-            loggedInUsername = user.displayName;
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => GroupsScreen(),
-              ),
-            );
-          }
-        });
-      }
-      if (userexists == false) {
-        HttpClientFireBase httpClient = HttpClientFireBase();
+      // if (response.value != null) {
+      //   response.value.forEach((k, v) {
+      //     if (v["emailid"] == user.email) {
+      //       userexists = true;
+      //       loggedInUserEmail = user.email;
+      //       loggedInUsername = user.displayName;
+      //       Navigator.of(context).push(
+      //         MaterialPageRoute(
+      //           builder: (context) => GroupsScreen(),
+      //         ),
+      //       );
+      //     }
+      //   });
+      // }
+      // if (userexists == false) {
+      //   HttpClientFireBase httpClient = HttpClientFireBase();
 
-        await httpClient.post(
-            url: 'https://trovami-bcd81.firebaseio.com/users.json',
-            body: guserjson);
-        loggedInUserEmail = user.email;
-        loggedInUsername = user.displayName;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => GroupsScreen(),
-          ),
-        );
-      } else {
-        setState(() {
-          _isgooglesigincomplete = true;
-        });
-      }
-
+      //   await httpClient.post(
+      //       url: 'https://trovami-bcd81.firebaseio.com/users.json',
+      //       body: guserjson);
+      //   loggedInUserEmail = user.email;
+      //   loggedInUsername = user.displayName;
+      //   Navigator.of(context).push(
+      //     MaterialPageRoute(
+      //       builder: (context) => GroupsScreen(),
+      //     ),
+      //   );
+      // } else {
+      //   setState(() {
+      //     _isgooglesigincomplete = true;
+      //   });
+      // }
     }
-
   }
 
   _handleSubmit() async {
@@ -192,10 +188,12 @@ class SigninFormState extends State<SignInScreen>
           loggedInUsername = us["name"];
 
           print("Trovami.SignInScreen: retrieving profile then owned groups");
-          ProfileManager().get(email)
-                          .then((value) => {GroupsManager().getOwned(value.id)})
-                          .then((value) => ProfileManager().getFriends())
-                          .then((value) => TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED));
+          ProfileManager()
+              .get(email)
+              .then((value) => {GroupsManager().getOwned(value.id)})
+              .then((value) => ProfileManager().getFriends())
+              .then(
+                  (value) => TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED));
 
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -219,8 +217,7 @@ class SigninFormState extends State<SignInScreen>
 
   setGoogleSigninListener() {
     _googleSignIn.onCurrentUserChanged
-        .listen((GoogleSignInAccount account) async {
-    });
+        .listen((GoogleSignInAccount account) async {});
     _googleSignIn.signInSilently();
   }
 
@@ -287,8 +284,10 @@ class SigninFormState extends State<SignInScreen>
                                 hintText: 'Email',
                                 obscureText: false,
                                 textInputType: TextInputType.text,
-                                textStyle: ThemeManager().getStyle(STYLE_TEXT_EDIT),
-                                hintStyle: ThemeManager().getStyle(STYLE_TEXT_HINT),
+                                textStyle:
+                                    ThemeManager().getStyle(STYLE_TEXT_EDIT),
+                                hintStyle:
+                                    ThemeManager().getStyle(STYLE_TEXT_HINT),
                                 textFieldColor: textFieldColor,
                                 icon: Icons.mail_outline,
                                 iconColor:
@@ -303,8 +302,10 @@ class SigninFormState extends State<SignInScreen>
                               hintText: 'Password',
                               obscureText: true,
                               textInputType: TextInputType.text,
-                              textStyle: ThemeManager().getStyle(STYLE_TEXT_EDIT),
-                              hintStyle: ThemeManager().getStyle(STYLE_TEXT_HINT),
+                              textStyle:
+                                  ThemeManager().getStyle(STYLE_TEXT_EDIT),
+                              hintStyle:
+                                  ThemeManager().getStyle(STYLE_TEXT_HINT),
                               textFieldColor: textFieldColor,
                               icon: Icons.lock_outline,
                               iconColor: Colors.white,
@@ -341,7 +342,7 @@ class SigninFormState extends State<SignInScreen>
                           buttonColor: const Color.fromRGBO(100, 100, 100, 1.0),
                         ),
 
-/// UNCOMMENT IF YOU WANT TO SIGNIN THROUGH GOOGLE
+                        /// UNCOMMENT IF YOU WANT TO SIGNIN THROUGH GOOGLE
 //                        (_isgooglesigincomplete
 //                            ? new FloatingActionButton(
 //                                child:

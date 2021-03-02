@@ -4,9 +4,10 @@ import 'package:trovami/model/TrovUser.dart';
 
 import 'UsersManager.dart';
 
-const String FIELD_EMAIL         = "email";
+const String FIELD_EMAIL = "email";
 
-class ProfileManager { // extends ChangeNotifier{
+class ProfileManager {
+  // extends ChangeNotifier{
   //<editor-fold desc="Singleton Setup">
   static final ProfileManager _instance = new ProfileManager._internal();
   factory ProfileManager() {
@@ -23,30 +24,38 @@ class ProfileManager { // extends ChangeNotifier{
   //   friends.addAll(moreFriends);
   // }
 
-  TrovUser getFriendData(String id){
+  TrovUser getFriendData(String id) {
     return friendsData[id];
   }
+
   //<editor-fold desc="DB Calls">
   Future<TrovUser> get(String email) async {
-    FirebaseResponse initResponse = await CloudFirebaseHelper().assureFireBaseInitialized();
-    if (initResponse.hasError())
-      return null;
+    FirebaseResponse initResponse =
+        await CloudFirebaseHelper().assureFireBaseInitialized();
+    if (initResponse.hasError()) return null;
 
-    await CloudFirebaseHelper.getItem(TABLE_USERS, FIELD_EMAIL, email, TrovUser()).then((response) async => {
-      if (response.hasError()){
-        print ("ProfileManager.getItem failed with $response.getError()")
-      } else {
-        print ("ProfileManager.getItems succeeded returning ${response.items.length} docs")
-      },
-      profile = response.items.values.first,
+    await CloudFirebaseHelper.getItem(
+            TABLE_USERS, FIELD_EMAIL, email, TrovUser())
+        .then((response) async => {
+              if (response.hasError())
+                {
+                  print(
+                      "ProfileManager.getItem failed with $response.getError()")
+                }
+              else
+                {
+                  print(
+                      "ProfileManager.getItems succeeded returning ${response.items.length} docs")
+                },
+              profile = response.items.values.first,
 //      notifyListeners()
-
-    });
+            });
 //    await getFriends(profile.friends);
 //    TriggersHelper().trigger(TRIGGER_PROFILE_UPDATED);
     return profile;
   }
-  Future<FirebaseResponse> getFriends() async{
+
+  Future<FirebaseResponse> getFriends() async {
     // var response = await UsersManager().getThese(profile.friends);
     // if (!response.hasError()){
     //   friendsData.clear();
@@ -56,15 +65,21 @@ class ProfileManager { // extends ChangeNotifier{
     //   }
     // }
     // return response;
-    await UsersManager().getThese(profile.friends).then((FirebaseResponse response)=>{
-      print("Trovami.ProfileManager.getFriends: returned from UsersManager.getThese"),
-      if (!response.hasError()){
-          friendsData.clear(),
-        for (Object obj in response.items.values){
-          friendsData.putIfAbsent((obj as TrovUser).id, () => (obj as TrovUser))
-        }
-      }
-    });
+    // await UserManager()
+    //     .getThese(profile.friends)
+    //     .then((FirebaseResponse response) => {
+    //           print(
+    //               "Trovami.ProfileManager.getFriends: returned from UsersManager.getThese"),
+    //           if (!response.hasError())
+    //             {
+    //               friendsData.clear(),
+    //               for (Object obj in response.items.values)
+    //                 {
+    //                   friendsData.putIfAbsent(
+    //                       (obj as TrovUser).id, () => (obj as TrovUser))
+    //                 }
+    //             }
+    //         });
   }
 //</editor-fold>
 }

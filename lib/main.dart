@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
-import 'package:trovami/screens/SplashScreen.dart';
+import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/helpers/authHelper.dart';
+import 'package:trovami/managers/UsersManager.dart';
+import 'package:trovami/screens/splash_screen.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
-import 'model/userModel.dart';
 
 // TODO: Do login credentials need to be saved?
 //logindetails logindet = new logindetails();
@@ -28,7 +30,8 @@ void main() {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => UserModel(), // TODO: Placeholder for ChangeNotifierProvider, UserModel not used
+      create: (context) => UserManager(UserAuthHelper(),
+          CloudFirebaseHelper()), // TODO: Placeholder for ChangeNotifierProvider, UserModel not used
       child: new MaterialApp(
         title: Strings.appName,
         debugShowCheckedModeBanner: false,
@@ -64,8 +67,6 @@ class MyCustomRoute1<T> extends MaterialPageRoute<T> {
   @override
   Widget TransitionBuilder(BuildContext context, Animation<Offset> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    // if (settings.isInitialRoute)
-    //   return child;
     return new SlideTransition(position: animation, child: child);
   }
 }
