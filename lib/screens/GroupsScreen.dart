@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
 import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/managers/ThemeManager.dart';
 import 'package:trovami/model/Group.dart';
+import '../Strings.dart';
 import 'UnitTestsScreen.dart';
 import 'AddGroupScreen.dart';
 
@@ -44,30 +44,28 @@ class _BodyState extends State<GroupsScreen> {
             ),
             IconButton(
               icon: Icon(Icons.edit),
-              onPressed: () => handleMoreMenu(),
+              onPressed: () => _handleMoreMenu(),
               iconSize: 35.0,
             ),
           ],
           title: Text('Groups'),
         ),
-        body: _groupsWidget()
+        body: _body()
     );
   }
 
-  _groupsWidget() {
-    if (CloudFirebaseHelper().isReady()) {
-      return getGroupWidgets(context);
-    } else if(!CloudFirebaseHelper().isInitialized()) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text("Fetching Groups...", style: ThemeManager().getStyle(STYLE_NORMAL_BOLD),),
-      );
-    } else if (CloudFirebaseHelper().hasError()){
-      return Text("Failed to connect to Firebase", style: ThemeManager().getStyle(STYLE_NORMAL_BOLD));
+  _body() {
+    if (groupsMgr.groups.isEmpty) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(Strings.noGroupsFound, style: ThemeManager().getStyle(STYLE_NORMAL_BOLD),),
+        );
+    } else {
+        return _groupWidgets(context);
     }
   }
 
-  Widget getGroupWidgets(BuildContext context) {
+  Widget _groupWidgets(BuildContext context) {
     List <Widget> groupWidgets = List<Widget>();
 
     for (Group group in groupsMgr.groups.values) {
@@ -75,7 +73,7 @@ class _BodyState extends State<GroupsScreen> {
           InkWell(
             splashColor: Colors.blue,
             onTap: () {
-              handleGroupTap(context, group);
+              _handleGroupTap(context, group);
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -100,7 +98,6 @@ class _BodyState extends State<GroupsScreen> {
 
     print("Trovami.GroupsScreen: Displaying ${groupWidgets.length} groups");
 
-
     return SingleChildScrollView(
       child: Column(
         children: groupWidgets
@@ -124,7 +121,7 @@ class _BodyState extends State<GroupsScreen> {
     return widget;
   }
 
-  handleMoreMenu() {
+  _handleMoreMenu() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => UnitTestsScreen(),
@@ -132,7 +129,7 @@ class _BodyState extends State<GroupsScreen> {
     );
   }
 
-  void handleGroupTap(BuildContext context, Group group) {
+  void _handleGroupTap(BuildContext context, Group group) {
     groupsMgr.setCurrent(group.id);
 
     RoutesHelper.pushRoute(context, ROUTE_GROUP_DETAILS);

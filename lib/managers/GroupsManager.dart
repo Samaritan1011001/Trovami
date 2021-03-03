@@ -43,7 +43,8 @@ class GroupsManager extends ChangeNotifier{
       })
     })
     .catchError((error) => {
-      print("Trovami.GroupsManager.getOwned() failed")
+      print("Trovami.GroupsManager.getOwned() failed"),
+      notifyListeners()
     });
   }
 

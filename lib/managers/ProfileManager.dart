@@ -3,8 +3,6 @@ import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/model/DocItem.dart';
 import 'package:trovami/model/TrovUser.dart';
 
-import 'UsersManager.dart';
-
 const String FIELD_EMAIL         = "email";
 
 class ProfileManager extends ChangeNotifier{

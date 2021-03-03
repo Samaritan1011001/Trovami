@@ -8,7 +8,6 @@ import 'package:trovami/screens/SplashScreen.dart';
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
 import 'managers/ProfileManager.dart';
-import 'managers/UsersManager.dart';
 
 // TODO: Do login credentials need to be saved?
 //logindetails logindet = new logindetails();

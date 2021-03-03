@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:trovami/managers/LocationsManager.dart';
 import 'package:trovami/managers/ProfileManager.dart';
+import 'package:trovami/model/TrovLocation.dart';
 import 'package:trovami/model/TrovUser.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,7 +35,7 @@ class HomeScreenState extends State<HomeScreen> {
     TrovUser profile = Provider.of<ProfileManager>(context).profile;
 
     return StreamBuilder<QuerySnapshot>(
-          stream: CloudFirebaseHelper.getLocationsStream(profile.friends),
+          stream: LocationsManager.getLocationsStream(profile.friends),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             print("Building");
             var markerSet = _getMarkers(snapshot);
@@ -62,18 +64,17 @@ class HomeScreenState extends State<HomeScreen> {
     }
 
     for (DocumentSnapshot docSnapshot in querySnapshot.data.docs) {
-      var id = docSnapshot.data()[FIELD_ID] as String;
-      var location = docSnapshot.data()[FIELD_LOCATION] as GeoPoint;
-      print("Trovami.HomeScreen: $id, $location");
-      var marker = _getMarker(id, location);
+      var location = TrovLocation().fromMap(docSnapshot.data());
+
+      var marker = _getMarker(location.id, location);
       markers[marker.markerId] = marker;
     }
     return Set.of(markers.values);
   }
-  _getMarker(String id, GeoPoint location){
+  _getMarker(String id, TrovLocation location){
     return Marker(
       markerId: MarkerId(id),
-      position: LatLng(location.latitude,location.longitude,),
+      position: LatLng(location.geoPoint.latitude,location.geoPoint.longitude,),
       infoWindow: InfoWindow(title: id, snippet: '*'),
       onTap: () {
 //        _onMarkerTapped(markerId);
