@@ -1,9 +1,9 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
+import 'package:trovami/managers/AuthManager.dart';
 import 'package:trovami/managers/UsersManager.dart';
 import 'package:trovami/model/TrovUser.dart';
 import 'package:trovami/widgets/Roundedbutton.dart';
@@ -35,14 +35,14 @@ class _SignUpState extends State<SignUp> {
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
-  _handleSubmitted1(UserManager userProvider) async {
+  _handleSubmitted1(AuthManager authProvider) async {
     if (!_formKeySeondary.currentState.validate()) {
       showInSnackBar('Please fix the errors in red before submitting.');
     } else {
       _formKeySeondary.currentState.save();
-      await userProvider.signUp(
-          _user, _passwordTextController.value.toString());
-      RoutesHelper.pushRoute(context, '/login');
+      await authProvider.createUserWithEmailAndPassword(
+          _user.email, _passwordTextController.value.toString());
+      // RoutesHelper.pushRoute(context, '/login');
     }
   }
 
@@ -147,10 +147,10 @@ class _SignUpState extends State<SignUp> {
               ),
               padding: const EdgeInsets.only(top: 10.0),
             ),
-            Consumer<UserManager>(builder: (context, userProvider, child) {
+            Consumer<AuthManager>(builder: (context, authProvider, child) {
               return RoundedButton(
                 buttonName: 'Sign-up',
-                onTap: () => _handleSubmitted1(userProvider),
+                onTap: () => _handleSubmitted1(authProvider),
                 // width: screenSize.width,
                 height: 50.0,
                 bottomMargin: 10.0,

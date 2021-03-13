@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
-import 'package:trovami/helpers/authHelper.dart';
+import 'package:trovami/helpers/firebaseAuthHelper.dart';
+import 'package:trovami/managers/AuthManager.dart';
 import 'package:trovami/managers/UsersManager.dart';
 import 'package:trovami/screens/splash_screen.dart';
 
@@ -29,9 +30,13 @@ void main() {
 //      : MapView.setApiKey("AIzaSyB4xaxweIhP0F36ZCBpfeiDjpoPc741Oe0");
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserManager(UserAuthHelper(),
-          CloudFirebaseHelper()), // TODO: Placeholder for ChangeNotifierProvider, UserModel not used
+    MultiProvider(
+      providers: [
+        Provider<AuthManager>(
+            create: (_) => AuthManager(),
+            dispose: (_, AuthManager authManager) => authManager.dispose()),
+        Provider<UserManager>(create: (_) => UserManager()),
+      ],
       child: new MaterialApp(
         title: Strings.appName,
         debugShowCheckedModeBanner: false,

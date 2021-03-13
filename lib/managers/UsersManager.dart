@@ -1,29 +1,13 @@
 // Singleton to manage Users
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
-import 'package:trovami/helpers/authHelper.dart';
 import 'package:trovami/model/DocItem.dart';
 import 'package:trovami/model/TrovUser.dart';
 
 class UserManager extends ChangeNotifier {
-  UserManager(
-      UserAuthHelper authRepository, CloudFirebaseHelper firebaseRepository)
-      : _authRepository = authRepository,
-        _firebaseRepository = firebaseRepository;
-
-  final UserAuthHelper _authRepository;
-  final CloudFirebaseHelper _firebaseRepository;
-
-  Future<bool> signUp(TrovUser user, String password) async {
-    FirebaseResponse initResponse =
-        await CloudFirebaseHelper().assureFireBaseInitialized();
-    if (initResponse.hasError()) return false;
-    await _authRepository.createUser(user.email, password);
-    notifyListeners();
-    return true;
-  }
-
 // TODO: Deprecate.  No need to store many users
 // Only need current user (Profile) and friends (stored with Profile)
 //  Map<String, TrovUser> users = new LinkedHashMap<String, TrovUser>();
