@@ -66,7 +66,7 @@ class _BodyState extends State<GroupsScreen> {
   }
 
   Widget _groupWidgets(BuildContext context) {
-    List <Widget> groupWidgets = List<Widget>();
+    List <Widget> groupWidgets = <Widget>[];
 
     for (Group group in groupsMgr.groups.values) {
       groupWidgets.add(

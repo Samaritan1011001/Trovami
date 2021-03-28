@@ -99,7 +99,7 @@ class HomeScreenState extends State<HomeScreen> {
       minLng = min(minLng, marker.position.longitude);
       maxLng = max(maxLng, marker.position.longitude);
     }
-    return CameraUpdate.newLatLngBounds(LatLngBounds(southwest: LatLng(minLat, minLng), northeast: LatLng(maxLat, maxLng)), 10.0);
+    return CameraUpdate.newLatLngBounds(LatLngBounds(southwest: LatLng(minLat, minLng), northeast: LatLng(maxLat, maxLng)), 50.0);
   }
 
 }
