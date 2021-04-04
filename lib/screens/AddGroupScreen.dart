@@ -70,7 +70,8 @@ class AddGroupScreenState extends State<AddGroupScreen>{
     ProfileManager profileMgr = Provider.of<ProfileManager>(context);
 
     if(profileMgr.profile.friends.isNotEmpty) {
-      children1 = List.generate(profileMgr.profile.friends.length, (int i) => new FriendRow(profileMgr, i, this));
+      children1 = List.generate(profileMgr.profile.friends.length,
+                               (int i) => FriendRow(context, profileMgr.profile.friends[i], selectedIds.contains(profileMgr.profile.friends[i]), toggleSelection));
     }
 
     return new Scaffold(
@@ -156,20 +157,22 @@ class AddGroupScreenState extends State<AddGroupScreen>{
   }
 
 class FriendRow extends StatelessWidget {
-  final ProfileManager profileMgr;
-  final friendIdx;
-  final AddGroupScreenState state;
+  ProfileManager profileMgr;
+  final friendId;
+  final selectedCallback;
   var friendData;
+  var isSelected;
 
-  FriendRow(this.profileMgr, this.friendIdx, this.state){
-    friendData = profileMgr.getFriendData(profileMgr.profile.friends[friendIdx]);
+  FriendRow(BuildContext context, this.friendId, this.isSelected, this.selectedCallback){
+    profileMgr = Provider.of<ProfileManager>(context);
+    friendData = profileMgr.getFriendData(friendId);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        state.toggleSelection(profileMgr.profile.friends[friendIdx]);
+        selectedCallback(friendId);
       },
       child: Container(
         child: Column(
@@ -190,11 +193,8 @@ class FriendRow extends StatelessWidget {
         ),
         padding: EdgeInsets.only(left: 10.0, top: 5.0, bottom: 5.0),
         decoration: BoxDecoration(
-          color: state.selectedIds.contains(profileMgr.profile.friends[friendIdx]) ? ThemeManager().getColor(
-              COLOR_PRIMARY)
-              : ThemeManager().getColor(COLOR_CANVAS),
-          border: Border(
-            bottom: BorderSide(color: const Color.fromRGBO(0, 0, 0, 0.2),),
+          color: isSelected ? ThemeManager().getColor(COLOR_PRIMARY) : ThemeManager().getColor(COLOR_CANVAS),
+          border: Border(bottom: BorderSide(color: const Color.fromRGBO(0, 0, 0, 0.2),),
           ),
         ),
       ),
