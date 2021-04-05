@@ -1,16 +1,5 @@
-
-
-
-
-
-import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-
-
 class HttpClientFireBase{
-
-
     HttpClient client;
 
     HttpClientFireBase(){
@@ -27,7 +16,6 @@ class HttpClientFireBase{
       return request.close();
     });
      return response;
-
   }
 
   put({body,url}){

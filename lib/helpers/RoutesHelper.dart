@@ -94,4 +94,7 @@ class RoutesHelper {
   static pushRoute(BuildContext context, String name) {
     Navigator.pushNamed(context, name);
   }
+  static replaceRoute(BuildContext context,String name){
+    Navigator.pushReplacementNamed(context, name);
+  }
 }

@@ -6,12 +6,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:trovami/helpers/RoutesHelper.dart';
-import 'package:trovami/helpers/TriggersHelper.dart';
 import 'package:trovami/helpers/httpClient.dart';
-//import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:trovami/managers/GroupsManager.dart';
-import 'package:trovami/managers/ProfileManager.dart';
 import 'package:trovami/managers/ThemeManager.dart';
 import 'package:trovami/model/TrovUser.dart';
 
@@ -190,12 +186,6 @@ class SigninFormState extends State<SignInScreen>
         if (email == us["emailid"]) {
           loggedInUserEmail = email;
           loggedInUsername = us["name"];
-
-          print("Trovami.SignInScreen: retrieving profile then owned groups");
-          ProfileManager().get(email)
-                          .then((value) => {GroupsManager().getOwned(value.id)})
-                          .then((value) => ProfileManager().getFriends())
-                          .then((value) => TriggersHelper().trigger(TRIGGER_GROUPS_UPDATED));
 
           Navigator.of(context).push(
             MaterialPageRoute(

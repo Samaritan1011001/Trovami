@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/managers/ProfileManager.dart';
 import '../managers/ThemeManager.dart';
@@ -26,17 +27,17 @@ class MainBody extends StatefulWidget{
 }
 
 class MainBodyState extends State<MainBody> {
+  ProfileManager profileManager;
   MainBodyState();
 
   @override
   void initState() {
-    ProfileManager().getFriends().then((FirebaseResponse response){
-      print("Trovami.UnitTestScreen");
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    profileManager = Provider.of<ProfileManager>(context);
+
     return new Scaffold(
       appBar: new AppBar(
       leading: new Container(),

@@ -3,8 +3,11 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:trovami/helpers/CloudFirebaseHelper.dart';
+import 'package:provider/provider.dart';
+import 'package:trovami/managers/LocationsManager.dart';
 import 'package:trovami/managers/ProfileManager.dart';
+import 'package:trovami/model/TrovLocation.dart';
+import 'package:trovami/model/TrovUser.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -28,27 +31,30 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    TrovUser profile = Provider.of<ProfileManager>(context).profile;
+    LocationsManager locationsManager = Provider.of<LocationsManager>(context);
+
     return StreamBuilder<QuerySnapshot>(
-          stream: CloudFirebaseHelper.getLocationsStream(ProfileManager().profile.friends),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            print("Building");
-            var markerSet = _getMarkers(snapshot);
-            if (mapController != null) {
-              mapController.moveCamera(_getCameraUpdate());
-            }
-            return GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                target: initialLocation,
-                zoom: 14.4746,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                mapController = controller;
-              },
-              markers: markerSet,
-            );
+      stream: locationsManager.getLocationsStream(profile.friends),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        print("Building");
+        var markerSet = _getMarkers(snapshot);
+        if (mapController != null) {
+          mapController.moveCamera(_getCameraUpdate());
         }
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: initialLocation,
+            zoom: 14.4746,
+          ),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+            mapController = controller;
+          },
+          markers: markerSet,
+        );
+      }
     );
   }
   _getMarkers(AsyncSnapshot<QuerySnapshot> querySnapshot) {
@@ -58,18 +64,17 @@ class HomeScreenState extends State<HomeScreen> {
     }
 
     for (DocumentSnapshot docSnapshot in querySnapshot.data.docs) {
-      var id = docSnapshot.data()[FIELD_ID] as String;
-      var location = docSnapshot.data()[FIELD_LOCATION] as GeoPoint;
-      print("Trovami.HomeScreen: $id, $location");
-      var marker = _getMarker(id, location);
+      var location = TrovLocation().fromMap(docSnapshot.data());
+
+      var marker = _getMarker(location.id, location);
       markers[marker.markerId] = marker;
     }
     return Set.of(markers.values);
   }
-  _getMarker(String id, GeoPoint location){
+  _getMarker(String id, TrovLocation location){
     return Marker(
       markerId: MarkerId(id),
-      position: LatLng(location.latitude,location.longitude,),
+      position: LatLng(location.geoPoint.latitude,location.geoPoint.longitude,),
       infoWindow: InfoWindow(title: id, snippet: '*'),
       onTap: () {
 //        _onMarkerTapped(markerId);
@@ -94,7 +99,7 @@ class HomeScreenState extends State<HomeScreen> {
       minLng = min(minLng, marker.position.longitude);
       maxLng = max(maxLng, marker.position.longitude);
     }
-    return CameraUpdate.newLatLngBounds(LatLngBounds(southwest: LatLng(minLat, minLng), northeast: LatLng(maxLat, maxLng)), 10.0);
+    return CameraUpdate.newLatLngBounds(LatLngBounds(southwest: LatLng(minLat, minLng), northeast: LatLng(maxLat, maxLng)), 50.0);
   }
 
 }

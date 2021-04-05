@@ -4,7 +4,7 @@ class OldUser {
    String password;
    String name;
    bool locationShare;
-  Map<String,double> location=null;
+  Map<String,double> location;
    List<String> groupsIamin=[];
 
 

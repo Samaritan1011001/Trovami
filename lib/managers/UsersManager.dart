@@ -1,18 +1,9 @@
-// Singleton to manage Users
-
+import 'package:flutter/cupertino.dart';
 import 'package:trovami/helpers/CloudFirebaseHelper.dart';
 import 'package:trovami/model/DocItem.dart';
 import 'package:trovami/model/TrovUser.dart';
 
-class UsersManager {
-  static final UsersManager _instance = new UsersManager._internal();
-
-  factory UsersManager() {
-    return _instance;
-  }
-
-  UsersManager._internal();
-
+class UsersManager extends ChangeNotifier{
 // TODO: Deprecate.  No need to store many users
 // Only need current user (Profile) and friends (stored with Profile)
 //  Map<String, TrovUser> users = new LinkedHashMap<String, TrovUser>();

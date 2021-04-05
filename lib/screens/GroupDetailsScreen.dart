@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 import 'package:trovami/managers/GroupsManager.dart';
 import '../Strings.dart';
 import '../helpers/RoutesHelper.dart';
@@ -45,7 +46,9 @@ class GroupStatusState extends State<GroupStatus>{
 
   @override
   Widget build(BuildContext context) {
-    var curGroup = GroupsManager().currentGroup();
+    GroupsManager groupsMgr = Provider.of<GroupsManager>(context);
+
+    var curGroup = groupsMgr.currentGroup();
     var children = new List.generate(curGroup.members.length, (int i) => MemberList(curGroup.members[i]));
     bool togglestate = true;
 

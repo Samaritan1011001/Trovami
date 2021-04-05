@@ -24,7 +24,7 @@ class TrovUser extends DocItem{
    }
 
   @override
-  fromMap(Map<String, Object> data) {
+  TrovUser fromMap(Map<String, Object> data) {
     TrovUser user = TrovUser();
     user.id = data[DocItem.FLD_ID];
     user.name = data[DocItem.FLD_NAME];
