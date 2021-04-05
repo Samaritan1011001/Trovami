@@ -32,28 +32,29 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     TrovUser profile = Provider.of<ProfileManager>(context).profile;
+    LocationsManager locationsManager = Provider.of<LocationsManager>(context);
 
     return StreamBuilder<QuerySnapshot>(
-          stream: LocationsManager.getLocationsStream(profile.friends),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            print("Building");
-            var markerSet = _getMarkers(snapshot);
-            if (mapController != null) {
-              mapController.moveCamera(_getCameraUpdate());
-            }
-            return GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                target: initialLocation,
-                zoom: 14.4746,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                mapController = controller;
-              },
-              markers: markerSet,
-            );
+      stream: locationsManager.getLocationsStream(profile.friends),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        print("Building");
+        var markerSet = _getMarkers(snapshot);
+        if (mapController != null) {
+          mapController.moveCamera(_getCameraUpdate());
         }
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: initialLocation,
+            zoom: 14.4746,
+          ),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+            mapController = controller;
+          },
+          markers: markerSet,
+        );
+      }
     );
   }
   _getMarkers(AsyncSnapshot<QuerySnapshot> querySnapshot) {

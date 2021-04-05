@@ -7,6 +7,7 @@ import 'package:trovami/screens/SplashScreen.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
+import 'managers/LocationsManager.dart';
 import 'managers/ProfileManager.dart';
 
 // TODO: Do login credentials need to be saved?
@@ -28,6 +29,7 @@ void main() {
       providers: [
         ChangeNotifierProvider<ProfileManager>(create: (_) => ProfileManager()),
         ChangeNotifierProvider<GroupsManager>(create: (_) => GroupsManager("alan")),
+        ChangeNotifierProvider<LocationsManager>(create: (_) => LocationsManager()),
 //        ChangeNotifierProvider<UsersManager>(create: (_) => UsersManager()),
       ],
       child: new MaterialApp(
