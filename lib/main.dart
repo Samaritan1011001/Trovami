@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:trovami/managers/GroupsManager.dart';
 import 'package:trovami/model/userModel.dart';
+import 'package:trovami/splashscreen.dart';
 
 import 'Strings.dart';
 import 'helpers/RoutesHelper.dart';
@@ -27,7 +28,6 @@ final ThemeData kDefaultTheme = new ThemeData(
   accentColor: Colors.blueGrey,
 );
 
-
 void main() {
 //  defaultTargetPlatform == TargetPlatform.iOS
 //      ? MapView.setApiKey("AIzaSyCLw1SjRi8TLDu_Nzcdo2Ufu68H1UXl9BU")
@@ -36,50 +36,44 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserModel(),
-
       child: new MaterialApp(
-      title: Strings.appName,
-      debugShowCheckedModeBanner: false,
-      home: new SignInForm(),
-      theme: defaultTargetPlatform == TargetPlatform.iOS
-          ? kIOSTheme
-          : kDefaultTheme,
+        title: Strings.appName,
+        debugShowCheckedModeBanner: false,
+        //home: new SignInForm(),
+        home: new SplashScreen(),
+        theme: defaultTargetPlatform == TargetPlatform.iOS
+            ? kIOSTheme
+            : kDefaultTheme,
         // ignore: missing_return
         onGenerateRoute: RoutesHelper.provideRoute,
         initialRoute: ROUTE_HOME,
-  ),
+      ),
     ),
   );
 }
 
 class MyCustomRoute<T> extends MaterialPageRoute<T> {
-  MyCustomRoute({ WidgetBuilder builder, RouteSettings settings })
+  MyCustomRoute({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
     // if (settings.isInitialRoute)
     //   return child;
-    return new FadeTransition( opacity: animation, child: child);
+    return new FadeTransition(opacity: animation, child: child);
   }
 }
 
 class MyCustomRoute1<T> extends MaterialPageRoute<T> {
-  MyCustomRoute1({ WidgetBuilder builder, RouteSettings settings })
+  MyCustomRoute1({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override
-  Widget TransitionBuilder(BuildContext context,
-      Animation<Offset> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
+  Widget TransitionBuilder(BuildContext context, Animation<Offset> animation,
+      Animation<double> secondaryAnimation, Widget child) {
     // if (settings.isInitialRoute)
     //   return child;
-    return new SlideTransition( position: animation, child: child);
+    return new SlideTransition(position: animation, child: child);
   }
 }
-
-
