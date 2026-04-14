@@ -1,13 +1,13 @@
 buildscript {
-    ext.kotlin_version = '1.3.60'
+    ext.kotlin_version = '1.9.22'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.google.gms:google-services:4.3.3'
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -15,7 +15,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -26,20 +26,7 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(':app')
 }
-subprojects {
-    project.configurations.all {
-        resolutionStrategy.eachDependency { details ->
-            if (details.requested.group == 'androidx.viewpager' &&
-                    !details.requested.name.contains('androidx')) {
-                details.useVersion "1.0.0"
-            }
-            if (details.requested.group == 'androidx.viewpager' &&
-                    !details.requested.name.contains('androidx')) {
-                details.useVersion "1.0.0"
-            }
-        }
-    }
-}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

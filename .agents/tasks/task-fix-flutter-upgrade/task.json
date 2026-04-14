@@ -1,0 +1,7 @@
+{
+  "task_id": "task-fix-flutter-upgrade",
+  "task_description": "Upgrade the Trovami Flutter app from Dart SDK >=2.8.0 <3.0.0 with heavily outdated dependencies to modern Flutter 3.x with current dependency versions. Fix all breaking API changes in Dart source code so that flutter analyze passes with zero errors.",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

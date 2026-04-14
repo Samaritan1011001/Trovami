@@ -1,0 +1,24 @@
+{
+  "id": "FEAT-001",
+  "type": "chore",
+  "description": "Install Flutter SDK in the sandbox environment and create a working branch for the upgrade work.",
+  "status": "completed",
+  "steps": [
+    "Download Flutter SDK stable channel (latest 3.x) and extract to a suitable location (e.g., /opt/flutter or /home/user/flutter)",
+    "Add Flutter to PATH so 'flutter' command works",
+    "Run 'flutter --version' to confirm installation",
+    "Create a new git branch named 'fix/flutter-upgrade' from the current HEAD in /projects/sandbox/Trovami",
+    "Run 'flutter pub get' to see the current state of dependency resolution (it will likely fail, which is expected - just confirm Flutter itself works)"
+  ],
+  "acceptance_criteria": [
+    "'flutter --version' outputs a Flutter 3.x version",
+    "A git branch 'fix/flutter-upgrade' exists and is checked out",
+    "'flutter' command is available in PATH"
+  ],
+  "verification": [
+    "Run 'flutter --version' and confirm output shows Flutter 3.x",
+    "Run 'git branch --show-current' in /projects/sandbox/Trovami and confirm it shows 'fix/flutter-upgrade'"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
