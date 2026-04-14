@@ -1,60 +1,56 @@
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
-  IconData icon;
-  String hintText;
-  TextInputType textInputType;
-  Color textFieldColor, iconColor;
-  bool obscureText;
-  double bottomMargin;
-  TextStyle textStyle,hintStyle;
-  var validateFunction;
-  var onSaved;
-  Key key;
+  final IconData? icon;
+  final String? hintText;
+  final TextInputType? textInputType;
+  final Color? textFieldColor;
+  final Color? iconColor;
+  final bool obscureText;
+  final double bottomMargin;
+  final TextStyle? textStyle;
+  final TextStyle? hintStyle;
+  final FormFieldValidator<String>? validateFunction;
+  final FormFieldSetter<String>? onSaved;
 
-  //passing props in the Constructor.
-  //Java like style
-  InputField({
-    this.key,
+  const InputField({
+    super.key,
     this.hintText,
-    this.obscureText,
+    this.obscureText = false,
     this.textInputType,
     this.textFieldColor,
     this.icon,
     this.iconColor,
-    this.bottomMargin,
+    this.bottomMargin = 0.0,
     this.textStyle,
     this.validateFunction,
     this.onSaved,
-    this.hintStyle
+    this.hintStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return (new Container(
-        margin: new EdgeInsets.only(bottom: bottomMargin),
-        child: new DecoratedBox(
-          decoration: new BoxDecoration(
-              borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
+    return Container(
+        margin: EdgeInsets.only(bottom: bottomMargin),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(30.0)),
               color: textFieldColor),
-          child: new TextFormField(
+          child: TextFormField(
             style: textStyle,
-            key: key,
             obscureText: obscureText,
             keyboardType: textInputType,
             validator: validateFunction,
             onSaved: onSaved,
-            decoration: new InputDecoration(
-                hintText: hintText,
-                hintStyle: hintStyle,
-                icon: new Icon(
-                  icon,
-                  color: Colors.brown[150],
-                ),
-//                hideDivider: true,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: hintStyle,
+              icon: Icon(
+                icon,
+                color: Colors.brown[200],
+              ),
             ),
           ),
-        )));
+        ));
   }
 }

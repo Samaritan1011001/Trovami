@@ -1,26 +1,28 @@
 import 'DocItem.dart';
 
-class TrovUser extends DocItem{
+class TrovUser extends DocItem {
   static const String FLD_EMAIL = "email";
 
   TrovUser();
-   String email;
+  String? email;
 
-  TrovUser.fromJson(Map value){
-    id = value[DocItem.FLD_ID];
-    name=value[DocItem.FLD_NAME];
-    email=value[FLD_EMAIL];
+  TrovUser.fromJson(Map value) {
+    id = value[DocItem.FLD_ID] as String?;
+    name = value[DocItem.FLD_NAME] as String?;
+    email = value[FLD_EMAIL] as String?;
   }
-   Map toJson(){
-     return {DocItem.FLD_ID: id, DocItem.FLD_NAME: name, FLD_EMAIL: email};
-   }
 
   @override
-  fromMap(Map<String, Object> data) {
+  Map toJson() {
+    return {DocItem.FLD_ID: id, DocItem.FLD_NAME: name, FLD_EMAIL: email};
+  }
+
+  @override
+  TrovUser fromMap(Map<String, Object> data) {
     TrovUser user = TrovUser();
-    user.id = data[DocItem.FLD_ID];
-    user.name = data[DocItem.FLD_NAME];
-    user.email = data[FLD_EMAIL];
+    user.id = data[DocItem.FLD_ID] as String?;
+    user.name = data[DocItem.FLD_NAME] as String?;
+    user.email = data[FLD_EMAIL] as String?;
     return user;
   }
 }

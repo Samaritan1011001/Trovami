@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 const String COLOR_PRIMARY        = "ColorPrimary";
